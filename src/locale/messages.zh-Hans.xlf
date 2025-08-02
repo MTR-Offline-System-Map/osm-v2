@@ -2,6 +2,13 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="5331838453897417006" datatype="html">
+        <source>离线线路图更新可能延迟，请以实际状况为准。</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="title" datatype="html">
         <source>离线线路图</source>
         <context-group purpose="location">
@@ -67,20 +74,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
           <context context-type="linenumber">24,25</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7373619377359302437" datatype="html">
-        <source>玩家</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1050278401445458144" datatype="html">
-        <source>没有玩家在线。</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
-          <context context-type="linenumber">34,35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5824507108095419704" datatype="html">

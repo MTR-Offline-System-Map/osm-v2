@@ -10,7 +10,7 @@ export abstract class DataServiceBase<T> {
 
 	public readonly isLoading = () => this.loading;
 	// protected readonly getUrl = (endpoint: string) => `${document.location.origin}${document.location.pathname}mtr/api/map/${endpoint}/${this.dimensionService.getDimensionIndex()}`;
-	protected readonly getUrl = (endpoint: string) => `http://localhost:8080/mtr/api/map/${endpoint}/${this.dimensionService.getDimensionIndex()}`;
+	protected readonly getUrl = (endpoint: string) => `${document.location.origin}${document.location.pathname}mtr/api/map/${endpoint}/${this.dimensionService.getDimensionIndex()}`;
 	protected readonly fetchData = (id: string) => {
 		this.loading = true;
 		this.id = id;

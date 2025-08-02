@@ -1,3 +1,21 @@
+.banner {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	background-color: #ffd54f;
+	height: 25px;
+	z-index: 1;
+	p {
+		text-align: center;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translate(-50%);
+		max-height: 25px;
+		white-space: nowrap;
+	}
+}
+
 .button-corner {
 	background-color: var(--background-color);
 	position: absolute;

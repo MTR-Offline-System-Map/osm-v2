@@ -15,8 +15,6 @@ import {VisibilityToggleComponent} from "../visibility-toggle/visibility-toggle.
 import {InterchangeStyleToggleComponent} from "../interchange-style-toggle/interchange-style-toggle.component";
 import {SearchComponent} from "../search/search.component";
 import {AccordionModule} from "primeng/accordion";
-import {ClientsService} from "../../service/clients.service";
-import {NgOptimizedImage} from "@angular/common";
 
 @Component({
 	selector: "app-main-panel",
@@ -33,8 +31,7 @@ import {NgOptimizedImage} from "@angular/common";
 		ReactiveFormsModule,
 		SearchComponent,
 		VisibilityToggleComponent,
-		InterchangeStyleToggleComponent,
-		NgOptimizedImage,
+		InterchangeStyleToggleComponent
 	],
 	templateUrl: "./main-panel.component.html",
 	styleUrl: "./main-panel.component.css",
@@ -51,7 +48,7 @@ export class MainPanelComponent {
 	});
 	protected readonly routeTypes: [string, RouteType][] = [];
 
-	constructor(private readonly mapDataService: MapDataService, private readonly dimensionService: DimensionService, private readonly clientsService: ClientsService, private readonly themeService: ThemeService) {
+	constructor(private readonly mapDataService: MapDataService, private readonly dimensionService: DimensionService, private readonly themeService: ThemeService) {
 		mapDataService.dataProcessed.subscribe(() => {
 			if (!this.formGroup.getRawValue().dimension) {
 				this.formGroup.patchValue({dimension: dimensionService.getDimensions()[0]});
@@ -78,10 +75,6 @@ export class MainPanelComponent {
 		if (data.dimension) {
 			this.mapDataService.setDimension(data.dimension);
 		}
-	}
-
-	getAllClients() {
-		return this.clientsService.allClients;
 	}
 
 	clickStation(id: string) {

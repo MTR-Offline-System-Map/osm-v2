@@ -1,5 +1,4 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
 import {DimensionService} from "./dimension.service";
 import {DataServiceBase} from "./data-service-base";
 import {MapDataService} from "./map-data.service";
@@ -38,27 +37,10 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 		routeStationId1: string,
 		routeStationId2: string,
 	}> = {};
-	private readonly nameCache: Record<string, string> = {};
 
-	constructor(private readonly httpClient: HttpClient, mapDataService: MapDataService, dimensionService: DimensionService) {
-		super(() => this.httpClient.get<{ data: ClientsDTO }>(this.getUrl("clients")), ({data}) => {
-			this.allClients.length = 0;
-			this.allClientsNotInStationOrRoute.length = 0;
-			this.clientGroupsForStation = {};
-			this.clientGroupsForRoute = {};
-
+	constructor(mapDataService: MapDataService, dimensionService: DimensionService) {
+		super(() => {}, ({data}) => {
 			data.clients.forEach(clientDTO => {
-				const client = {id: clientDTO.id, name: "", rawX: clientDTO.x, rawZ: clientDTO.z};
-				if (client.id in this.nameCache) {
-					client.name = this.nameCache[client.id];
-				} else {
-					this.httpClient.get<{ username: string }>(`https://www.mc-heads.net/json/get_user?search&u=${client.id}`).subscribe(({username}) => {
-						this.nameCache[client.id] = username;
-						client.name = username;
-					});
-				}
-				this.allClients.push(client);
-
 				const route = clientDTO.routeId ? mapDataService.routes.find(route => route.id === clientDTO.routeId) : undefined;
 				const station = (!route || route.routePlatforms.some(({station}) => station.id === clientDTO.stationId)) && clientDTO.stationId ? mapDataService.stations.find(station => station.id === clientDTO.stationId) : undefined;
 				if (station) {
@@ -71,7 +53,6 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 						routeStationId1: "",
 						routeStationId2: "",
 					}));
-					this.clientGroupsForStation[clientDTO.stationId].clients.push(client);
 				} else if (route) {
 					const reverse = clientDTO.routeStationId1 > clientDTO.routeStationId2;
 					const newRouteStationId1 = reverse ? clientDTO.routeStationId2 : clientDTO.routeStationId1;
@@ -86,21 +67,10 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 						routeStationId1: newRouteStationId1,
 						routeStationId2: newRouteStationId2,
 					}));
-					this.clientGroupsForRoute[key].clients.push(client);
-				} else {
-					this.allClientsNotInStationOrRoute.push(client);
 				}
 			});
 		}, REFRESH_INTERVAL, dimensionService);
 		mapDataService.dataProcessed.subscribe(() => this.fetchData(""));
-	}
-
-	public getClientGroupsForStation() {
-		return this.clientGroupsForStation;
-	}
-
-	public getClientGroupsForRoute() {
-		return this.clientGroupsForRoute;
 	}
 
 	public static getRouteConnectionKey(stationId1: string, stationId2: string, color: number) {

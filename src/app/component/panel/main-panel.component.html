@@ -26,25 +26,6 @@
 				</div>
 			}
 			<p-divider/>
-			<p-accordion [multiple]="true">
-				<p-accordion-panel>
-					<p-accordion-header><ng-container i18n>Players</ng-container> ({{ getAllClients().length }})</p-accordion-header>
-					<p-accordion-content>
-						@if (getAllClients().length === 0) {
-							<div i18n>There are no players online.</div>
-						} @else {
-							<div class="column gap-small">
-								@for (client of getAllClients(); track $index) {
-									<div class="row gap-small center clickable">
-										<img [ngSrc]="'https://mc-heads.net/avatar/' + client.id" [width]="24" [height]="24" [alt]="client.name"/>
-										<div>{{ client.name }}</div>
-									</div>
-								}
-							</div>
-						}
-					</p-accordion-content>
-				</p-accordion-panel>
-			</p-accordion>
 		</div>
 		<div class="spacing"></div>
 		<div class="row gap-small center padding-sides padding-top-bottom">
