@@ -13,9 +13,7 @@ import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {ThemeService} from "../../service/theme.service";
 import {MapSelectionService} from "../../service/map-selection.service";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
-import {ClientsService} from "../../service/clients.service";
 import {TooltipModule} from "primeng/tooltip";
-import {NgOptimizedImage} from "@angular/common";
 
 const blackColor = 0x000000;
 const whiteColor = 0xFFFFFF;
@@ -80,7 +78,7 @@ export class MapComponent implements AfterViewInit {
 	private lineGeometryThinDashed: LineGeometry | undefined;
 	private pointsForLineConnection: Record<string, [number, number, boolean][]> = {};
 
-	constructor(private readonly mapDataService: MapDataService, private readonly mapSelectionService: MapSelectionService, private readonly clientService: ClientsService, private readonly themeService: ThemeService) {
+	constructor(private readonly mapDataService: MapDataService, private readonly mapSelectionService: MapSelectionService, private readonly themeService: ThemeService) {
 		this.canvas = () => this.canvasRef.nativeElement;
 		this.mapDataService.mapLoading.subscribe(() => this.loading = true);
 	}
@@ -238,19 +236,12 @@ export class MapComponent implements AfterViewInit {
 				animationStartTime = Date.now();
 			}
 		});
-
-		this.clientService.dataProcessed.subscribe(() => {
-			this.createStationBlobs();
-			draw();
-		});
 	}
 
 	private createStationBlobs() {
 		const positions: number[] = [];
 		const colors: number[] = [];
 		const backgroundColor = this.getBackgroundColor();
-		const newClientImagePadding = clientImagePadding * SETTINGS.scale / this.camera.zoom / 2;
-		const newClientImageSize = clientImageSize * SETTINGS.scale / this.camera.zoom / 2;
 		this.clientPositions = {};
 		this.clientGroupsOnRouteRaw.length = 0;
 
@@ -291,8 +282,6 @@ export class MapComponent implements AfterViewInit {
 			processShape(x, -z, 7, newWidth, newHeight, rotate, adjustZ - 1, this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, stationSelected));
 			processShape(x, -z, 5, newWidth, newHeight, rotate, adjustZ, this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, stationSelected));
 		});
-
-		Object.values(this.clientService.allClients).forEach(({id, rawX, rawZ}) => this.clientPositions[id] = {x: rawX, y: -rawZ});
 
 		if (this.stationGeometry) {
 			this.stationGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
@@ -427,8 +416,6 @@ export class MapComponent implements AfterViewInit {
 							MapComponent.setColor(backgroundColor, (dashed ? colorsThinDashed : colorsThin));
 						}
 					});
-
-					this.pointsForLineConnection[ClientsService.getRouteConnectionKey(stationId1, stationId2, colorInt)] = points;
 				}
 
 				if (oneWayPoints.length >= 2) {
@@ -522,17 +509,6 @@ export class MapComponent implements AfterViewInit {
 			const canvasY = (-y + this.camera.position.y) * this.camera.zoom;
 			this.clientGroupsOnRoute.push({
 				clients,
-				clientImagePadding: clientImagePadding * SETTINGS.scale,
-				x: canvasX + halfCanvasWidth,
-				y: canvasY + halfCanvasHeight - clientImageSize * SETTINGS.scale / 2,
-			});
-		});
-
-		this.clientService.allClientsNotInStationOrRoute.forEach(({id, name, rawX, rawZ}) => {
-			const canvasX = (rawX - this.camera.position.x) * this.camera.zoom;
-			const canvasY = (rawZ + this.camera.position.y) * this.camera.zoom;
-			this.clientGroupsOnRoute.push({
-				clients: [{id, name}],
 				clientImagePadding: clientImagePadding * SETTINGS.scale,
 				x: canvasX + halfCanvasWidth,
 				y: canvasY + halfCanvasHeight - clientImageSize * SETTINGS.scale / 2,
