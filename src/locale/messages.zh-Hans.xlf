@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="title" datatype="html">
+        <source>离线线路图</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5541757004565024527" datatype="html">
+        <source>车站详情</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7522273064270292227" datatype="html">
+        <source>路线详情</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2102825898069375693" datatype="html">
+        <source>菜单</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2812108764688288077" datatype="html">
+        <source>虚线</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/interchange-style-toggle/interchange-style-toggle.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5482024014385217232" datatype="html">
+        <source>空心线</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/interchange-style-toggle/interchange-style-toggle.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/visibility-toggle/visibility-toggle.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6430497685257244247" datatype="html">
+        <source>搜索</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="801511044046681189" datatype="html">
+        <source>维度</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5407672064878596427" datatype="html">
+        <source>出站换乘样式</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
+          <context context-type="linenumber">24,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7373619377359302437" datatype="html">
+        <source>玩家</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1050278401445458144" datatype="html">
+        <source>没有玩家在线。</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5824507108095419704" datatype="html">
+        <source>暗色主题</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
+          <context context-type="linenumber">52,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9022884244743823994" datatype="html">
+        <source>路线方向</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/route-panel/route-panel.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4981069295266058814" datatype="html">
+        <source>路线车厂</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/route-panel/route-panel.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4846792506513649213" datatype="html">
+        <source>车站</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/search/search.component.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6784952512362771698" datatype="html">
+        <source>路线</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/search/search.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/station-panel/station-panel.component.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="471816275243265264" datatype="html">
+        <source>位置</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/station-panel/station-panel.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8565139252639339122" datatype="html">
+        <source>复制位置</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/station-panel/station-panel.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7023594088317898788" datatype="html">
+        <source>在地图上聚焦</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/station-panel/station-panel.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7239594406496316469" datatype="html">
+        <source>付费区</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/station-panel/station-panel.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2557623954339695776" datatype="html">
+        <source>连接</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/station-panel/station-panel.component.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2109348818976292721" datatype="html">
+        <source>显示详情</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/station-panel/station-panel.component.html</context>
+          <context context-type="linenumber">39,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="996392855508119363" datatype="html">
+        <source>隐藏</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/visibility-toggle/visibility-toggle.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="592980626739521579" datatype="html">
+        <source>实线</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/visibility-toggle/visibility-toggle.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6113179921997948226" datatype="html">
+        <source>虚线</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/visibility-toggle/visibility-toggle.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4172345182949733528" datatype="html">
+        <source>重轨</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2202593120472294151" datatype="html">
+        <source>轻轨</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5749402301909341956" datatype="html">
+        <source>高速铁路</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="795963863809389005" datatype="html">
+        <source>轮渡</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5411472053838096880" datatype="html">
+        <source>快船</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8906137071483749666" datatype="html">
+        <source>游轮</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1294402069599294247" datatype="html">
+        <source>缆车</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8931291953507502185" datatype="html">
+        <source>巴士</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2735224459503660581" datatype="html">
+        <source>小型巴士</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5071196472858741755" datatype="html">
+        <source>快速巴士</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3750019189930551201" datatype="html">
+        <source>飞机</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/data/routeType.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

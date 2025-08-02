@@ -1,0 +1,53 @@
+canvas {
+	background: var(--background-color);
+	position: absolute;
+	transition: opacity 0.2s;
+	width: 100%;
+	height: 100%;
+}
+
+.label {
+	cursor: pointer;
+	position: absolute;
+	transition: color 0.2s;
+	will-change: transform;
+}
+
+.label:hover {
+	color: var(--p-button-primary-hover-background);
+}
+
+.station-name {
+	font-size: 0.6rem;
+	line-height: 1.2rem;
+	white-space: nowrap;
+	text-shadow: -2px -2px 0 var(--background-color),
+	0 -2px 0 var(--background-color),
+	2px -2px 0 var(--background-color),
+	2px 0 0 var(--background-color),
+	2px 2px 0 var(--background-color),
+	0 2px 0 var(--background-color),
+	-2px 2px 0 var(--background-color),
+	-2px 0 0 var(--background-color);
+}
+
+.station-name.cjk {
+	font-size: 1.2rem;
+}
+
+.station-name.text {
+	font-weight: 600;
+}
+
+.station-name.icon {
+	font-size: 1.2rem;
+	width: unset;
+}
+
+.loading-background {
+	background-color: var(--background-color);
+	justify-content: center;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}

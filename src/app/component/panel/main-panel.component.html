@@ -1,0 +1,55 @@
+<div class="column gap wrapper" [formGroup]="formGroup">
+	<div class="column gap-small padding-sides">
+		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeRoutes]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)"/>
+		<p-float-label variant="in">
+			<p-select inputId="dropdown" formControlName="dimension" [options]="getDimensions()" (onChange)="setDimension()" [fluid]="true"/>
+			<label for="dropdown" i18n>Dimension</label>
+		</p-float-label>
+	</div>
+	<div class="column content">
+		<div class="column padding-sides">
+			<div class="column gap-small">
+				@for (routeType of routeTypes; track $index) {
+					<div class="row gap center">
+						<div class="material-icons">{{ routeType[1].icon }}</div>
+						<div class="shrink spacing">{{ routeType[1].text }}</div>
+						<app-visibility-toggle [routeType]="routeType[0]"/>
+					</div>
+				}
+			</div>
+			@if (hasInterchanges()) {
+				<p-divider/>
+				<div class="row gap center">
+					<div class="material-icons">polyline</div>
+					<div class="shrink spacing" i18n>Interchange Style</div>
+					<app-interchange-style-toggle/>
+				</div>
+			}
+			<p-divider/>
+			<p-accordion [multiple]="true">
+				<p-accordion-panel>
+					<p-accordion-header><ng-container i18n>Players</ng-container> ({{ getAllClients().length }})</p-accordion-header>
+					<p-accordion-content>
+						@if (getAllClients().length === 0) {
+							<div i18n>There are no players online.</div>
+						} @else {
+							<div class="column gap-small">
+								@for (client of getAllClients(); track $index) {
+									<div class="row gap-small center clickable">
+										<img [ngSrc]="'https://mc-heads.net/avatar/' + client.id" [width]="24" [height]="24" [alt]="client.name"/>
+										<div>{{ client.name }}</div>
+									</div>
+								}
+							</div>
+						}
+					</p-accordion-content>
+				</p-accordion-panel>
+			</p-accordion>
+		</div>
+		<div class="spacing"></div>
+		<div class="row gap-small center padding-sides padding-top-bottom">
+			<p-toggle-switch inputId="themeToggle" formControlName="themeToggle" (onChange)="changeTheme($event.checked)"/>
+			<label for="themeToggle" i18n>Dark Theme</label>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+.title {
+	font-weight: bold;
+}
+
+.subtitle {
+	font-size: 0.6rem;
+}
+
+.light-color {
+	color: var(--light-color);
+}
+
+.color {
+	border-left: 4px solid;
+	padding-left: 4px;
+}
+
+.align-right {
+	text-align: right;
+}

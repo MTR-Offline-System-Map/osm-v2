@@ -1,0 +1,16 @@
+<app-drawer #sideMain i18n-title="@@title" title="Offline System Map">
+	<app-main-panel class="wrapper" (stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, true)" (routeClicked)="onClickRoute($event, sideMain, sideStation, sideRoute)"/>
+</app-drawer>
+
+<app-drawer #sideStation i18n-title title="Station Details" (closed)="onCloseStation()">
+	<app-station-panel (stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, true)" (routeClicked)="onClickRoute($event, sideMain, sideStation, sideRoute)"/>
+</app-drawer>
+
+<app-drawer #sideRoute i18n-title title="Route Details" (closed)="onCloseRoute()">
+	<app-route-panel (stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, true)" (routeClicked)="onClickRoute($event, sideMain, sideStation, sideRoute)"/>
+</app-drawer>
+
+<app-map (stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, false)"/>
+<button pButton class="button-corner" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="onClickMain(sideMain, sideStation, sideRoute)" i18n-pTooltip pTooltip="Menu" tooltipPosition="left">
+	<div class="material-icons">menu</div>
+</button>

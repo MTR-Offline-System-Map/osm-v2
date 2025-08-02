@@ -1,0 +1,29 @@
+name: Build
+on: [ pull_request, push, workflow_dispatch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Setup Node packages
+        run: npm ci
+      - name: Build Angular (English)
+        run: ng build --configuration=production
+      - name: Capture English build artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: English
+          path: dist/osm/
+      - name: Build Angular (Simplified Chinese)
+        run: ng build --configuration=production,zh-Hans
+      - name: Capture Simplified Chinese build artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: Simplified Chinese
+          path: dist/osm/
