@@ -19,13 +19,9 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: English
-          path: dist/osm/
-      - name: Build Angular (Simplified Chinese)
-        run: |
-          rm -rf ./dist/
-          npm run ng build --configuration=production,zh-Hans
+          path: dist/osm/en-US/
       - name: Capture Simplified Chinese build artifact
         uses: actions/upload-artifact@main
         with:
           name: Simplified Chinese
-          path: dist/osm/
+          path: dist/osm/zh-Hans/

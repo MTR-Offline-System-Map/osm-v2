@@ -1,7 +1,7 @@
 import {Observable} from "rxjs";
 import {DimensionService} from "./dimension.service";
 import {EventEmitter} from "@angular/core";
-import { environment } from "../../environments/environment";
+import {environment} from "../../environments/environment";
 
 export abstract class DataServiceBase<T> {
 	public readonly dataProcessed = new EventEmitter<void>();
