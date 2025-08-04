@@ -33,7 +33,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly animateClient = new EventEmitter<string>();
 
 	constructor(private readonly httpClient: HttpClient, dimensionService: DimensionService) {
-		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(this.getUrl("stations-and-routes")), ({data}) => {
+		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(this.getUrl), ({data}) => {
 			this.routes.length = 0;
 			this.stations.length = 0;
 

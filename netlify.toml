@@ -1,0 +1,8 @@
+[build]
+  command = "bash build.sh"
+  publish = "dist/osm/browser"
+
+[build.environment]
+  GH_USER = "MTR-Offline-System-Map"
+  GH_REPO = "server-v2"
+  GH_BRANCH = "main"

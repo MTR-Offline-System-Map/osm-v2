@@ -1,6 +1,7 @@
 import {Observable} from "rxjs";
 import {DimensionService} from "./dimension.service";
 import {EventEmitter} from "@angular/core";
+import { environment } from "../../environments/environment";
 
 export abstract class DataServiceBase<T> {
 	public readonly dataProcessed = new EventEmitter<void>();
@@ -9,7 +10,7 @@ export abstract class DataServiceBase<T> {
 	private timeoutId = 0;
 
 	public readonly isLoading = () => this.loading;
-	protected readonly getUrl = (endpoint: string) => `${document.location.origin}${document.location.pathname.replace("index.html", "").replace(/zh-Hans.html/i, "").replace(/zh-Hans/i, "")}mtr/api/map/${endpoint}/${this.dimensionService.getDimensionIndex()}`;
+	protected readonly getUrl = environment.dataUrl + this.dimensionService.getDimensionIndex();
 	protected readonly fetchData = (id: string) => {
 		this.loading = true;
 		this.id = id;
