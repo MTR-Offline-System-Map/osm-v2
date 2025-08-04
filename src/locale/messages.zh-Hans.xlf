@@ -77,7 +77,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="5970015566577237632" datatype="html">
-        <source>.</source>
+        <source>../zh-Hans/</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/panel/main-panel.component.html</context>
           <context context-type="linenumber">29,30</context>
