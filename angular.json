@@ -29,9 +29,7 @@
               "@angular/localize/init"
             ],
 						"tsConfig": "tsconfig.app.json",
-						"assets": [
-							"src/assets"
-						],
+						"assets": [],
 						"styles": [
 							"src/styles.scss"
 						],
