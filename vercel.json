@@ -7,9 +7,7 @@
         {
           "type": "header",
           "key": "Accept-Language",
-          "value": {
-            "inc": "zh"
-          }
+          "value": "zh"
         }
       ],
       "permanent": true
@@ -21,9 +19,7 @@
         {
           "type": "header",
           "key": "Accept-Language",
-          "value": {
-            "ninc": "zh"
-          }
+          "value": "zh"
         }
       ],
       "permanent": true
