@@ -1,6 +1,9 @@
 name: Build
 on: [ pull_request, push, workflow_dispatch ]
-
+env:
+  GH_USER: MTR-Offline-System-Map
+  GH_REPO: example-v2
+  GH_BRANCH: main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
       - name: Setup Node packages
         run: npm ci
       - name: Build Angular (English)
-        run: npm run ng build --configuration=production
+        run: bash build.sh
       - name: Capture English build artifact
         uses: actions/upload-artifact@main
         with:

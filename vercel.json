@@ -1,0 +1,32 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/zh-Hans/",
+      "has": [
+        {
+          "type": "header",
+          "key": "Accept-Language",
+          "value": {
+            "inc": "zh"
+          }
+        }
+      ],
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "destination": "/en-US/",
+      "missing": [
+        {
+          "type": "header",
+          "key": "Accept-Language",
+          "value": {
+            "ninc": "zh"
+          }
+        }
+      ],
+      "permanent": true
+    }
+  ]
+}
