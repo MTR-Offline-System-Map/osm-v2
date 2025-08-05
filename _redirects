@@ -1,4 +1,2 @@
-/          /en-US/    301
-/          /zh-Hans/  301  Language=zh
-/en-US/*   /en-US/    200
-/zh-Hans/* /zh-Hans/  200
+/    /en-US/      301
+/    /zh-Hans/    301  Language=zh
