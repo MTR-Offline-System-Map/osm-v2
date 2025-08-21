@@ -6,6 +6,7 @@ cp ./src/environments/environment.prod.template.ts ./src/environments/environmen
 
 sed -i "s|\$GH_USER|${GH_USER}|g" ./src/environments/environment.prod.ts
 sed -i "s|\$GH_REPO|${GH_REPO}|g" ./src/environments/environment.prod.ts
+sed -i "s|\$GH_PATH|${GH_PATH}|g" ./src/environments/environment.prod.ts
 sed -i "s|\$GH_BRANCH|${GH_BRANCH}|g" ./src/environments/environment.prod.ts
 
 npm run ng build --configuration=production

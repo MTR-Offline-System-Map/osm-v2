@@ -1,4 +1,13 @@
 {
+  "buildCommand": "bash build.sh",
+  "outputDirectory": "dist/osm/browser",
+  "installCommand": "npm ci",
+  "env": {
+    "GH_USER": "",
+    "GH_REPO": "",
+    "GH_PATH": "/v2/",
+    "GH_BRANCH": "main"
+  },
   "redirects": [
     {
       "source": "/",

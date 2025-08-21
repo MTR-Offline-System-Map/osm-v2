@@ -2,7 +2,8 @@ name: Build
 on: [ pull_request, push, workflow_dispatch ]
 env:
   GH_USER: MTR-Offline-System-Map
-  GH_REPO: example-v2
+  GH_REPO: example
+  GH_PATH: /v2/
   GH_BRANCH: main
 jobs:
   build:
