@@ -12,6 +12,7 @@ import {StationDTO} from "../entity/generated/station";
 import {Station} from "../entity/station";
 import {RouteDTO} from "../entity/generated/route";
 import {StationForMap} from "../entity/stationForMap";
+import {environment} from "../../environments/environment";
 
 const REFRESH_INTERVAL = 30000;
 
@@ -33,7 +34,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly animateClient = new EventEmitter<string>();
 
 	constructor(private readonly httpClient: HttpClient, dimensionService: DimensionService) {
-		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(this.getUrl), ({data}) => {
+		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(environment.dataUrl + this.dimensionService.getDimensionIndex()), ({data}) => {
 			this.routes.length = 0;
 			this.stations.length = 0;
 
