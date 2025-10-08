@@ -5,7 +5,7 @@
 [![Vercel](https://badge.gteh.top/vercel/mtr-osm-v2?style=flat-square&name=Vercel)](//mtr-osm-v2.vercel.app)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 
-[English](//github.com/MTR-Offline-System-Map/server-v2/blob/main/README.md) | 简体中文
+[English](//github.com/MTR-Offline-System-Map/osm-v2/blob/main/README.md) | 简体中文
 
 离线线路图 v2 前端
 

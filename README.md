@@ -5,7 +5,7 @@
 [![Vercel](https://badge.gteh.top/vercel/mtr-osm-v2?style=flat-square&name=Vercel)](//mtr-osm-v2.vercel.app)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 
-English | [简体中文](//github.com/MTR-Offline-System-Map/server-v2/blob/main/README.zh-Hans.md)
+English | [简体中文](//github.com/MTR-Offline-System-Map/osm-v2/blob/main/README.zh-Hans.md)
 
 Frontend of Offline System Map v2
 
