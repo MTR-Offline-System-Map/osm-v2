@@ -53,12 +53,12 @@ export class SearchComponent {
 		if (event.query === "") {
 			this.textCleared.emit();
 		} else {
-			const filter = (list: SearchData[]): { value: { key: string, icons: string[], color: number, name: string, number: string, isStation: boolean } }[] => {
+			const filter = (list: SearchData[]): { value: { key: string, icons: string[], color?: number, name: string, number: string, type: "station" | "route" } }[] => {
 				const matches: { value: SearchData, index: number }[] = [];
-				list.forEach(({key, icons, color, name, number, isStation}) => {
+				list.forEach(({key, icons, color, name, number, type}) => {
 					const index = name.toLowerCase().indexOf(event.query.toLowerCase());
 					if (index >= 0) {
-						matches.push({value: {key, icons, color, name, number, isStation}, index});
+						matches.push({value: {key, icons, color, name, number, type}, index});
 					}
 				});
 				const result: { value: SearchData }[] = matches.sort((match1, match2) => {

@@ -3,10 +3,9 @@ import {MapComponent} from "./component/map/map.component";
 import {StationPanelComponent} from "./component/station-panel/station-panel.component";
 import {StationService} from "./service/station.service";
 import {DrawerComponent} from "./component/drawer/drawer.component";
-import {MainPanelComponent} from "./component/panel/main-panel.component";
+import {MainPanelComponent} from "./component/main-panel/main-panel.component";
 import {RouteKeyService} from "./service/route.service";
 import {RoutePanelComponent} from "./component/route-panel/route-panel.component";
-import {ThemeService} from "./service/theme.service";
 import {ButtonModule} from "primeng/button";
 import {TooltipModule} from "primeng/tooltip";
 
@@ -26,7 +25,7 @@ import {TooltipModule} from "primeng/tooltip";
 })
 export class AppComponent {
 
-	constructor(private readonly themeService: ThemeService, private readonly stationService: StationService, private readonly routeKeyService: RouteKeyService) {
+	constructor(private readonly stationService: StationService, private readonly routeKeyService: RouteKeyService) {
 	}
 
 	getTitle() {
@@ -63,9 +62,5 @@ export class AppComponent {
 
 	onCloseRoute() {
 		this.routeKeyService.clear();
-	}
-
-	isDarkTheme() {
-		return this.themeService.isDarkTheme();
 	}
 }

@@ -46,7 +46,6 @@ export class MapComponent implements AfterViewInit {
 	@ViewChild("wrapper") private readonly wrapperRef!: ElementRef<HTMLDivElement>;
 	@ViewChild("canvas") private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
 	@ViewChild("stats") private readonly statsRef!: ElementRef<HTMLDivElement>;
-	loading = true;
 	readonly clientGroupsOnRoute: {
 		clients: { id: string, name: string }[],
 		clientImagePadding: number,
@@ -56,6 +55,7 @@ export class MapComponent implements AfterViewInit {
 	readonly textLabels: TextLabel[] = [];
 	readonly clientImageSize = clientImageSize;
 
+	private timeoutId = 0;
 	private clientPositions: Record<string, { x: number, y: number }> = {};
 
 	private readonly clientGroupsOnRouteRaw: {
@@ -77,19 +77,19 @@ export class MapComponent implements AfterViewInit {
 	private lineGeometryThin: LineGeometry | undefined;
 	private lineGeometryThinDashed: LineGeometry | undefined;
 	private pointsForLineConnection: Record<string, [number, number, boolean][]> = {};
-
+	
 	constructor(private readonly mapDataService: MapDataService, private readonly mapSelectionService: MapSelectionService, private readonly themeService: ThemeService) {
 		this.canvas = () => this.canvasRef.nativeElement;
-		this.mapDataService.mapLoading.subscribe(() => this.loading = true);
 	}
 
 	ngAfterViewInit() {
-		const stats = new Stats();
-		this.statsRef.nativeElement.append(stats.dom);
+		const stats = document.location.origin === "http://localhost:4200" ? new Stats() : undefined;
+		if (stats) {
+			this.statsRef.nativeElement.append(stats.dom);
+		}
 		this.scene.background = new THREE.Color(this.getBackgroundColor()).convertLinearToSRGB();
 		const renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas()});
 		renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-		let previousZoom = 1;
 		let hasUpdate = false;
 		let needsCenter = true;
 		let animationStartX = 0;
@@ -100,15 +100,19 @@ export class MapComponent implements AfterViewInit {
 		let lineNormalDashed: Line2 | undefined;
 		let lineThinDashed: Line2 | undefined;
 
-		const draw = () => {
+		const draw = (scheduleRedraw: boolean) => {
 			hasUpdate = true;
-			if (this.camera.zoom !== previousZoom) {
-				this.createStationBlobs();
-				this.createStationConnections();
-				this.createLines(() => {
-					lineNormalDashed?.computeLineDistances();
-					lineThinDashed?.computeLineDistances();
-				});
+			if (scheduleRedraw) {
+				clearTimeout(this.timeoutId);
+				this.timeoutId = setTimeout(() => {
+					hasUpdate = true;
+					this.createStationBlobs();
+					this.createStationConnections();
+					this.createLines(() => {
+						lineNormalDashed?.computeLineDistances();
+						lineThinDashed?.computeLineDistances();
+					});
+				}, 100) as unknown as number;
 			}
 		};
 
@@ -116,11 +120,13 @@ export class MapComponent implements AfterViewInit {
 			const animationProgress = Date.now() - animationStartTime;
 			if (animationProgress < animationDuration) {
 				const animationPercentage = (1 - Math.cos(Math.PI * animationProgress / animationDuration)) / 2;
-				this.moveMap(animationStartX + (animationTargetX - animationStartX) * animationPercentage, animationStartY + (animationTargetY - animationStartY) * animationPercentage);
+				this.moveMap(
+					animationStartX + (animationTargetX - animationStartX) * animationPercentage,
+					animationStartY + (animationTargetY - animationStartY) * animationPercentage,
+				);
 			}
 
 			if (hasUpdate) {
-				previousZoom = this.camera.zoom;
 				const {clientWidth, clientHeight} = this.canvas();
 				if (clientWidth !== renderer.domElement.width || clientHeight !== renderer.domElement.height) {
 					renderer.setSize(clientWidth * devicePixelRatio, clientHeight * devicePixelRatio, false);
@@ -141,10 +147,9 @@ export class MapComponent implements AfterViewInit {
 				renderer.render(this.scene, this.camera);
 				this.updateLabels();
 				hasUpdate = false;
-				this.loading = false;
 			}
 
-			stats.update();
+			stats?.update();
 			requestAnimationFrame(animate);
 		};
 		requestAnimationFrame(animate);
@@ -156,11 +161,10 @@ export class MapComponent implements AfterViewInit {
 		this.controls.touches.ONE = THREE.TOUCH.PAN;
 		this.controls.zoomToCursor = true;
 		this.controls.zoomSpeed = 2;
-		this.controls.addEventListener("change", () => draw());
-		window.addEventListener("resize", () => draw());
+		this.controls.addEventListener("change", () => draw(true));
+		window.addEventListener("resize", () => draw(true));
 
 		this.mapDataService.drawMap.subscribe(() => {
-			this.loading = true;
 			this.scene.background = new THREE.Color(this.getBackgroundColor()).convertLinearToSRGB();
 			this.scene.clear();
 
@@ -210,12 +214,13 @@ export class MapComponent implements AfterViewInit {
 
 			this.scene.add(new THREE.Mesh(this.oneWayArrowGeometry, materialWithVertexColors));
 			this.updateLabels();
-			draw();
+			draw(false);
 		});
 
 		this.mapSelectionService.updateSelection.subscribe(() => {
-			previousZoom = 0;
-			draw();
+			if (!this.mapDataService.getMapLoading()) {
+				draw(true);
+			}
 		});
 
 		this.mapDataService.animateMap.subscribe(({x, z}) => {
@@ -236,6 +241,10 @@ export class MapComponent implements AfterViewInit {
 				animationStartTime = Date.now();
 			}
 		});
+	}
+
+	getLoading() {
+		return this.mapDataService.getMapLoading();
 	}
 
 	private createStationBlobs() {
@@ -368,13 +377,13 @@ export class MapComponent implements AfterViewInit {
 		};
 
 		this.mapDataService.lineConnections.forEach(({lineConnectionParts, direction1, direction2, x1, z1, x2, z2, stationId1, stationId2, length, relativeLength}) => {
-			const lineOffset = length * this.camera.zoom < 10 ? Number.MAX_SAFE_INTEGER : 0;
+			const hidden = length * this.camera.zoom < 10;
 			for (let i = 0; i < lineConnectionParts.length; i++) {
 				const {color, offset1, offset2, oneWay} = lineConnectionParts[i];
 				const colorInt = parseInt(color.split("|")[0]);
 				const lineSelected = this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStationConnections.some(stationConnection => stationConnection.routeColor === colorInt && stationConnection.stationIds[0] === stationId1 && stationConnection.stationIds[1] === stationId2);
 				const newColorInt = this.getColor(colorInt, colorInt, grayColorLight, grayColorDark, lineSelected);
-				const noService = false; // TODO;
+				const noService = false; // TODO
 				const colorOffset = (i - lineConnectionParts.length / 2 + 0.5) * 6 * SETTINGS.scale;
 				const routeTypeVisibility = this.mapDataService.routeTypeVisibility[color.split("|")[1]];
 				const dashed = routeTypeVisibility === "DASHED";
@@ -409,10 +418,11 @@ export class MapComponent implements AfterViewInit {
 
 				if (points.length >= 2) {
 					points.forEach(([x, y, offset]) => {
-						(noService ? positionsNormalDashed : positionsNormal).push(x + lineOffset, -y, offset ? -10000 : lineZ);
+						const newZ = hidden || offset ? -10000 : lineZ;
+						(noService ? positionsNormalDashed : positionsNormal).push(x, -y, newZ);
 						MapComponent.setColor(newColorInt, (noService ? colorsNormalDashed : colorsNormal));
 						if (hollow) {
-							(dashed ? positionsThinDashed : positionsThin).push(x + lineOffset, -y, offset ? -10000 : lineZ + 1);
+							(dashed ? positionsThinDashed : positionsThin).push(x, -y, newZ + 1);
 							MapComponent.setColor(backgroundColor, (dashed ? colorsThinDashed : colorsThin));
 						}
 					});
@@ -444,21 +454,25 @@ export class MapComponent implements AfterViewInit {
 		});
 
 		if (this.lineGeometryNormal) {
+			this.lineGeometryNormal.dispose();
 			this.lineGeometryNormal.setPositions(positionsNormal);
 			this.lineGeometryNormal.setColors(colorsNormal);
 		}
 
 		if (this.lineGeometryNormalDashed) {
+			this.lineGeometryNormalDashed.dispose();
 			this.lineGeometryNormalDashed.setPositions(positionsNormalDashed);
 			this.lineGeometryNormalDashed.setColors(colorsNormalDashed);
 		}
 
 		if (this.lineGeometryThin) {
+			this.lineGeometryThin.dispose();
 			this.lineGeometryThin.setPositions(positionsThin);
 			this.lineGeometryThin.setColors(colorsThin);
 		}
 
 		if (this.lineGeometryThinDashed) {
+			this.lineGeometryThinDashed.dispose();
 			this.lineGeometryThinDashed.setPositions(positionsThinDashed);
 			this.lineGeometryThinDashed.setColors(colorsThinDashed);
 		}

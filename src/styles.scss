@@ -10,11 +10,13 @@
 :root {
 	--background-color: var(--p-surface-50);
 	--light-color: var(--p-surface-400);
+	--banner-background-color: #ffd54f;
 }
 
 :root.dark-theme {
 	--background-color: var(--p-surface-950);
 	--light-color: var(--p-surface-600);
+	--banner-background-color: #ffb300;
 }
 
 html, body {
