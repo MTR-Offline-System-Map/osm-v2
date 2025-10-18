@@ -9,7 +9,7 @@ English | [简体中文](//github.com/MTR-Offline-System-Map/osm-v2/blob/main/RE
 
 Frontend of Offline System Map v2
 
-Original code: [Minecraft-Transit-Railway/Transport-Simulation-Core](//github.com/Minecraft-Transit-Railway/Transport-Simulation-Core/tree/master/buildSrc/src/main/resources/website)
+Original code: [Minecraft-Transit-Railway/Transport-Simulation-Core](//github.com/Minecraft-Transit-Railway/Transport-Simulation-Core/tree/master/website)
 
 Languages: English, 简体中文 (Simplified Chinese)
 

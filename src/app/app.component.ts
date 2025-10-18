@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, inject} from "@angular/core";
 import {MapComponent} from "./component/map/map.component";
 import {StationPanelComponent} from "./component/station-panel/station-panel.component";
 import {StationService} from "./service/station.service";
@@ -25,8 +25,8 @@ import {TooltipModule} from "primeng/tooltip";
 })
 export class AppComponent {
 
-	constructor(private readonly stationService: StationService, private readonly routeKeyService: RouteKeyService) {
-	}
+	private readonly stationService = inject(StationService);
+	private readonly routeKeyService = inject(RouteKeyService);
 
 	getTitle() {
 		return document.title;

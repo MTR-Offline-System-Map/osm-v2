@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from "@angular/core";
+import {Component, EventEmitter, inject, Output} from "@angular/core";
 import {MapDataService} from "../../service/map-data.service";
 import {ROUTE_TYPES, RouteType} from "../../data/routeType";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -37,6 +37,10 @@ import {AccordionModule} from "primeng/accordion";
 	styleUrl: "./main-panel.component.css",
 })
 export class MainPanelComponent {
+	private readonly mapDataService = inject(MapDataService);
+	private readonly dimensionService = inject(DimensionService);
+	private readonly themeService = inject(ThemeService);
+
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
 
@@ -48,14 +52,14 @@ export class MainPanelComponent {
 	});
 	protected readonly routeTypes: [string, RouteType][] = [];
 
-	constructor(private readonly mapDataService: MapDataService, private readonly dimensionService: DimensionService, private readonly themeService: ThemeService) {
-		mapDataService.dataProcessed.subscribe(() => {
+	constructor() {
+		this.mapDataService.dataProcessed.subscribe(() => {
 			if (!this.formGroup.getRawValue().dimension) {
-				this.formGroup.patchValue({dimension: dimensionService.getDimensions()[0]});
+				this.formGroup.patchValue({dimension: this.dimensionService.getDimensions()[0]});
 			}
 			this.routeTypes.length = 0;
 			Object.entries(ROUTE_TYPES).forEach(([routeTypeKey, routeType]) => {
-				if (routeTypeKey in mapDataService.routeTypeVisibility) {
+				if (routeTypeKey in this.mapDataService.routeTypeVisibility) {
 					this.routeTypes.push([routeTypeKey, routeType]);
 				}
 			});

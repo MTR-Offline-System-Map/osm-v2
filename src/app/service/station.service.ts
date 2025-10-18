@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {inject, Injectable} from "@angular/core";
 import {MapDataService} from "./map-data.service";
 import {ROUTE_TYPES} from "../data/routeType";
 import {DimensionService} from "./dimension.service";
@@ -10,10 +10,14 @@ const REFRESH_INTERVAL = 3000;
 
 @Injectable({providedIn: "root"})
 export class StationService extends SelectableDataServiceBase<void, Station> {
+	private readonly dataService = inject(MapDataService);
+
 	public readonly routesAtStation: { name: string, variations: string[], number: string, color: number, typeIcon: string }[] = [];
 	private hasTerminating = false;
 
-	constructor(private readonly dataService: MapDataService, dimensionService: DimensionService) {
+	constructor() {
+		const dimensionService = inject(DimensionService);
+		
 		super(stationId => this.dataService.stations.find(station => station.id === stationId), () => {
 			this.routesAtStation.length = 0;
 		}, () => {}, () => {

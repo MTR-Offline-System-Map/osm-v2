@@ -9,7 +9,7 @@
 
 离线线路图 v2 前端
 
-原版代码: [Minecraft-Transit-Railway/Transport-Simulation-Core](//github.com/Minecraft-Transit-Railway/Transport-Simulation-Core/tree/master/buildSrc/src/main/resources/website)
+原版代码: [Minecraft-Transit-Railway/Transport-Simulation-Core](//github.com/Minecraft-Transit-Railway/Transport-Simulation-Core/tree/master/website)
 
 语言: English (英语), 简体中文
 

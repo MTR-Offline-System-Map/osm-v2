@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {inject, Injectable} from "@angular/core";
 import {MapDataService} from "./map-data.service";
 import {SimplifyRoutesPipe} from "../pipe/simplifyRoutesPipe";
 import {Route} from "../entity/route";
@@ -9,9 +9,14 @@ import {MapSelectionService} from "./map-selection.service";
 
 @Injectable({providedIn: "root"})
 export class RouteVariationService extends SelectableDataServiceBase<void, Route> {
+	private readonly routeKeyService = inject(RouteKeyService);
+
 	public readonly routeStationDetails: { id: string, name: string }[] = [];
 
-	constructor(private readonly routeKeyService: RouteKeyService, dimensionService: DimensionService) {
+	constructor() {
+		
+		const dimensionService = inject(DimensionService);
+
 		super(routeId => {
 			this.routeStationDetails.length = 0;
 			const selectedRoutes = this.routeKeyService.getSelectedData();
@@ -28,14 +33,19 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 		}, () => {
 		}, 0, dimensionService);
 
-		routeKeyService.selectionChanged.subscribe(() => this.select(""));
+		this.routeKeyService.selectionChanged.subscribe(() => this.select(""));
 	}
 }
 
 @Injectable({providedIn: "root"})
 export class RouteKeyService extends SelectableDataServiceBase<void, Route[]> {
 
-	constructor(mapDataService: MapDataService, mapSelectionService: MapSelectionService, dimensionService: DimensionService) {
+	constructor() {
+
+		const mapDataService = inject(MapDataService);
+		const mapSelectionService = inject(MapSelectionService);
+		const dimensionService = inject(DimensionService);
+		
 		super(routeKey => {
 			mapSelectionService.selectedStationConnections.length = 0;
 			mapSelectionService.selectedStations.length = 0;
