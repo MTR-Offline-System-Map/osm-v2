@@ -90,10 +90,13 @@ export class SearchComponent {
 
 	onSelect(event: AutoCompleteSelectEvent) {
 		if (event?.value?.value) {
-			if (event.value.value.isStation) {
-				this.stationClicked.emit(event.value.value.key);
-			} else {
-				this.routeClicked.emit(event.value.value.key);
+			switch (event.value.value.type) {
+				case "station":
+					this.stationClicked.emit(event.value.value.key);
+					break;
+				case "route":
+					this.routeClicked.emit(event.value.value.key);
+					break;
 			}
 		}
 	}
