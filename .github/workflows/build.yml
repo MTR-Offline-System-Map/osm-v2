@@ -17,7 +17,7 @@ jobs:
           node-version: 20
       - name: Setup Node packages
         run: npm ci
-      - name: Build Angular (English)
+      - name: Build Angular
         run: bash build.sh
       - name: Capture English build artifact
         uses: actions/upload-artifact@main

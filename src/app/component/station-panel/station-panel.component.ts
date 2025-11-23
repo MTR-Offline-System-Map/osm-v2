@@ -51,7 +51,6 @@ export class StationPanelComponent {
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
 	@Output() directionsOpened = new EventEmitter<{ stationDetails: { stationId: string, isStartStation: boolean } }>;
-$localize: any;
 
 	getStation() {
 		return this.stationService.getSelectedData();
@@ -158,5 +157,17 @@ $localize: any;
 
 	isOffline() {
 		return this.dimensionService.isOffline();
+	}
+
+	getPlatformLocalize() {
+		return $localize`Platform `;
+	}
+
+	getEvery8SecondsLocalize() {
+		return $localize`Every 8 Seconds`;
+	}
+
+	getArrivedLocalize() {
+		return $localize`Arrived`;
 	}
 }
