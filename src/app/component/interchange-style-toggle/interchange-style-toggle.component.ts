@@ -22,12 +22,12 @@ export class InterchangeStyleToggleComponent {
 		{
 			icon: "more_horiz",
 			value: "DOTTED",
-			tooltip: $localize`Dotted`,
+			tooltip: "Dotted",
 		},
 		{
 			icon: "drag_handle",
 			value: "HOLLOW",
-			tooltip: $localize`Hollow`,
+			tooltip: "Hollow",
 		},
 	];
 

@@ -4,5 +4,5 @@ export class SearchData {
 	public readonly color?: number;
 	public readonly name: string = "";
 	public readonly number: string = "";
-	public readonly type: "station" | "route" = "station";
+	public readonly type: "station" | "route" | "client" = "station";
 }

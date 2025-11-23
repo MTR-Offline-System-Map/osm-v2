@@ -13,7 +13,10 @@ import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {ThemeService} from "../../service/theme.service";
 import {MapSelectionService} from "../../service/map-selection.service";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {ClientsService} from "../../service/clients.service";
 import {TooltipModule} from "primeng/tooltip";
+import {NgOptimizedImage} from "@angular/common";
+import {DimensionService} from "../../service/dimension.service";
 
 const blackColor = 0x000000;
 const whiteColor = 0xFFFFFF;
@@ -36,7 +39,8 @@ const animationDuration = 2000;
 	imports: [
 		TooltipModule,
 		ProgressSpinnerModule,
-		SplitNamePipe
+		SplitNamePipe,
+		NgOptimizedImage,
 	],
 	templateUrl: "./map.component.html",
 	styleUrls: ["./map.component.css"],
@@ -44,9 +48,12 @@ const animationDuration = 2000;
 export class MapComponent implements AfterViewInit {
 	private readonly mapDataService = inject(MapDataService);
 	private readonly mapSelectionService = inject(MapSelectionService);
+	private readonly clientsService = inject(ClientsService);
 	private readonly themeService = inject(ThemeService);
+	private readonly dimensionService = inject(DimensionService);
 
 	@Output() stationClicked = new EventEmitter<string>();
+	@Output() clientClicked = new EventEmitter<string>();
 	@ViewChild("wrapper") private readonly wrapperRef!: ElementRef<HTMLDivElement>;
 	@ViewChild("canvas") private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
 	@ViewChild("stats") private readonly statsRef!: ElementRef<HTMLDivElement>;
@@ -81,7 +88,7 @@ export class MapComponent implements AfterViewInit {
 	private lineGeometryThin: LineGeometry | undefined;
 	private lineGeometryThinDashed: LineGeometry | undefined;
 	private pointsForLineConnection: Record<string, [number, number, boolean][]> = {};
-	
+
 	constructor() {
 		this.canvas = () => this.canvasRef.nativeElement;
 	}
@@ -91,6 +98,7 @@ export class MapComponent implements AfterViewInit {
 		if (stats) {
 			this.statsRef.nativeElement.append(stats.dom);
 		}
+
 		this.scene.background = new THREE.Color(this.getBackgroundColor()).convertLinearToSRGB();
 		const renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas()});
 		renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
@@ -245,6 +253,14 @@ export class MapComponent implements AfterViewInit {
 				animationStartTime = Date.now();
 			}
 		});
+
+		if (!this.dimensionService.isOffline()) {
+			this.clientsService.dataProcessed.subscribe(() => {
+				if (!this.mapDataService.getMapLoading()) {
+					draw(true);
+				}
+			});
+		}
 	}
 
 	getLoading() {
@@ -255,6 +271,8 @@ export class MapComponent implements AfterViewInit {
 		const positions: number[] = [];
 		const colors: number[] = [];
 		const backgroundColor = this.getBackgroundColor();
+		const newClientImagePadding = clientImagePadding * SETTINGS.scale / this.camera.zoom / 2;
+		const newClientImageSize = clientImageSize * SETTINGS.scale / this.camera.zoom / 2;
 		this.clientPositions = {};
 		this.clientGroupsOnRouteRaw.length = 0;
 
@@ -294,7 +312,48 @@ export class MapComponent implements AfterViewInit {
 			const newHeight = height * 3 * SETTINGS.scale / this.camera.zoom;
 			processShape(x, -z, 7, newWidth, newHeight, rotate, adjustZ - 1, this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, stationSelected));
 			processShape(x, -z, 5, newWidth, newHeight, rotate, adjustZ, this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, stationSelected));
+
+			if (!this.dimensionService.isOffline()) {
+				const clientGroups = this.clientsService.getClientGroupsForStation()[id];
+				if (clientGroups) {
+					const clientCount = clientGroups.clients.length;
+					const newClientImageWidth = newClientImageSize * clientCount + newClientImagePadding * (clientCount - 1);
+					processShape(x, -z, 7, newClientImageWidth, newClientImageSize, false, adjustZ - 1, this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, stationSelected));
+					processShape(x, -z, 5, newClientImageWidth, newClientImageSize, false, adjustZ, this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, stationSelected));
+				}
+			}
 		});
+
+		if (!this.dimensionService.isOffline()) {
+			Object.values(this.clientsService.allClients).forEach(({id, rawX, rawZ}) => this.clientPositions[id] = {x: rawX, y: -rawZ});
+			Object.entries(this.clientsService.getClientGroupsForRoute()).forEach(([routeKey, {clients, x, z, route, routeStationId1, routeStationId2}]) => {
+				const points = this.pointsForLineConnection[routeKey];
+				if (points) {
+					let closestX = 0;
+					let closestY = 0;
+					let shortestDistance = Number.MAX_SAFE_INTEGER;
+					for (let i = 1; i < points.length; i++) {
+						const [x1, z1] = points[i - 1];
+						const [x2, z2] = points[i];
+						const {closestPoint, distance} = MapComponent.closestPointAndDistanceToSegment(x1, -z1, x2, -z2, x, -z);
+						if (distance < shortestDistance) {
+							shortestDistance = distance;
+							closestX = closestPoint.x;
+							closestY = closestPoint.y;
+						}
+					}
+
+					const color = route?.color ?? 0;
+					const lineSelected = this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStationConnections.some(stationConnection => stationConnection.routeColor === color && stationConnection.stationIds[0] === routeStationId1 && stationConnection.stationIds[1] === routeStationId2);
+					const adjustZ = lineSelected ? 18 : -2;
+					const clientCount = clients.length;
+					const newClientImageWidth = newClientImageSize * clientCount + newClientImagePadding * (clientCount - 1);
+					processShape(closestX, closestY, 5, newClientImageWidth, newClientImageSize, false, adjustZ, this.getColor(color, color, grayColorLight, grayColorDark, lineSelected));
+					clients.forEach(({id}) => this.clientPositions[id] = {x: closestX, y: closestY});
+					this.clientGroupsOnRouteRaw.push({clients, x: closestX, y: closestY});
+				}
+			});
+		}
 
 		if (this.stationGeometry) {
 			this.stationGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
@@ -430,6 +489,8 @@ export class MapComponent implements AfterViewInit {
 							MapComponent.setColor(backgroundColor, (dashed ? colorsThinDashed : colorsThin));
 						}
 					});
+
+					this.pointsForLineConnection[ClientsService.getRouteConnectionKey(stationId1, stationId2, colorInt)] = points;
 				}
 
 				if (oneWayPoints.length >= 2) {
@@ -499,23 +560,28 @@ export class MapComponent implements AfterViewInit {
 			const {id, name, getIcons, x, z} = station;
 			const canvasX = (x - this.camera.position.x) * this.camera.zoom;
 			const canvasY = (z + this.camera.position.y) * this.camera.zoom;
+			const clientGroup = this.clientsService.getClientGroupsForStation()[id];
 
-			if (Math.abs(canvasX) <= halfCanvasWidth && Math.abs(canvasY) <= halfCanvasHeight && renderedTextCount < SETTINGS.maxText * 2 && (this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id))) {
+			if (Math.abs(canvasX) <= halfCanvasWidth && Math.abs(canvasY) <= halfCanvasHeight && (clientGroup || renderedTextCount < SETTINGS.maxText * 2) && (this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id))) {
 				const newWidth = width * 3 * SETTINGS.scale;
 				const newHeight = height * 3 * SETTINGS.scale;
+				const clientsHeight = clientGroup ? clientImageSize * SETTINGS.scale / 2 : 0;
+				const clientsWidth = clientGroup ? clientsHeight * clientGroup.clients.length + clientImagePadding * SETTINGS.scale * (clientGroup.clients.length - 1) / 2 : 0;
 				const rotatedSize = (newHeight + newWidth) * Math.SQRT1_2;
-				const textOffset = rotate ? rotatedSize : newHeight + 9 * SETTINGS.scale;
+				const textOffset = Math.max(rotate ? rotatedSize : newHeight, clientsHeight) + 9 * SETTINGS.scale;
 				const icons = getIcons(type => this.mapDataService.routeTypeVisibility[type] === "HIDDEN");
 				this.textLabels.push({
 					hoverOverride: false,
 					id,
 					text: name,
 					icons,
-					shouldRenderText: renderedTextCount < SETTINGS.maxText,
+					shouldRenderText: !!clientGroup || renderedTextCount < SETTINGS.maxText,
+					clients: this.dimensionService.isOffline() ? clientGroup?.clients : [],
+					clientImagePadding: clientImagePadding * SETTINGS.scale,
 					x: canvasX + halfCanvasWidth,
 					y: canvasY + halfCanvasHeight - textOffset,
-					stationWidth: rotate ? rotatedSize : newWidth * 2 + 18 * SETTINGS.scale,
-					stationHeight: rotate ? rotatedSize : newHeight * 2 + 18 * SETTINGS.scale,
+					stationWidth: Math.max(rotate ? rotatedSize : newWidth, clientsWidth) * 2 + 18 * SETTINGS.scale,
+					stationHeight: Math.max(rotate ? rotatedSize : newHeight, clientsHeight) * 2 + 18 * SETTINGS.scale,
 				});
 				renderedTextCount++;
 			}
@@ -532,6 +598,19 @@ export class MapComponent implements AfterViewInit {
 				y: canvasY + halfCanvasHeight - clientImageSize * SETTINGS.scale / 2,
 			});
 		});
+
+		if (!this.dimensionService.isOffline()) {
+			this.clientsService.allClientsNotInStationOrRoute.forEach(({id, name, rawX, rawZ}) => {
+				const canvasX = (rawX - this.camera.position.x) * this.camera.zoom;
+				const canvasY = (rawZ + this.camera.position.y) * this.camera.zoom;
+				this.clientGroupsOnRoute.push({
+					clients: [{id, name}],
+					clientImagePadding: clientImagePadding * SETTINGS.scale,
+					x: canvasX + halfCanvasWidth,
+					y: canvasY + halfCanvasHeight - clientImageSize * SETTINGS.scale / 2,
+				});
+			});
+		}
 	}
 
 	private centerMap() {
@@ -603,6 +682,8 @@ class TextLabel {
 	public readonly text: string = "";
 	public readonly icons: string[] = [];
 	public readonly shouldRenderText: boolean = false;
+	public readonly clients?: { id: string, name: string }[];
+	public readonly clientImagePadding: number = 0;
 	public readonly x: number = 0;
 	public readonly y: number = 0;
 	public readonly stationWidth: number = 0;

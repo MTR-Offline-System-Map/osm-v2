@@ -29,7 +29,9 @@
               "@angular/localize/init"
             ],
 						"tsConfig": "tsconfig.app.json",
-						"assets": [],
+						"assets": [
+							"src/assets"
+						],
 						"styles": [
 							"src/styles.scss"
 						],
@@ -62,7 +64,6 @@
 							"localize": true
 						},
 						"development": {
-							"localize": true,
 							"optimization": false,
 							"extractLicenses": false,
 							"sourceMap": true
@@ -73,9 +74,6 @@
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
-						"zh-Hans": {
-							"buildTarget": "osm:build:zh-Hans"
-						},
 						"production": {
 							"buildTarget": "osm:build:production"
 						},

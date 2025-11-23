@@ -9,6 +9,8 @@ export class StationsAndRoutesDTO {
 
 	public readonly dimensions: string[] = [];
 
+	public readonly offline: boolean = false;
+
 	public constructor() {
 	}
 }

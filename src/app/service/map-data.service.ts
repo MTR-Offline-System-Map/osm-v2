@@ -12,7 +12,6 @@ import {StationDTO} from "../entity/generated/station";
 import {Station} from "../entity/station";
 import {RouteDTO} from "../entity/generated/route";
 import {StationForMap} from "../entity/stationForMap";
-import {environment} from "../../environments/environment";
 
 const REFRESH_INTERVAL = 30000;
 
@@ -36,10 +35,9 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly animateClient = new EventEmitter<string>();
 
 	constructor() {
-		
 		const dimensionService = inject(DimensionService);
-		
-		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(environment.dataUrl + this.dimensionService.getDimensionIndex()), ({data}) => {
+
+		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(this.getUrl("stations-and-routes")), ({data}) => {
 			this.routes.length = 0;
 			this.stations.length = 0;
 
@@ -101,8 +99,9 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			}
 
 			this.dimensionService.setDimensions(data.dimensions);
+			this.dimensionService.isOffline.set(data.offline);
 			this.updateData();
-		}, REFRESH_INTERVAL, dimensionService);
+		}, REFRESH_INTERVAL, dimensionService, false);
 
 		this.fetchData("");
 

@@ -18,9 +18,10 @@ export class RouteDisplayComponent implements AfterViewInit {
 	@Input() colorAbove?: number;
 	@Input() colorBelow?: number;
 	@Input({required: true}) isStation = false;
+	@Input({required: true}) icons: { icon: string, offset: number, tooltip?: string }[] = [];
 	@ViewChild("text") private readonly textRef!: ElementRef<HTMLDivElement>;
 	private height = 0;
-	
+
 	ngAfterViewInit(): void {
 		new ResizeObserver(entries => entries.forEach(entry => this.height = entry.target.clientHeight)).observe(this.textRef.nativeElement);
 	}

@@ -12,6 +12,8 @@ import {SelectItemGroup} from "primeng/api";
 import {DataListEntryComponent} from "../data-list-entry/data-list-entry.component";
 import {FormatColorPipe} from "../../pipe/formatColorPipe";
 import {SearchData} from "../../entity/searchData";
+import {ClientsService} from "../../service/clients.service";
+import {DimensionService} from "../../service/dimension.service";
 
 
 const maxResults = 50;
@@ -34,11 +36,14 @@ const maxResults = 50;
 })
 export class SearchComponent {
 	private readonly dataService = inject(MapDataService);
+	private readonly clientsService = inject(ClientsService);
+	private readonly dimensionService = inject(DimensionService);
 	private readonly simplifyStationsPipe = inject(SimplifyStationsPipe);
 	private readonly simplifyRoutesPipe = inject(SimplifyRoutesPipe);
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
+	@Output() clientClicked = new EventEmitter<string>();
 	@Output() textCleared = new EventEmitter<void>();
 	@Input({required: true}) label = "";
 	@Input({required: true}) parentFormGroup!: FormGroup;
@@ -54,7 +59,7 @@ export class SearchComponent {
 		if (event.query === "") {
 			this.textCleared.emit();
 		} else {
-			const filter = (list: SearchData[]): { value: { key: string, icons: string[], color?: number, name: string, number: string, type: "station" | "route" } }[] => {
+			const filter = (list: SearchData[]): { value: { key: string, icons: string[], color?: number, name: string, number: string, type: "station" | "route" | "client" } }[] => {
 				const matches: { value: SearchData, index: number }[] = [];
 				list.forEach(({key, icons, color, name, number, type}) => {
 					const index = name.toLowerCase().indexOf(event.query.toLowerCase());
@@ -71,6 +76,7 @@ export class SearchComponent {
 
 			const searchedStations = filter(this.simplifyStationsPipe.transform(this.dataService.stations));
 			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes) : []);
+			const searchedClients = filter(!this.dimensionService.isOffline() ? this.clientsService.allClients.map(client => ({key: client.id, icons: [`https://mc-heads.net/avatar/${client.id}`], name: client.name, number: "", type: "client"})) : []);
 
 			if (searchedStations.length > 0) {
 				this.data.push({
@@ -85,6 +91,13 @@ export class SearchComponent {
 					items: searchedRoutes,
 				});
 			}
+
+			if (searchedClients.length > 0) {
+				this.data.push({
+					label: $localize`Players`,
+					items: searchedClients,
+				});
+			}
 		}
 	}
 
@@ -96,6 +109,9 @@ export class SearchComponent {
 					break;
 				case "route":
 					this.routeClicked.emit(event.value.value.key);
+					break;
+				case "client":
+					this.clientClicked.emit(event.value.value.key);
 					break;
 			}
 		}

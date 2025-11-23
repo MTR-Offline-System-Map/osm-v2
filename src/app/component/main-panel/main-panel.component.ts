@@ -15,6 +15,8 @@ import {VisibilityToggleComponent} from "../visibility-toggle/visibility-toggle.
 import {InterchangeStyleToggleComponent} from "../interchange-style-toggle/interchange-style-toggle.component";
 import {SearchComponent} from "../search/search.component";
 import {AccordionModule} from "primeng/accordion";
+import {ClientsService} from "../../service/clients.service";
+import {DataListEntryComponent} from "../data-list-entry/data-list-entry.component";
 
 @Component({
 	selector: "app-main-panel",
@@ -31,7 +33,9 @@ import {AccordionModule} from "primeng/accordion";
 		ReactiveFormsModule,
 		SearchComponent,
 		VisibilityToggleComponent,
-		InterchangeStyleToggleComponent
+		InterchangeStyleToggleComponent,
+		DataListEntryComponent,
+
 	],
 	templateUrl: "./main-panel.component.html",
 	styleUrl: "./main-panel.component.css",
@@ -39,10 +43,13 @@ import {AccordionModule} from "primeng/accordion";
 export class MainPanelComponent {
 	private readonly mapDataService = inject(MapDataService);
 	private readonly dimensionService = inject(DimensionService);
+	private readonly clientsService = inject(ClientsService);
 	private readonly themeService = inject(ThemeService);
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
+	@Output() clientClicked = new EventEmitter<string>();
+	@Output() directionsOpened = new EventEmitter<void>();
 
 	protected readonly formGroup = new FormGroup({
 		search: new FormControl(""),
@@ -70,6 +77,10 @@ export class MainPanelComponent {
 		return this.mapDataService.stationConnections.length > 0;
 	}
 
+	isOffline() {
+		return this.dimensionService.isOffline();
+	}
+
 	getDimensions() {
 		return this.dimensionService.getDimensions();
 	}
@@ -81,6 +92,10 @@ export class MainPanelComponent {
 		}
 	}
 
+	getAllClients() {
+		return this.clientsService.allClients;
+	}
+
 	clickStation(id: string) {
 		this.stationClicked.emit(id);
 		this.formGroup.patchValue({search: undefined});
@@ -88,6 +103,11 @@ export class MainPanelComponent {
 
 	clickRoute(id: string) {
 		this.routeClicked.emit(id);
+		this.formGroup.patchValue({search: undefined});
+	}
+
+	clickClient(id: string) {
+		this.clientClicked.emit(id);
 		this.formGroup.patchValue({search: undefined});
 	}
 

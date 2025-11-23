@@ -40,6 +40,6 @@ export class SimplifyRoutesPipe implements PipeTransform {
 	}
 
 	public static getDeviationString(realtime: boolean, deviation: number) {
-		return realtime ? deviation > 0 ? "delay" : "early" : "Scheduled";
+		return realtime ? deviation > 0 ? $localize`delay` : $localize`early` : $localize`Scheduled`;
 	}
 }

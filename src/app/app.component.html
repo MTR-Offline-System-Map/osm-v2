@@ -1,28 +1,44 @@
-<div class="banner">
+<div class="banner" [hidden]="!isOffline()">
   <p i18n>Offline System Map updates could be delayed. Actual conditions may vary.</p>
 </div>
 
-<app-drawer #sideMain i18n-title="@@title" title="Offline System Map">
+<app-drawer #sideMain title="Transport System Map" i18n-title>
 	<app-main-panel
 			class="wrapper"
-			(stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, true)"
-			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideRoute)"/>
+			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, true)"
+			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"
+			(clientClicked)="onClickClient($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"
+			(directionsOpened)="onOpenDirections(undefined, sideMain, sideStation, sideClient, sideDirections, sideRoute)"/>
 </app-drawer>
 
 <app-drawer #sideStation i18n-title title="Station Details" (closed)="onCloseStation()">
 	<app-station-panel
-			(stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, true)"
-			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideRoute)"/>
+			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, true)"
+			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"
+			(directionsOpened)="onOpenDirections($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"/>
+</app-drawer>
+
+
+<app-drawer #sideClient i18n-title title="Player" (closed)="onCloseClient()">
+	<app-client-panel
+			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, true)"
+			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"
+			(directionsOpened)="onOpenDirections($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"/>
+</app-drawer>
+
+<app-drawer #sideDirections i18n-title title="Directions" (closed)="onCloseDirections()">
+	<app-directions/>
 </app-drawer>
 
 <app-drawer #sideRoute i18n-title title="Route Details" (closed)="onCloseRoute()">
 	<app-route-panel
-			(stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, true)"
-			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideRoute)"/>
+			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, true)"
+			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"/>
 </app-drawer>
 
 <app-map
-		(stationClicked)="onClickStation($event, sideMain, sideStation, sideRoute, false)"/>
-<button pButton class="button-corner" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="onClickMain(sideMain, sideStation, sideRoute)" i18n-pTooltip pTooltip="Menu" tooltipPosition="left">
+		(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, false)"
+		(clientClicked)="onClickClient($event, sideMain, sideStation, sideClient, sideDirections, sideRoute)"/>
+<button pButton class="button-corner" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="onClickMain(sideMain, sideStation, sideClient, sideDirections, sideRoute)" i18n-pTooltip pTooltip="Menu" tooltipPosition="left">
 	<div class="material-icons">menu</div>
 </button>

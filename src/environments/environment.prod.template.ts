@@ -1,3 +1,5 @@
 export const environment = {
-  dataUrl: "https://fastly.jsdelivr.net/gh/$GH_USER/$GH_REPO@$GH_BRANCH$GH_PATH"
+  dataUrl: "https://fastly.jsdelivr.net/gh/$GH_USER/$GH_REPO@$GH_BRANCH$GH_PATH",
+  useSlash: true,
+  dimensions: [],
 };

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, inject, Output} from "@angular/core";
-import {StationService} from "../../service/station.service";
+import {Arrival, StationService} from "../../service/station.service";
 import {FormatNamePipe} from "../../pipe/formatNamePipe";
 import {FormatColorPipe} from "../../pipe/formatColorPipe";
 import {MapDataService} from "../../service/map-data.service";
@@ -15,32 +15,43 @@ import {DividerModule} from "primeng/divider";
 import {DialogModule} from "primeng/dialog";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ChipModule} from "primeng/chip";
+import {FormatTimePipe} from "../../pipe/formatTimePipe";
+import {FormatDatePipe} from "../../pipe/formatDatePipe";
+import {SplitNamePipe} from "../../pipe/splitNamePipe";
+import {DimensionService} from "../../service/dimension.service";
 
 @Component({
 	selector: "app-station-panel",
 	imports: [
-    ButtonModule,
-    TooltipModule,
-    TabsModule,
-    CheckboxModule,
-    ChipModule,
-    DividerModule,
-    ProgressSpinnerModule,
-    DialogModule,
-    FormatNamePipe,
-    FormatColorPipe,
-    DataListEntryComponent,
-    TitleComponent
-],
+		ButtonModule,
+		TooltipModule,
+		TabsModule,
+		CheckboxModule,
+		ChipModule,
+		DividerModule,
+		ProgressSpinnerModule,
+		DialogModule,
+		FormatNamePipe,
+		FormatColorPipe,
+		FormatDatePipe,
+		FormatTimePipe,
+		SplitNamePipe,
+		DataListEntryComponent,
+		TitleComponent,
+	],
 	templateUrl: "./station-panel.component.html",
 	styleUrl: "./station-panel.component.css",
 })
 export class StationPanelComponent {
 	private readonly dataService = inject(MapDataService);
 	private readonly stationService = inject(StationService);
+	private readonly dimensionService = inject(DimensionService);
 
+	protected dialogData?: Arrival;
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
+	@Output() directionsOpened = new EventEmitter<{ stationDetails: { stationId: string, isStartStation: boolean } }>;
+$localize: any;
 
 	getStation() {
 		return this.stationService.getSelectedData();
@@ -76,6 +87,14 @@ export class StationPanelComponent {
 		}
 	}
 
+	getActiveRoutes() {
+		return this.stationService.arrivalsRoutes;
+	}
+
+	getArrivals() {
+		return this.stationService.getArrivals();
+	}
+
 	getRoutes() {
 		return this.stationService.routesAtStation;
 	}
@@ -86,6 +105,22 @@ export class StationPanelComponent {
 
 	mapRouteVariations(variations: string[]): [string, string][] {
 		return variations.map(variation => [variation, ""]);
+	}
+
+	updateArrivalFilter(filterArrivalShowTerminating: boolean, toggleRouteKey?: string) {
+		this.stationService.updateArrivalFilter(filterArrivalShowTerminating, toggleRouteKey);
+	}
+
+	routeFiltered(routeKey: string) {
+		return this.stationService.routeFiltered(routeKey);
+	}
+
+	resetArrivalFilter() {
+		this.stationService.resetArrivalFilter();
+	}
+
+	getHasTerminating() {
+		return this.stationService.getHasTerminating();
 	}
 
 	isLoading() {
@@ -106,7 +141,22 @@ export class StationPanelComponent {
 		}
 	}
 
+	openDirections(isStartStation: boolean) {
+		const station = this.stationService.getSelectedData();
+		if (station) {
+			this.directionsOpened.emit({stationDetails: {stationId: station.id, isStartStation}});
+		}
+	}
+
+	showDetails(arrival: Arrival) {
+		this.dialogData = arrival;
+	}
+
 	getRouteKey(route: { color: number, name: string, number: string }) {
 		return SimplifyRoutesPipe.getRouteKey(route);
+	}
+
+	isOffline() {
+		return this.dimensionService.isOffline();
 	}
 }

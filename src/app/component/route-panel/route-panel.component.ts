@@ -6,12 +6,14 @@ import {DataListEntryComponent} from "../data-list-entry/data-list-entry.compone
 import {FormatTimePipe} from "../../pipe/formatTimePipe";
 import {ROUTE_TYPES} from "../../data/routeType";
 import {TitleComponent} from "../title/title.component";
+import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 import {TooltipModule} from "primeng/tooltip";
 import {CheckboxModule} from "primeng/checkbox";
 import {DividerModule} from "primeng/divider";
 import {SelectModule} from "primeng/select";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {FormsModule} from "@angular/forms";
+import {DimensionService} from "../../service/dimension.service";
 
 @Component({
 	selector: "app-route-panel",
@@ -22,6 +24,7 @@ import {FormsModule} from "@angular/forms";
 		DividerModule,
 		TooltipModule,
 		FormatNamePipe,
+		FormatTimePipe,
 		RouteDisplayComponent,
 		DataListEntryComponent,
 		TitleComponent,
@@ -31,6 +34,7 @@ import {FormsModule} from "@angular/forms";
 	styleUrl: "./route-panel.component.css",
 })
 export class RoutePanelComponent {
+	private readonly dimensionService = inject(DimensionService);
 	private readonly routeVariationService = inject(RouteVariationService);
 	private readonly routeKeyService = inject(RouteKeyService);
 	private readonly formatTimePipe = inject(FormatTimePipe);
@@ -78,7 +82,28 @@ export class RoutePanelComponent {
 		return route ? [...new Set(route.depots)].sort() : [];
 	}
 
+	getVehicleIcons(vehicles: { deviation: number, percentage: number }[], displayHeight: number) {
+		const icon = this.getRouteIcon() ?? "";
+		return vehicles.map(vehicle => ({icon, offset: vehicle.percentage * displayHeight / 2, tooltip: `${this.formatTimePipe.transform(Math.abs(Math.round(vehicle.deviation / 1000)), "")} ${SimplifyRoutesPipe.getDeviationString(true, vehicle.deviation)}`}));
+	}
+
 	getRouteStationDetails() {
 		return this.routeVariationService.routeStationDetails;
+	}
+
+	getTotalDurationSeconds() {
+		return this.routeVariationService.getTotalDurationSeconds();
+	}
+
+	hasDurations() {
+		return this.routeVariationService.routeStationDetails[0]?.durationSeconds;
+	}
+
+	hasDwellTimes() {
+		return this.routeVariationService.routeStationDetails[0]?.dwellTimeSeconds;
+	}
+
+	isOnline() {
+		return !this.dimensionService.isOffline();
 	}
 }

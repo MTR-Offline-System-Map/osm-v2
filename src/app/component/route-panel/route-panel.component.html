@@ -7,11 +7,19 @@
 			</p-select>
 			<label for="dropdown" i18n>Route Variation</label>
 		</p-float-label>
+		@if (getTotalDurationSeconds(); as totalDurationSeconds) {
+			<div class="row gap center">
+				<div class="row gap center" pTooltip="Total Duration" tooltipPosition="left">
+					<div class="material-icons">schedule</div>
+					<div>{{ totalDurationSeconds | formatTime : "" }}</div>
+				</div>
+			</div>
+		}
 		<div class="row gap center">
 			<div class="row gap center" i18n-pTooltip pTooltip="Depot(s) For Route" tooltipPosition="left">
 				<div class="material-icons">home</div>
 				@if (getRouteDepots().length === 0) {
-					<div>(None)</div>
+					<div i18n>(None)</div>
 				} @else {
 					<div class="column gap-small">
 						@for (depot of getRouteDepots(); track $index) {
@@ -28,14 +36,38 @@
 	</div>
 
 	<div class="column gap padding-sides content">
+		<div class="row gap-small center" [style.display]="isOnline() && hasDurations() ? '' : 'none'">
+			<p-checkbox #showDurationsCheckbox inputId="showDurationsCheckbox" [binary]="true"/>
+			<label for="showDurationsCheckbox" i18n>Show Travel Times</label>
+		</div>
+		<div class="row gap-small center" [style.display]="isOnline() && hasDwellTimes() ? '' : 'none'">
+			<p-checkbox #showDwellTimesCheckbox inputId="showDwellTimesCheckbox" [binary]="true"/>
+			<label for="showDwellTimesCheckbox" i18n>Show Dwell Times</label>
+		</div>
 		<div class="column">
 			@for (stationDetails of getRouteStationDetails(); track $index) {
-				<app-route-display [colorAbove]="$index > 0 ? getRouteColor() : undefined" [colorBelow]="$index < $count - 1 ? getRouteColor() : undefined" [isStation]="true">
+				<app-route-display #display1 [colorAbove]="$index > 0 ? getRouteColor() : undefined" [colorBelow]="$index < $count - 1 ? getRouteColor() : undefined" [isStation]="true" [icons]="getVehicleIcons(stationDetails.vehicles, display1.getHeight() + display2.getHeight())">
 					<div class="row center">
 						<app-data-list-entry class="spacing" [icons]="[]" [title]="[stationDetails.name | formatName, '']" [subtitles]="[]" [useLightColor]="false" [clickable]="true" (entryClicked)="stationClicked.emit(stationDetails.id)"/>
+						@if (showDwellTimesCheckbox.checked && stationDetails.dwellTimeSeconds && isOnline()) {
+							<div class="row center duration" pTooltip="Dwell Time">
+								<div class="material-icons">hourglass_empty</div>
+								<div>&nbsp;{{ stationDetails.dwellTimeSeconds | formatTime :"" }}</div>
+							</div>
+						}
 					</div>
 				</app-route-display>
-				<app-route-display #display2 [colorAbove]="getRouteColor()" [colorBelow]="getRouteColor()" [isStation]="false" [style.display]="$index < $count - 1? '' : 'none'"></app-route-display>
+				<app-route-display #display2 [colorAbove]="getRouteColor()" [colorBelow]="getRouteColor()" [isStation]="false" [icons]="[]" [style.display]="$index < $count - 1? '' : 'none'">
+					@if (showDurationsCheckbox.checked && stationDetails.durationSeconds && isOnline()) {
+						<div class="row">
+							<div class="spacing"></div>
+							<div class="row center duration" pTooltip="Travel Time">
+								<div class="material-icons">{{ getRouteIcon() }}</div>
+								<div>&nbsp;{{ stationDetails.durationSeconds | formatTime :"" }}</div>
+							</div>
+						</div>
+					}
+				</app-route-display>
 			}
 		</div>
 	</div>

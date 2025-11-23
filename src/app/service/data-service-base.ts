@@ -1,6 +1,7 @@
 import {Observable} from "rxjs";
 import {DimensionService} from "./dimension.service";
 import {EventEmitter} from "@angular/core";
+import {environment} from "../../environments/environment";
 
 export abstract class DataServiceBase<T> {
 	public readonly dataProcessed = new EventEmitter<void>();
@@ -9,6 +10,7 @@ export abstract class DataServiceBase<T> {
 	private timeoutId = 0;
 
 	public readonly isLoading = () => this.loading;
+	protected readonly getUrl = (endpoint: string) => `${environment.dataUrl}/${endpoint}${environment.useSlash ? "/" : "?dimension=" }${this.dimensionService.getDimensionIndex()}`;
 	protected readonly fetchData = (id: string) => {
 		this.loading = true;
 		this.id = id;
@@ -16,33 +18,35 @@ export abstract class DataServiceBase<T> {
 		this.getDataInternal();
 	};
 
-	protected constructor(private readonly sendData: () => Observable<T> | void, private readonly processData: (data: T) => void, private readonly refreshInterval: number, protected readonly dimensionService: DimensionService) {
+	protected constructor(private readonly sendData: () => Observable<T> | void, private readonly processData: (data: T) => void, private readonly refreshInterval: number, protected readonly dimensionService: DimensionService, private readonly mustOnline: boolean) {
 	}
 
 	private getDataInternal() {
-		const observable = this.sendData();
-		if (observable) {
-			const currentId = this.formatId();
-			observable.subscribe({
-				next: data => {
-					if (currentId == this.formatId()) {
-						this.loading = false;
-						this.processData(data);
-						this.dataProcessed.emit();
-						this.scheduleData();
-					} else {
-						console.log("skipped");
-					}
-				},
-				error: error => {
-					if (currentId == this.formatId()) {
-						console.error(error);
-						this.scheduleData();
-					} else {
-						console.log("skipped");
-					}
-				},
-			});
+		if (!this.dimensionService.isOffline() || !this.mustOnline) {
+			const observable = this.sendData();
+			if (observable) {
+				const currentId = this.formatId();
+				observable.subscribe({
+					next: data => {
+						if (currentId == this.formatId()) {
+							this.loading = false;
+							this.processData(data);
+							this.dataProcessed.emit();
+							this.scheduleData();
+						} else {
+							console.log("skipped");
+						}
+					},
+					error: error => {
+						if (currentId == this.formatId()) {
+							console.error(error);
+							this.scheduleData();
+						} else {
+							console.log("skipped");
+						}
+					},
+				});
+			}
 		}
 	}
 

@@ -1,12 +1,16 @@
-import {Injectable} from "@angular/core";
+import {Injectable, signal, WritableSignal} from "@angular/core";
+import {environment} from "../../environments/environment";
 
 @Injectable({providedIn: "root"})
 export class DimensionService {
-	private dimensions: string[] = [];
+	private dimensions: string[] = environment.dimensions;
 	private dimensionIndex = 0;
+	public isOffline: WritableSignal<boolean> = signal(true);
 
 	public setDimensions(dimensions: string[]) {
-		this.dimensions = dimensions;
+		if (environment.dimensions.length == 0) {
+			this.dimensions = dimensions;
+		}
 		this.clampDimensionIndex();
 	}
 
