@@ -10,7 +10,7 @@ export abstract class DataServiceBase<T> {
 	private timeoutId = 0;
 
 	public readonly isLoading = () => this.loading;
-	protected readonly getUrl = (endpoint: string) => `${environment.dataUrl}${environment.useSlash ? "" : endpoint}${environment.useSlash ? "/" : "?dimension=" }${this.dimensionService.getDimensionIndex()}`;
+	protected readonly getUrl = (endpoint: string) => environment.dataUrl(endpoint, this.dimensionService.getDimensionIndex());
 	protected readonly fetchData = (id: string) => {
 		this.loading = true;
 		this.id = id;

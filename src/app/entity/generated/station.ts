@@ -15,6 +15,10 @@ export class StationDTO {
 
 	public readonly connections: string[] = [];
 
+	public readonly x?: number;
+	
+	public readonly z?: number;
+
 	public constructor(id: string, name: string, color: number, zone1: number, zone2: number, zone3: number) {
 		this.id = id;
 		this.name = name;

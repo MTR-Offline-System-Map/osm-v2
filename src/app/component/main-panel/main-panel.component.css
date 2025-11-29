@@ -1,3 +1,11 @@
 .shrink {
 	overflow: hidden;
 }
+
+.toggle {
+	min-height: 41.6px;
+}
+
+.theme-toggle {
+	margin-bottom: 1rem;
+}

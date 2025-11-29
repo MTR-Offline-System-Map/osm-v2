@@ -3,7 +3,6 @@ import {MapDataService} from "../../service/map-data.service";
 import {ROUTE_TYPES, RouteType} from "../../data/routeType";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DimensionService} from "../../service/dimension.service";
-import {ThemeService} from "../../service/theme.service";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {SelectModule} from "primeng/select";
 import {SelectButtonModule} from "primeng/selectbutton";
@@ -17,34 +16,36 @@ import {SearchComponent} from "../search/search.component";
 import {AccordionModule} from "primeng/accordion";
 import {ClientsService} from "../../service/clients.service";
 import {DataListEntryComponent} from "../data-list-entry/data-list-entry.component";
+import {environment} from "../../../environments/environment";
+import {setCookie} from "../../data/utilities";
+import {ThemeToggleComponent} from "../theme-toggle/theme-toggle.component";
 
 @Component({
 	selector: "app-main-panel",
 	imports: [
-		FloatLabelModule,
-		SelectModule,
-		SelectButtonModule,
-		ButtonModule,
-		ToggleSwitchModule,
-		DividerModule,
-		TooltipModule,
-		AccordionModule,
-		FormsModule,
-		ReactiveFormsModule,
-		SearchComponent,
-		VisibilityToggleComponent,
-		InterchangeStyleToggleComponent,
-		DataListEntryComponent,
-
-	],
+    FloatLabelModule,
+    SelectModule,
+    SelectButtonModule,
+    ButtonModule,
+    ToggleSwitchModule,
+    DividerModule,
+    TooltipModule,
+    AccordionModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SearchComponent,
+    VisibilityToggleComponent,
+    InterchangeStyleToggleComponent,
+    DataListEntryComponent,
+    ThemeToggleComponent
+],
 	templateUrl: "./main-panel.component.html",
 	styleUrl: "./main-panel.component.css",
 })
 export class MainPanelComponent {
-	private readonly mapDataService = inject(MapDataService);
+	private readonly dataService = inject(MapDataService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly clientsService = inject(ClientsService);
-	private readonly themeService = inject(ThemeService);
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
@@ -55,18 +56,19 @@ export class MainPanelComponent {
 		search: new FormControl(""),
 		dimension: new FormControl(""),
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
-		themeToggle: new FormControl(this.themeService.isDarkTheme()),
+		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
+		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
 	});
 	protected readonly routeTypes: [string, RouteType][] = [];
 
 	constructor() {
-		this.mapDataService.dataProcessed.subscribe(() => {
+		this.dataService.dataProcessed.subscribe(() => {
 			if (!this.formGroup.getRawValue().dimension) {
 				this.formGroup.patchValue({dimension: this.dimensionService.getDimensions()[0]});
 			}
 			this.routeTypes.length = 0;
 			Object.entries(ROUTE_TYPES).forEach(([routeTypeKey, routeType]) => {
-				if (routeTypeKey in this.mapDataService.routeTypeVisibility) {
+				if (routeTypeKey in this.dataService.routeTypeVisibility) {
 					this.routeTypes.push([routeTypeKey, routeType]);
 				}
 			});
@@ -74,7 +76,7 @@ export class MainPanelComponent {
 	}
 
 	hasInterchanges() {
-		return this.mapDataService.stationConnections.length > 0;
+		return this.dataService.hasConnections();
 	}
 
 	isOffline() {
@@ -88,7 +90,7 @@ export class MainPanelComponent {
 	setDimension() {
 		const data = this.formGroup.getRawValue();
 		if (data.dimension) {
-			this.mapDataService.setDimension(data.dimension);
+			this.dataService.setDimension(data.dimension);
 		}
 	}
 
@@ -111,7 +113,33 @@ export class MainPanelComponent {
 		this.formGroup.patchValue({search: undefined});
 	}
 
-	changeTheme(isDarkTheme: boolean) {
-		this.themeService.setTheme(isDarkTheme);
+	getEnableShowHiddenRoutes() {
+		return environment.enableShowHiddenRoutes;
+	}
+
+	getEnableShowAllStations() {
+		return environment.enableShowAllStations && this.dimensionService.includeMarkers();
+	}
+
+	getPlayersLocalize() {
+		return $localize`Players`;
+	}
+
+	getShowHiddenRoutes() {
+		return this.dataService.getShowHiddenRoutes();
+	}
+
+	getShowAllStations() {
+		return this.dataService.getShowAllStations();
+	}
+
+	setShowHiddenRoutes(value: boolean) {
+		setCookie("show_hidden_routes", value.toString());
+		window.location.reload();
+	}
+
+	setShowAllStations(value: boolean) {
+		setCookie("show_all_stations", value.toString());
+		window.location.reload();
 	}
 }

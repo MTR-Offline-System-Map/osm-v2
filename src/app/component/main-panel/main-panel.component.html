@@ -3,7 +3,8 @@
 		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeRoutes]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)"/>
 		<p-float-label variant="in">
 			<p-select inputId="dropdown" formControlName="dimension" [options]="getDimensions()" (onChange)="setDimension()" [fluid]="true"/>
-			<label for="dropdown" i18n>Dimension</label>
+			<label for="dropdown" i18n>Time or Data Source</label>
+			<!-- <label for="dropdown" i18n>Time or Data Source</label> -->
 		</p-float-label>
 		<button pButton class="icon-button" severity="secondary" (click)="directionsOpened.emit()" [fluid]="true" [style.display]="isOffline() ? 'none' : ''">
 			<div class="row gap-small">
@@ -22,6 +23,20 @@
 						<app-visibility-toggle [routeType]="routeType[0]"/>
 					</div>
 				}
+				@if (getEnableShowHiddenRoutes()) {
+					<div class="row gap center toggle">
+						<div class="material-icons">visibility_off</div>
+						<div class="shrink spacing" i18n>Show Hidden Routes</div>
+						<p-toggle-switch inputId="showHiddenRoutesToggle" formControlName="showHiddenRoutesToggle" (onChange)="setShowHiddenRoutes($event.checked)"/>
+					</div>
+				}
+				@if (getEnableShowAllStations()) {
+					<div class="row gap center toggle">
+						<div class="material-icons">visibility_off</div>
+						<div class="shrink spacing" i18n>Show All Stations</div>
+						<p-toggle-switch inputId="showAllStationsToggle" formControlName="showAllStationsToggle" (onChange)="setShowAllStations($event.checked)"/>
+					</div>
+				}
 			</div>
 			@if (hasInterchanges()) {
 				<p-divider/>
@@ -35,10 +50,10 @@
 			<div [hidden]="isOffline()">
 				<p-accordion [multiple]="true">
 					<p-accordion-panel>
-						<p-accordion-header><span i18n>Players</span> ({{ getAllClients().length }})</p-accordion-header>
+						<p-accordion-header>{{ getPlayersLocalize() }} ({{ getAllClients().length }})</p-accordion-header>
 						<p-accordion-content>
 							@if (getAllClients().length === 0) {
-								<div>There are no players online.</div>
+								<div i18n>There are no players online.</div>
 							} @else {
 								<div class="column gap-small">
 									@for (client of getAllClients(); track $index) {
@@ -59,11 +74,12 @@
 				</button>
 			</a>
 			<p-divider/>
+			<div class="row gap center theme-toggle">
+				<div class="material-icons">palette</div>
+				<div class="shrink spacing" i18n>Theme</div>
+				<app-theme-toggle/>
+			</div>
 		</div>
 		<div class="spacing"></div>
-		<div class="row gap-small center padding-sides padding-top-bottom">
-			<p-toggle-switch inputId="themeToggle" formControlName="themeToggle" (onChange)="changeTheme($event.checked)"/>
-			<label for="themeToggle" i18n>Dark Theme</label>
-		</div>
 	</div>
 </div>

@@ -9,6 +9,6 @@ sed -i "s|\$GH_REPO|${GH_REPO}|g" ./src/environments/environment.prod.ts
 sed -i "s|\$GH_PATH|${GH_PATH}|g" ./src/environments/environment.prod.ts
 sed -i "s|\$GH_BRANCH|${GH_BRANCH}|g" ./src/environments/environment.prod.ts
 
-npm run ng build --configuration=production
+npm run ng prod
 
 cp ./_redirects ./dist/osm/browser/

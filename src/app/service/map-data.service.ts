@@ -1,4 +1,4 @@
-import {arrayAverage, getCookie, getFromArray, pushIfNotExists, setIfUndefined} from "../data/utilities";
+import {arrayAverage, getCookie, getFromArray, getFromArrayU, pushIfNotExists, setIfUndefined} from "../data/utilities";
 import {ROUTE_TYPES} from "../data/routeType";
 import {LineConnection} from "../entity/lineConnection";
 import {StationConnection} from "../entity/stationConnection";
@@ -12,6 +12,7 @@ import {StationDTO} from "../entity/generated/station";
 import {Station} from "../entity/station";
 import {RouteDTO} from "../entity/generated/route";
 import {StationForMap} from "../entity/stationForMap";
+import {environment} from "../../environments/environment";
 
 const REFRESH_INTERVAL = 30000;
 
@@ -22,13 +23,16 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly routes: Route[] = [];
 	public readonly stations: Station[] = [];
 	public readonly routeTypeVisibility: Record<string, "HIDDEN" | "SOLID" | "HOLLOW" | "DASHED"> = {};
-	public interchangeStyle: "DOTTED" | "HOLLOW";
+	public interchangeStyle: "HIDDEN" | "DOTTED" | "HOLLOW";
 	public readonly stationConnections: StationConnection[] = [];
 	public readonly lineConnections: LineConnection[] = [];
 	public readonly stationsForMap: StationForMap[] = [];
 	private centerX = 0;
 	private centerY = 0;
 	private mapLoading = true;
+	private showHiddenRoutes: boolean = false;
+	private showAllStations: boolean = false;
+	private hasConnection: boolean = false;
 
 	public readonly drawMap = new EventEmitter<void>();
 	public readonly animateMap = new EventEmitter<{ x: number, z: number }>();
@@ -46,7 +50,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			const stationIdToPosition: Record<string, { x: number[], y: number[], z: number[] }> = {};
 			const availableRouteTypes: string[] = [];
 			data.routes.forEach(routeDTO => {
-				if (routeDTO.stations.length > 1 && !routeDTO.hidden) {
+				if (routeDTO.stations.length > 1 && (!routeDTO.hidden || this.showHiddenRoutes)) {
 					const route = new Route(routeDTO);
 					this.routes.push(route);
 					routeIdMap[routeDTO.id] = {routeDTO, route};
@@ -62,10 +66,16 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 			// Write stations
 			const stationIdMap: Record<string, { stationDTO: StationDTO, station: Station }> = {};
-			data.stations.forEach(stationDTO => getFromArray(stationIdToPosition, stationDTO.id, position => {
-				const station = new Station(stationDTO, arrayAverage(position.x), arrayAverage(position.y), arrayAverage(position.z));
+			data.stations.forEach(stationDTO => getFromArrayU(stationIdToPosition, stationDTO, stationDTO.id, position => {
+				const station = new Station(stationDTO, arrayAverage(position.x), arrayAverage(position.y), arrayAverage(position.z), false);
 				this.stations.push(station);
 				stationIdMap[stationDTO.id] = {stationDTO, station};
+			}, dto => {
+				if (this.getShowAllStations() && dto.x != undefined && dto.z != undefined) {
+					const station = new Station(dto, dto.x, 0, dto.z, true);
+					this.stations.push(station);
+					stationIdMap[dto.id] = {stationDTO, station};
+				}
 			}));
 
 			// Write station connection cache
@@ -100,13 +110,24 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 			this.dimensionService.setDimensions(data.dimensions);
 			this.dimensionService.isOffline.set(data.offline);
+			this.dimensionService.includeMarkers.set(data.includeMarkers);
 			this.updateData();
 		}, REFRESH_INTERVAL, dimensionService, false);
 
 		this.fetchData("");
 
+		if (environment.enableShowHiddenRoutes) {
+			const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
+			this.showHiddenRoutes = cookieShowHiddenRoutes === "true";
+		}
+
+		if (environment.enableShowAllStations) {
+			const cookieShowAllStations = getCookie("show_all_stations");
+			this.showAllStations = cookieShowAllStations == "true";
+		}
+
 		const cookieInterchangeStyle = getCookie("interchange_style");
-		this.interchangeStyle = cookieInterchangeStyle === "DOTTED" || cookieInterchangeStyle === "HOLLOW" ? cookieInterchangeStyle : "DOTTED";
+		this.interchangeStyle = cookieInterchangeStyle === "HIDDEN" || cookieInterchangeStyle === "DOTTED" || cookieInterchangeStyle === "HOLLOW" ? cookieInterchangeStyle : "DOTTED";
 
 		Object.keys(ROUTE_TYPES).forEach(routeTypeKey => {
 			const visibility = getCookie(`visibility_${routeTypeKey}`);
@@ -191,7 +212,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		let maxLineConnectionLength = 1;
 
 		this.stations.forEach(station => {
-			if (station.id in stationRoutes) {
+			if (station.id in stationRoutes || this.getShowAllStations()) {
 				const combinedGroups: string[][] = [];
 				const stationDirection: Record<string, 0 | 1 | 2 | 3> = {};
 				setIfUndefined(stationGroups, station.id, () => ({}));
@@ -240,7 +261,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 				const rotate = routesForDirection[1].length + routesForDirection[3].length > routesForDirection[0].length + routesForDirection[2].length;
 				const width = Math.max(Math.max(0, routesForDirection[rotate ? 1 : 0].length - 1), Math.max(0, routesForDirection[rotate ? 0 : 1].length - 1) * Math.SQRT1_2);
 				const height = Math.max(Math.max(0, routesForDirection[rotate ? 3 : 2].length - 1), Math.max(0, routesForDirection[rotate ? 2 : 3].length - 1) * Math.SQRT1_2);
-				this.stationsForMap.push({station, rotate: rotate, routeCount: Object.keys(stationRoutes[station.id]).length, width, height});
+				this.stationsForMap.push({station, rotate: rotate, routeCount: station.single ? 0 : Object.keys(stationRoutes[station.id]).length, width, height});
 				routesForDirection.forEach(routesForOneDirection => routesForOneDirection.sort());
 
 				Object.entries(stationGroups[station.id]).forEach(groupEntry => {
@@ -341,7 +362,24 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			}
 		});
 
+		this.hasConnection = this.stationConnections.length > 0;
+		if (this.interchangeStyle === "HIDDEN") {
+			this.stationConnections.length = 0;
+		}
+
 		this.drawMap.emit();
 		this.mapLoading = false;
+	}
+
+	getShowHiddenRoutes() {
+		return this.showHiddenRoutes;
+	}
+
+	getShowAllStations() {
+		return this.showAllStations;
+	}
+
+	hasConnections() {
+		return this.hasConnection;
 	}
 }

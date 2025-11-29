@@ -576,7 +576,7 @@ export class MapComponent implements AfterViewInit {
 					text: name,
 					icons,
 					shouldRenderText: !!clientGroup || renderedTextCount < SETTINGS.maxText,
-					clients: this.dimensionService.isOffline() ? clientGroup?.clients : [],
+					clients: this.dimensionService.isOffline() ? [] : clientGroup?.clients,
 					clientImagePadding: clientImagePadding * SETTINGS.scale,
 					x: canvasX + halfCanvasWidth,
 					y: canvasY + halfCanvasHeight - textOffset,

@@ -12,6 +12,7 @@ export class Station {
 	public readonly x: number;
 	public readonly y: number;
 	public readonly z: number;
+	public readonly single: boolean = false;
 	public readonly connections: Station[] = [];
 	public readonly routes: Route[] = [];
 
@@ -20,6 +21,7 @@ export class Station {
 		x: number,
 		y: number,
 		z: number,
+		single: boolean,
 	) {
 		this.id = stationDTO.id;
 		this.name = stationDTO.name;
@@ -30,6 +32,7 @@ export class Station {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.single = single;
 	}
 
 	public readonly getIcons = (predicate?: (type: string) => boolean) => {

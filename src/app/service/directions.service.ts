@@ -124,7 +124,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 				} else {
 					const name = clientsService.getClient(directionsRequest?.startClientId)?.name;
 					if (name) {
-						firstDirection.startStation = {name, color: 0, connections: [], getIcons: () => [], id: "", routes: [], x: 0, y: 0, z: 0, zone1: 0, zone2: 0, zone3: 0};
+						firstDirection.startStation = {name, color: 0, connections: [], getIcons: () => [], id: "", routes: [], x: 0, y: 0, z: 0, zone1: 0, zone2: 0, zone3: 0, single: false};
 					}
 				}
 			}
@@ -135,7 +135,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 				} else {
 					const name = clientsService.getClient(directionsRequest?.endClientId)?.name;
 					if (name) {
-						lastDirection.endStation = {name, color: 0, connections: [], getIcons: () => [], id: "", routes: [], x: 0, y: 0, z: 0, zone1: 0, zone2: 0, zone3: 0};
+						lastDirection.endStation = {name, color: 0, connections: [], getIcons: () => [], id: "", routes: [], x: 0, y: 0, z: 0, zone1: 0, zone2: 0, zone3: 0, single: false};
 					}
 				}
 			}

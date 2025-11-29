@@ -55,7 +55,7 @@ export class RoutePanelComponent {
 	}
 
 	getDropdownRoutes() {
-		return this.routeKeyService.getSelectedData()?.map(route => ({name: route.name.split("||")[1] ?? "(Untitled)", id: route.id}));
+		return this.routeKeyService.getSelectedData()?.map(route => ({name: route.name.split("||")[1] ?? $localize`(Untitled)`, id: route.id}));
 	}
 
 	selectRoute(id: string) {
@@ -105,5 +105,10 @@ export class RoutePanelComponent {
 
 	isOnline() {
 		return !this.dimensionService.isOffline();
+	}
+
+	getRouteHidden() {
+		const route = this.routeVariationService.getSelectedData();
+		return route ? route.hidden : false;
 	}
 }

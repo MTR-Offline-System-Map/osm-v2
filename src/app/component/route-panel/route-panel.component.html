@@ -1,6 +1,14 @@
 <div class="column wrapper">
 	<div class="column gap padding-sides">
 		<app-title [name]="getRouteName()" [color]="getRouteColor()"/>
+		@if (getRouteHidden()) {
+			<div class="row gap center">
+				<div class="row gap center" i18n-pTooltip pTooltip="Hidden Route" tooltipPosition="left">
+					<div class="material-icons">visibility_off</div>
+					<div i18n>Please confirm that this route is open.</div>
+				</div>
+			</div>
+		}
 		<p-float-label variant="in">
 			<p-select inputId="dropdown" [options]="getDropdownRoutes()" optionLabel="name" (onChange)="selectRoute($event.value.id)" [(ngModel)]="dropdownValue" [fluid]="true">
 				<ng-template #item let-route>{{ route.name | formatName }}</ng-template>
@@ -9,7 +17,7 @@
 		</p-float-label>
 		@if (getTotalDurationSeconds(); as totalDurationSeconds) {
 			<div class="row gap center">
-				<div class="row gap center" pTooltip="Total Duration" tooltipPosition="left">
+				<div class="row gap center" i18n-pTooltip pTooltip="Total Duration" tooltipPosition="left">
 					<div class="material-icons">schedule</div>
 					<div>{{ totalDurationSeconds | formatTime : "" }}</div>
 				</div>

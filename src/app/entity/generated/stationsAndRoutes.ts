@@ -11,6 +11,8 @@ export class StationsAndRoutesDTO {
 
 	public readonly offline: boolean = false;
 
+	public readonly includeMarkers: boolean = false;
+
 	public constructor() {
 	}
 }

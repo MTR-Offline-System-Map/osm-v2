@@ -19,6 +19,7 @@ import {FormatTimePipe} from "../../pipe/formatTimePipe";
 import {FormatDatePipe} from "../../pipe/formatDatePipe";
 import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {DimensionService} from "../../service/dimension.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
 	selector: "app-station-panel",
@@ -155,12 +156,27 @@ export class StationPanelComponent {
 		return SimplifyRoutesPipe.getRouteKey(route);
 	}
 
+	getSingleStation() {
+		const station = this.stationService.getSelectedData();
+		if (station) {
+			return station.single;
+		}
+		return true;
+	}
+
+	viewOnWorldMap() {
+		const station = this.stationService.getSelectedData();
+		if (station) {
+			location.assign(environment.worldMapLink(this.dimensionService.getDimensionIndex(), Math.round(station.x), Math.round(station.z)));
+		}
+	}
+
 	isOffline() {
 		return this.dimensionService.isOffline();
 	}
 
 	getPlatformLocalize() {
-		return $localize`Platform `;
+		return $localize`Platform`;
 	}
 
 	getEvery8SecondsLocalize() {

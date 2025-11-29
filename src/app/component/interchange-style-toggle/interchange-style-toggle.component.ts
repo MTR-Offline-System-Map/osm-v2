@@ -18,16 +18,21 @@ import {FormsModule} from "@angular/forms";
 export class InterchangeStyleToggleComponent {
 	private readonly mapDataService = inject(MapDataService);
 
-	protected readonly interchangeStyleOptions: { icon: string, value: "DOTTED" | "HOLLOW", tooltip: string }[] = [
+	protected readonly interchangeStyleOptions: { icon: string, value: "HIDDEN" | "DOTTED" | "HOLLOW", tooltip: string }[] = [
+		{
+			icon: "visibility_off",
+			value: "HIDDEN",
+			tooltip: $localize`Hidden`,
+		},
 		{
 			icon: "more_horiz",
 			value: "DOTTED",
-			tooltip: "Dotted",
+			tooltip: $localize`Dotted`,
 		},
 		{
 			icon: "drag_handle",
 			value: "HOLLOW",
-			tooltip: "Hollow",
+			tooltip: $localize`Hollow`,
 		},
 	];
 

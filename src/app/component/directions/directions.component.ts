@@ -180,7 +180,7 @@ export class DirectionsComponent {
 	}
 
 	getStationName(station?: Station) {
-		return station ? this.formatNamePipe.transform(station.name) : "(Untitled)";
+		return station ? this.formatNamePipe.transform(station.name) : $localize`(Untitled)`;
 	}
 
 	getPlatformName(platformName?: string) {
@@ -264,5 +264,9 @@ export class DirectionsComponent {
 
 	isEnglish() {
 		return LOCALE_ID.toString() === "en-US";
+	}
+
+	getIntermediateStationLocalize() {
+		return $localize`intermediate station`;
 	}
 }

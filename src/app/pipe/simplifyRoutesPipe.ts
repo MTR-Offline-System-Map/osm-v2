@@ -14,7 +14,7 @@ export class SimplifyRoutesPipe implements PipeTransform {
 		const newRoutes: Record<string, SearchData> = {};
 		routes.forEach(route => {
 			const key = SimplifyRoutesPipe.getRouteKey(route);
-			newRoutes[key] = {key, icons: [ROUTE_TYPES[route.type].icon, ""], color: route.color, name: route.name.split("||")[0], number: route.number, type: "route"};
+			newRoutes[key] = {key, icons: [ROUTE_TYPES[route.type].icon, route.hidden ? "visibility_off" : ""], color: route.color, name: route.name.split("||")[0], number: route.number, type: "route"};
 		});
 		return Object.values(newRoutes);
 	}

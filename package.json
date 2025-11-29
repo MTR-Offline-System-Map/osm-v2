@@ -8,7 +8,8 @@
 		"watch": "ng lint && ng build --watch --configuration development",
 		"test": "ng test",
 		"lint": "ng lint",
-		"update-all": "npx npm-check-updates -u && npm install --force"
+		"update-all": "npx npm-check-updates -u && npm install --force",
+		"prod": "ng build --configuration=production"
 	},
 	"private": true,
 	"dependencies": {
