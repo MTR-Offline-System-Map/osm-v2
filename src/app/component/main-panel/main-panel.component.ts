@@ -114,7 +114,7 @@ export class MainPanelComponent {
 	}
 
 	getEnableShowHiddenRoutes() {
-		return environment.enableShowHiddenRoutes;
+		return environment.enableShowHiddenRoutes && !this.dimensionService.c324();
 	}
 
 	getEnableShowAllStations() {
