@@ -5,7 +5,6 @@ import {environment} from "../../environments/environment";
 export class DimensionService {
 	private dimensions: string[] = environment.dimensions;
 	private dimensionIndex = 0;
-	public c324: WritableSignal<boolean> = signal(false);
 	public isOffline: WritableSignal<boolean> = signal(true);
 	public includeMarkers: WritableSignal<boolean> = signal(false);
 

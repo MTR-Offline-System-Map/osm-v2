@@ -8,9 +8,7 @@ export class StationsAndRoutesDTO {
 	public readonly routes: RouteDTO[] = [];
 
 	public readonly dimensions: string[] = [];
-
-	public readonly c324: boolean = false;
-
+	
 	public readonly offline: boolean = false;
 
 	public readonly includeMarkers: boolean = false;
