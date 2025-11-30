@@ -46,7 +46,7 @@
 							<div class="gray no-wrap">{{ direction.startTime | formatDate }}</div>
 						</div>
 					</app-route-display>
-					<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="getRouteColor($index)" [isStation]="false" [icons]="[{icon: direction.route ? direction.icon : sameStation(direction) ? 'transfer_within_a_station' : 'directions_walk', offset: 0}, {icon: 'visibility_off', offset: 30}]">
+					<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="getRouteColor($index)" [isStation]="false" [icons]="[{icon: direction.route ? direction.icon : sameStation(direction) ? 'transfer_within_a_station' : 'directions_walk', offset: 0}, {icon: direction.route ? (direction.route.hidden ? 'visibility_off' : '') : '', offset: 30}]">
 						@if (direction.route) {
 							<div class="row center">
 								<app-data-list-entry class="spacing" [icons]="[getCircularIcon(direction.route)]" [title]="[getRouteName(direction.route), '']" [subtitles]="[[getRouteDestination(direction.route), '']]" [useLightColor]="true" [clickable]="false"/>
