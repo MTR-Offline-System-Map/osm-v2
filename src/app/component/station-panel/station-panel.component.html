@@ -13,9 +13,11 @@
 				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" i18n-pTooltip pTooltip="Focus on Map" tooltipPosition="bottom">
 					<div class="material-icons">filter_center_focus</div>
 				</button>
-				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" i18n-pTooltip pTooltip="View on World Map" tooltipPosition="bottom">
-					<div class="material-icons">map</div>
-				</button>
+				@if (getEnableViewOnWorldMap()) {
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" i18n-pTooltip pTooltip="View on World Map" tooltipPosition="bottom">
+						<div class="material-icons">map</div>
+					</button>
+				}
 			</div>
 		</div>
 		<div class="row gap center">

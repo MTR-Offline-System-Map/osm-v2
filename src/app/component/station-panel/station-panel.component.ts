@@ -164,10 +164,14 @@ export class StationPanelComponent {
 		return true;
 	}
 
+	getEnableViewOnWorldMap() {
+		return environment.worldMapLink.enable;
+	}
+
 	viewOnWorldMap() {
 		const station = this.stationService.getSelectedData();
 		if (station) {
-			location.assign(environment.worldMapLink(this.dimensionService.getDimensionIndex(), Math.round(station.x), Math.round(station.z)));
+			location.assign(environment.worldMapLink.exec(this.dimensionService.getDimensionIndex(), Math.round(station.x), Math.round(station.z)));
 		}
 	}
 
