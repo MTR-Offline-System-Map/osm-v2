@@ -39,7 +39,7 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 		}, () => {
 		}, () => {
 		}, () => {
-		}, 0, dimensionService, true);
+		}, 0, dimensionService, false);
 
 		const departures: { departureFromNow: number, deviation: number }[] = [];
 		const updateDepartures = (route: Route | undefined) => {

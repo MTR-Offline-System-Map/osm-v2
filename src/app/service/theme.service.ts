@@ -6,22 +6,22 @@ import {MapDataService} from "./map-data.service";
 export class ThemeService {
 	private readonly mapDataService = inject(MapDataService);
 
-	private darkTheme: "LIGHT" | "SYSTEM" | "DARK" = "SYSTEM";
+	private theme: "LIGHT" | "SYSTEM" | "DARK" = "SYSTEM";
 
 	constructor() {
-		const darkTheme = getCookie("dark_theme");
-		if (darkTheme === "LIGHT" || darkTheme === "SYSTEM" || darkTheme === "DARK") {
-			this.darkTheme = darkTheme;
+		const theme = getCookie("theme");
+		if (theme === "LIGHT" || theme === "SYSTEM" || theme === "DARK") {
+			this.theme = theme;
 		}
 		this.setElementTag();
 	}
 
 	public getTheme() {
-		return this.darkTheme;
+		return this.theme;
 	}
 
-	public setTheme(isDarkTheme: "LIGHT" | "SYSTEM" | "DARK") {
-		this.darkTheme = isDarkTheme;
+	public setTheme(theme: "LIGHT" | "SYSTEM" | "DARK") {
+		this.theme = theme;
 		this.setElementTag();
 		setTimeout(() => this.mapDataService.drawMap.emit(), 0);
 	}
@@ -31,11 +31,11 @@ export class ThemeService {
 	}
 
 	public isDarkTheme() {
-		return this.darkTheme === "DARK" || (this.darkTheme === "SYSTEM" && this.getSystemTheme() === "DARK");
+		return this.theme === "DARK" || (this.theme === "SYSTEM" && this.getSystemTheme() === "DARK");
 	}
 
 	private setElementTag() {
-		setCookie("dark_theme", this.darkTheme);
+		setCookie("theme", this.theme);
 
 		const element = document.querySelector("html");
 		if (element) {

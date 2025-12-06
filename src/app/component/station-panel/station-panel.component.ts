@@ -20,6 +20,7 @@ import {FormatDatePipe} from "../../pipe/formatDatePipe";
 import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {DimensionService} from "../../service/dimension.service";
 import {environment} from "../../../environments/environment";
+import {FontStyleService} from "../../service/font-style.service";
 
 @Component({
 	selector: "app-station-panel",
@@ -47,6 +48,7 @@ export class StationPanelComponent {
 	private readonly dataService = inject(MapDataService);
 	private readonly stationService = inject(StationService);
 	private readonly dimensionService = inject(DimensionService);
+	private readonly fontStyleService = inject(FontStyleService);
 
 	protected dialogData?: Arrival;
 	@Output() stationClicked = new EventEmitter<string>();
@@ -165,7 +167,7 @@ export class StationPanelComponent {
 	}
 
 	getEnableViewOnWorldMap() {
-		return environment.worldMapLink.enable;
+		return environment.worldMapLink.enable(this.dimensionService.getDimensionIndex());
 	}
 
 	viewOnWorldMap() {
@@ -177,6 +179,10 @@ export class StationPanelComponent {
 
 	isOffline() {
 		return this.dimensionService.isOffline();
+	}
+
+	getFontStyle() {
+		return this.fontStyleService.getFontStyle();
 	}
 
 	getPlatformLocalize() {

@@ -29,7 +29,7 @@ export class ClientService extends SelectableDataServiceBase<string, string> {
 
 		super(clientId => clientId, () => {
 		}, clientId => of(clientId), () => {
-		}, REFRESH_INTERVAL, dimensionService, true);
+		}, REFRESH_INTERVAL, dimensionService, false);
 
 		this.clientsService.dataProcessed.subscribe(() => this.updateClient());
 	}

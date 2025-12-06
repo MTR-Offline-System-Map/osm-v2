@@ -1,7 +1,7 @@
 <div class="column gap">
 	<div class="column">
 		@for (namePart of name | splitName; track $index) {
-			<div class="name {{namePart.isCjk ? 'cjk' : ''}}">{{ namePart.text }}</div>
+			<div class="name {{namePart.isCjk ? 'cjk' : ''}} {{getFontStyle()==='SERIF'?'font-serif':''}}">{{ namePart.text }}</div>
 		}
 	</div>
 	@if (color) {

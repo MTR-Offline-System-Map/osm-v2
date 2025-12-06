@@ -106,7 +106,7 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 					routeStation2: route ? mapDataService.stations.find(station => station.id === clientDTO.routeStationId2) : undefined,
 				};
 			});
-		}, REFRESH_INTERVAL, dimensionService, true);
+		}, REFRESH_INTERVAL, dimensionService);
 		mapDataService.dataProcessed.subscribe(() => this.fetchData(""));
 	}
 

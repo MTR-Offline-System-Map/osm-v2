@@ -12,41 +12,41 @@ export abstract class DataServiceBase<T> {
 	public readonly isLoading = () => this.loading;
 	protected readonly getUrl = (endpoint: string) => environment.dataUrl(endpoint, this.dimensionService.getDimensionIndex());
 	protected readonly fetchData = (id: string) => {
-		this.loading = true;
-		this.id = id;
-		clearTimeout(this.timeoutId);
-		this.getDataInternal();
+		if (!this.dimensionService.isOffline() || !this.mustOnline) {
+			this.loading = true;
+			this.id = id;
+			clearTimeout(this.timeoutId);
+			this.getDataInternal();
+		}
 	};
 
-	protected constructor(private readonly sendData: () => Observable<T> | void, private readonly processData: (data: T) => void, private readonly refreshInterval: number, protected readonly dimensionService: DimensionService, private readonly mustOnline: boolean) {
+	protected constructor(private readonly sendData: () => Observable<T> | void, private readonly processData: (data: T) => void, private readonly refreshInterval: number, protected readonly dimensionService: DimensionService, private readonly mustOnline: boolean=true) {
 	}
 
 	private getDataInternal() {
-		if (!this.dimensionService.isOffline() || !this.mustOnline) {
-			const observable = this.sendData();
-			if (observable) {
-				const currentId = this.formatId();
-				observable.subscribe({
-					next: data => {
-						if (currentId == this.formatId()) {
-							this.loading = false;
-							this.processData(data);
-							this.dataProcessed.emit();
-							this.scheduleData();
-						} else {
-							console.log("skipped");
-						}
-					},
-					error: error => {
-						if (currentId == this.formatId()) {
-							console.error(error);
-							this.scheduleData();
-						} else {
-							console.log("skipped");
-						}
-					},
-				});
-			}
+		const observable = this.sendData();
+		if (observable) {
+			const currentId = this.formatId();
+			observable.subscribe({
+				next: data => {
+					if (currentId == this.formatId()) {
+						this.loading = false;
+						this.processData(data);
+						this.dataProcessed.emit();
+						this.scheduleData();
+					} else {
+						console.log("skipped");
+					}
+				},
+				error: error => {
+					if (currentId == this.formatId()) {
+						console.error(error);
+						this.scheduleData();
+					} else {
+						console.log("skipped");
+					}
+				},
+			});
 		}
 	}
 

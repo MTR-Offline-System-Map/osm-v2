@@ -139,7 +139,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 					}
 				}
 			}
-		}, REFRESH_INTERVAL, dimensionService, true);
+		}, REFRESH_INTERVAL, dimensionService);
 	}
 
 	public selectData(startStation: Station | undefined, endStation: Station | undefined, startClientId: string | undefined, endClientId: string | undefined, maxWalkingDistanceString: string) {

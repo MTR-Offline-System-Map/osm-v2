@@ -19,6 +19,7 @@ import {DataListEntryComponent} from "../data-list-entry/data-list-entry.compone
 import {environment} from "../../../environments/environment";
 import {setCookie} from "../../data/utilities";
 import {ThemeToggleComponent} from "../theme-toggle/theme-toggle.component";
+import {FontStyleToggleComponent} from "../font-style-toggle/font-style-toggle.component";
 
 @Component({
 	selector: "app-main-panel",
@@ -37,7 +38,8 @@ import {ThemeToggleComponent} from "../theme-toggle/theme-toggle.component";
     VisibilityToggleComponent,
     InterchangeStyleToggleComponent,
     DataListEntryComponent,
-    ThemeToggleComponent
+    ThemeToggleComponent,
+    FontStyleToggleComponent
 ],
 	templateUrl: "./main-panel.component.html",
 	styleUrl: "./main-panel.component.css",
@@ -114,15 +116,19 @@ export class MainPanelComponent {
 	}
 
 	getEnableShowHiddenRoutes() {
-		return environment.enableShowHiddenRoutes && (this.dataService.hasHiddenRoutes() || this.dataService.getShowHiddenRoutes());
+		return environment.enableShowHiddenRoutes && this.dataService.hasHiddenRoutes();
 	}
 
 	getEnableShowAllStations() {
-		return environment.enableShowAllStations && this.dimensionService.includeMarkers();
+		return environment.enableShowAllStations && this.dimensionService.includeMarkers();;
 	}
 
 	getPlayersLocalize() {
 		return $localize`Players`;
+	}
+
+	getDimensionLocalize() {
+		return environment.historicalMap.enable ? $localize`Time or Data Source` : $localize`Dimension`
 	}
 
 	getShowHiddenRoutes() {

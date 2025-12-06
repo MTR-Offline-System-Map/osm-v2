@@ -3,8 +3,7 @@
 		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeRoutes]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)"/>
 		<p-float-label variant="in">
 			<p-select inputId="dropdown" formControlName="dimension" [options]="getDimensions()" (onChange)="setDimension()" [fluid]="true"/>
-			<label for="dropdown" i18n>Time or Data Source</label>
-			<!-- <label for="dropdown" i18n>Time or Data Source</label> -->
+			<label for="dropdown">{{ getDimensionLocalize() }}</label>
 		</p-float-label>
 		<button pButton class="icon-button" severity="secondary" (click)="directionsOpened.emit()" [fluid]="true" [style.display]="isOffline() ? 'none' : ''">
 			<div class="row gap-small">
@@ -74,10 +73,17 @@
 				</button>
 			</a>
 			<p-divider/>
-			<div class="row gap center theme-toggle">
-				<div class="material-icons">palette</div>
-				<div class="shrink spacing" i18n>Theme</div>
-				<app-theme-toggle/>
+			<div class="column gap-small">
+				<div class="row gap center">
+					<div class="material-icons">palette</div>
+					<div class="shrink spacing" i18n>Theme</div>
+					<app-theme-toggle/>
+				</div>
+				<div class="row gap center font-style-toggle">
+					<div class="material-icons">text_format</div>
+					<div class="shrink spacing" i18n>Font Style</div>
+					<app-font-style-toggle/>
+				</div>
 			</div>
 		</div>
 		<div class="spacing"></div>

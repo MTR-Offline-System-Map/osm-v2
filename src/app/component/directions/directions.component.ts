@@ -25,6 +25,7 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {SearchData} from "../../entity/searchData";
 import {Station} from "../../entity/station";
 import {ClientsService} from "../../service/clients.service";
+import { FontStyleService } from "../../service/font-style.service";
 
 @Component({
 	selector: "app-directions",
@@ -56,7 +57,7 @@ export class DirectionsComponent {
 	private readonly mapSelectionService = inject(MapSelectionService);
 	private readonly formatNamePipe = inject(FormatNamePipe);
 	private readonly formatTimePipe = inject(FormatTimePipe);
-	private readonly LOCALE_ID = inject(LOCALE_ID);
+	private readonly fontStyleService = inject(FontStyleService);
 
 	protected readonly formGroup = new FormGroup({
 		startInput: new FormControl<{ value: SearchData } | undefined>(undefined),
@@ -184,7 +185,7 @@ export class DirectionsComponent {
 	}
 
 	getPlatformName(platformName?: string) {
-		return platformName ? $localize`Platform` + this.formatNamePipe.transform(platformName) : "";
+		return platformName ? $localize`Platform` + " " + this.formatNamePipe.transform(platformName) : "";
 	}
 
 	getRouteName(route: Route) {
@@ -260,6 +261,10 @@ export class DirectionsComponent {
 	private canAutomaticallyRefresh() {
 		const data = this.formGroup.getRawValue();
 		return data.startInput && data.startInput.value.type === "client" || data.endInput && data.endInput.value.type === "client";
+	}
+
+	getFontStyle() {
+		return this.fontStyleService.getFontStyle();
 	}
 
 	isEnglish() {

@@ -30,7 +30,7 @@
 				@if (textLabel.shouldRenderText || textLabel.hoverOverride) {
 					<div class="column center">
 						@for (textLabelPart of textLabel.text | splitName; track $index) {
-							<div class="station-name text {{textLabelPart.isCjk?'cjk':''}}">{{ textLabelPart.text }}</div>
+							<div class="station-name text {{textLabelPart.isCjk?'cjk':''}} {{getFontStyle()==='SERIF'?'font-serif':''}}">{{ textLabelPart.text }}</div>
 						}
 						<div class="row">
 							@for (icon of textLabel.icons; track $index) {

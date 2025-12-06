@@ -58,7 +58,7 @@
 					<div class="row center">
 						<app-data-list-entry class="spacing" [icons]="[]" [title]="[stationDetails.name | formatName, '']" [subtitles]="[]" [useLightColor]="false" [clickable]="true" (entryClicked)="stationClicked.emit(stationDetails.id)"/>
 						@if (showDwellTimesCheckbox.checked && stationDetails.dwellTimeSeconds && isOnline()) {
-							<div class="row center duration" pTooltip="Dwell Time">
+							<div class="row center duration" i18n-pTooltip pTooltip="Dwell Time">
 								<div class="material-icons">hourglass_empty</div>
 								<div>&nbsp;{{ stationDetails.dwellTimeSeconds | formatTime :"" }}</div>
 							</div>
@@ -69,7 +69,7 @@
 					@if (showDurationsCheckbox.checked && stationDetails.durationSeconds && isOnline()) {
 						<div class="row">
 							<div class="spacing"></div>
-							<div class="row center duration" pTooltip="Travel Time">
+							<div class="row center duration" i18n-pTooltip pTooltip="Travel Time">
 								<div class="material-icons">{{ getRouteIcon() }}</div>
 								<div>&nbsp;{{ stationDetails.durationSeconds | formatTime :"" }}</div>
 							</div>

@@ -17,6 +17,7 @@ import {ClientsService} from "../../service/clients.service";
 import {TooltipModule} from "primeng/tooltip";
 import {NgOptimizedImage} from "@angular/common";
 import {DimensionService} from "../../service/dimension.service";
+import {FontStyleService} from "../../service/font-style.service";
 
 const blackColor = 0x000000;
 const whiteColor = 0xFFFFFF;
@@ -51,6 +52,7 @@ export class MapComponent implements AfterViewInit {
 	private readonly clientsService = inject(ClientsService);
 	private readonly themeService = inject(ThemeService);
 	private readonly dimensionService = inject(DimensionService);
+	private readonly fontStyleService = inject(FontStyleService);
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() clientClicked = new EventEmitter<string>();
@@ -673,6 +675,10 @@ export class MapComponent implements AfterViewInit {
 		const closestY = y1 + tClamped * dy;
 
 		return {closestPoint: {x: closestX, y: closestY}, distance: Math.hypot(pointX - closestX, pointY - closestY)};
+	}
+
+	getFontStyle() {
+		return this.fontStyleService.getFontStyle();
 	}
 }
 

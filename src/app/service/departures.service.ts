@@ -63,7 +63,7 @@ export class DeparturesService extends DataServiceBase<{
 		}, data => {
 			this.departures = data.departures;
 			this.lastUpdated = data.lastUpdated;
-		}, REFRESH_INTERVAL, dimensionService, true);
+		}, REFRESH_INTERVAL, dimensionService);
 		this.fetchData("");
 	}
 

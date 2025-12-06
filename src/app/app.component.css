@@ -13,6 +13,7 @@
 		transform: translate(-50%);
 		max-height: 25px;
 		white-space: nowrap;
+		line-height: 24px;
 	}
 }
 

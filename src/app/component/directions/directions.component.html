@@ -74,7 +74,7 @@
 										<p-accordion-content>
 											<div class="column gap-small">
 												@for (intermediateStation of direction.intermediateStations; track $index) {
-													<div>{{ intermediateStation.name | formatName }}</div>
+													<div [className]="getFontStyle()==='SERIF'?'font-serif':''">{{ intermediateStation.name | formatName }}</div>
 												}
 											</div>
 										</p-accordion-content>

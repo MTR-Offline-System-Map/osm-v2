@@ -64,7 +64,7 @@
 											<div class="material-icons">{{ route.typeIcon }}</div>
 											<div class="column chip-text">
 												@for (name of route.name | splitName; track $index) {
-													<div>{{ name.text }}</div>
+													<div [className]="getFontStyle()==='SERIF'?'font-serif':''">{{ name.text }}</div>
 												}
 											</div>
 										</div>
@@ -72,7 +72,7 @@
 											<p-divider layout="vertical" [style.height]="route.textLineCount + 'rem'"/>
 											<div class="column chip-text">
 												@for (number of route.number | splitName; track $index) {
-													<div>{{ number.text }}</div>
+													<div [className]="getFontStyle()==='SERIF'?'font-serif':''">{{ number.text }}</div>
 												}
 											</div>
 										}

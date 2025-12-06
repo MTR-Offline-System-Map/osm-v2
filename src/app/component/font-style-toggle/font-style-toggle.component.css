@@ -1,0 +1,16 @@
+* {
+	--p-togglebutton-content-padding: 0.25rem;
+}
+
+.sans, .serif {
+	width: 24px;
+	height: 24px;
+	font-size: 24px;
+	line-height: 1;
+	text-align: center;
+}
+
+.serif {
+	font-family: 'Noto Serif TC', "Noto Serif SC", "Noto Serif JP", "Noto Serif KR", ui-serif, serif, system-ui;
+	margin-top: -3px;
+}

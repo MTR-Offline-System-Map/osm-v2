@@ -64,7 +64,7 @@ export class StationService extends SelectableDataServiceBase<{ currentTime: num
 				this.arrivalsRoutes.length = 0;
 				newRoutes.forEach(route => this.arrivalsRoutes.push(route));
 			}
-		}, REFRESH_INTERVAL, dimensionService, false);
+		}, REFRESH_INTERVAL, dimensionService);
 		setInterval(() => this.arrivals.forEach(arrival => arrival.calculateValues()), 100);
 	}
 

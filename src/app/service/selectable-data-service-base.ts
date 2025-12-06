@@ -19,11 +19,11 @@ export abstract class SelectableDataServiceBase<T, U> extends DataServiceBase<T>
 		this.selectionChanged.emit();
 	};
 
-	protected constructor(private readonly convert: (dataKey: string) => U | undefined, private readonly reset: () => void, sendData: (selectedData: U) => Observable<T> | void, processData: (data: T) => void, refreshInterval: number, dimensionService: DimensionService, private readonly needOnline: boolean) {
+	protected constructor(private readonly convert: (dataKey: string) => U | undefined, private readonly reset: () => void, sendData: (selectedData: U) => Observable<T> | void, processData: (data: T) => void, refreshInterval: number, dimensionService: DimensionService, mustOnline: boolean = true) {
 		super(() => {
-			if (this.selectedData && !dimensionService.isOffline()) {
+			if (this.selectedData) {
 				return sendData(this.selectedData);
 			}
-		}, processData, refreshInterval, dimensionService, needOnline);
+		}, processData, refreshInterval, dimensionService, mustOnline);
 	}
 }
