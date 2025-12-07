@@ -61,6 +61,7 @@ export class MainPanelComponent {
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
 		autoDetectBusRoutes: new FormControl(this.dataService.getAutoDetectBusRoutes()),
+		developerMode: new FormControl(this.dataService.getDeveloperMode()),
 	});
 	protected readonly routeTypes: [string, RouteType][] = [];
 
@@ -128,6 +129,10 @@ export class MainPanelComponent {
 		return environment.enableAutoDetectBusRoutes && this.dataService.hasBusRoutes();
 	}
 
+	getEnableDeveloperMode() {
+		return environment.enableDeveloperMode;
+	}
+
 	getPlayersLocalize() {
 		return $localize`Players`;
 	}
@@ -149,5 +154,9 @@ export class MainPanelComponent {
 	setAutoDetectBusRoutes(value: boolean) {
 		setCookie("auto_detect_bus_routes", value.toString());
 		window.location.reload();
+	}
+
+	setDeveloperMode(value: boolean) {
+		this.dataService.setDeveloperMode(value);
 	}
 }

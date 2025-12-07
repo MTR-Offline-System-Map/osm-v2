@@ -12,4 +12,5 @@ export const environment = {
   enableShowHiddenRoutes: true,
   enableShowAllStations: true,
   enableAutoDetectBusRoutes: true,
+  enableDeveloperMode: true,
 };

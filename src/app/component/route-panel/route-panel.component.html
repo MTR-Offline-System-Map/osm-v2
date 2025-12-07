@@ -1,6 +1,19 @@
 <div class="column wrapper">
 	<div class="column gap padding-sides">
 		<app-title [name]="getRouteName()" [color]="getRouteColor()"/>
+		@if (getDeveloperMode()) {
+			<div class="row gap-small center">
+				<div class="row gap center" i18n-pTooltip pTooltip="ID" tooltipPosition="left">
+					<div class="material-icons">code</div>
+					<div>{{ getRouteID() }}</div>
+				</div>
+				<div class="row center">
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyRouteID(id_icon)" i18n-pTooltip pTooltip="Copy ID" tooltipPosition="bottom">
+						<div class="material-icons" #id_icon>content_copy</div>
+					</button>
+				</div>
+			</div>
+		}
 		@if (getRouteHidden()) {
 			<div class="row gap center">
 				<div class="row gap center" i18n-pTooltip pTooltip="Hidden Route" tooltipPosition="left">

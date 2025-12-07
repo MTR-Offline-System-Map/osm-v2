@@ -36,6 +36,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	private hasConnection: boolean = false;
 	private autoDetectBusRoutes: boolean = false;
 	private hasBusRoute: boolean = false;
+	private developerMode: boolean = false;
 
 	public readonly drawMap = new EventEmitter<void>();
 	public readonly animateMap = new EventEmitter<{ x: number, z: number }>();
@@ -134,12 +135,17 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 		if (environment.enableShowHiddenRoutes) {
 			const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
-			this.showHiddenRoutes = cookieShowHiddenRoutes === "true";
+			this.showHiddenRoutes = cookieShowHiddenRoutes == "true";
 		}
 
 		if (environment.enableShowAllStations) {
 			const cookieShowAllStations = getCookie("show_all_stations");
 			this.showAllStations = cookieShowAllStations == "true";
+		}
+
+		if (environment.enableDeveloperMode) {
+			const cookieDeveloperMode = getCookie("developer_mode");
+			this.developerMode = cookieDeveloperMode == "true";
 		}
 
 		const cookieInterchangeStyle = getCookie("interchange_style");
@@ -408,6 +414,15 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 	getAutoDetectBusRoutes() {
 		return this.autoDetectBusRoutes;
+	}
+
+	getDeveloperMode() {
+		return this.developerMode;
+	}
+
+	setDeveloperMode(value: boolean) {
+		this.developerMode = value;
+		setCookie("developer_mode", value.toString());
 	}
 
 	/* setShowHiddenRoutes(value: boolean) {

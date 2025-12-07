@@ -14,10 +14,13 @@ import {SelectModule} from "primeng/select";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {FormsModule} from "@angular/forms";
 import {DimensionService} from "../../service/dimension.service";
+import {MapDataService} from "../../service/map-data.service";
+import {ButtonModule} from "primeng/button";
 
 @Component({
 	selector: "app-route-panel",
 	imports: [
+		ButtonModule,
 		FloatLabelModule,
 		SelectModule,
 		CheckboxModule,
@@ -34,6 +37,7 @@ import {DimensionService} from "../../service/dimension.service";
 	styleUrl: "./route-panel.component.css",
 })
 export class RoutePanelComponent {
+	private readonly dataService = inject(MapDataService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly routeVariationService = inject(RouteVariationService);
 	private readonly routeKeyService = inject(RouteKeyService);
@@ -70,6 +74,11 @@ export class RoutePanelComponent {
 	getRouteColor() {
 		const route = this.routeVariationService.getSelectedData();
 		return route ? route.color : undefined;
+	}
+
+	getRouteID() {
+		const route = this.routeVariationService.getSelectedData();
+		return route ? route.id : undefined;
 	}
 
 	getRouteIcon() {
@@ -110,5 +119,16 @@ export class RoutePanelComponent {
 	getRouteHidden() {
 		const route = this.routeVariationService.getSelectedData();
 		return route ? route.hidden : false;
+	}
+
+	getDeveloperMode() {
+		return this.dataService.getDeveloperMode();
+	}
+
+	copyRouteID(icon: HTMLDivElement) {
+		icon.innerText = "check";
+		const route = this.routeVariationService.getSelectedData();
+		navigator.clipboard.writeText(route ? route.id : "");
+		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
 }

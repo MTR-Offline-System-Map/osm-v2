@@ -1,6 +1,19 @@
 <div class="column gap wrapper">
 	<div class="column gap padding-sides">
 		<app-title [name]="getStation()?.name ?? ''" [color]="getStationColor()"/>
+		@if (getDeveloperMode()) {
+			<div class="row gap-small center">
+				<div class="row gap center" i18n-pTooltip pTooltip="ID" tooltipPosition="left">
+					<div class="material-icons">code</div>
+					<div>{{ getID() }}</div>
+				</div>
+				<div class="row center">
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyID(id_icon)" i18n-pTooltip pTooltip="Copy ID" tooltipPosition="bottom">
+						<div class="material-icons" #id_icon>content_copy</div>
+					</button>
+				</div>
+			</div>
+		}
 		<div class="row gap-small center">
 			<div class="row gap center" i18n-pTooltip pTooltip="Location" tooltipPosition="left">
 				<div class="material-icons">my_location</div>

@@ -64,6 +64,11 @@ export class StationPanelComponent {
 		return station === undefined ? undefined : station.color;
 	}
 
+	getID() {
+		const station = this.stationService.getSelectedData();
+		return station === undefined ? undefined : station.id;
+	}
+
 	getCoordinatesText() {
 		const station = this.stationService.getSelectedData();
 		return station === undefined ? "" : `${Math.round(station.x)}, ${Math.round(station.y)}, ${Math.round(station.z)}`;
@@ -129,6 +134,13 @@ export class StationPanelComponent {
 		return this.stationService.isLoading();
 	}
 
+	copyID(icon: HTMLDivElement) {
+		icon.innerText = "check";
+		const station = this.stationService.getSelectedData();
+		navigator.clipboard.writeText(station === undefined ? "" : station.id);
+		setTimeout(() => icon.innerText = "content_copy", 1000);
+	}
+
 	copyLocation(icon: HTMLDivElement) {
 		icon.innerText = "check";
 		const station = this.stationService.getSelectedData();
@@ -183,6 +195,10 @@ export class StationPanelComponent {
 
 	getFontStyle() {
 		return this.fontStyleService.getFontStyle();
+	}
+
+	getDeveloperMode() {
+		return this.dataService.getDeveloperMode();
 	}
 
 	getPlatformLocalize() {
