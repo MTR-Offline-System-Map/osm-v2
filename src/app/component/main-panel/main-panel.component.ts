@@ -60,6 +60,7 @@ export class MainPanelComponent {
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
+		autoDetectBusRoutes: new FormControl(this.dataService.getAutoDetectBusRoutes()),
 	});
 	protected readonly routeTypes: [string, RouteType][] = [];
 
@@ -123,20 +124,16 @@ export class MainPanelComponent {
 		return environment.enableShowAllStations && this.dimensionService.includeMarkers();;
 	}
 
+	getEnableAutoDetectBusRoutes() {
+		return environment.enableAutoDetectBusRoutes && this.dataService.hasBusRoutes();
+	}
+
 	getPlayersLocalize() {
 		return $localize`Players`;
 	}
 
 	getDimensionLocalize() {
 		return environment.historicalMap.enable ? $localize`Time or Data Source` : $localize`Dimension`
-	}
-
-	getShowHiddenRoutes() {
-		return this.dataService.getShowHiddenRoutes();
-	}
-
-	getShowAllStations() {
-		return this.dataService.getShowAllStations();
 	}
 
 	setShowHiddenRoutes(value: boolean) {
@@ -146,6 +143,11 @@ export class MainPanelComponent {
 
 	setShowAllStations(value: boolean) {
 		setCookie("show_all_stations", value.toString());
+		window.location.reload();
+	}
+
+	setAutoDetectBusRoutes(value: boolean) {
+		setCookie("auto_detect_bus_routes", value.toString());
 		window.location.reload();
 	}
 }

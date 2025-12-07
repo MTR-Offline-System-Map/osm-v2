@@ -112,7 +112,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="4744747022256455712" datatype="html">
-        <source>交换</source>
+        <source>互换</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/directions/directions.component.html</context>
           <context context-type="linenumber">8,9</context>
@@ -225,67 +225,74 @@
           <context context-type="linenumber">11,12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3337914386906667483" datatype="html">
-        <source>显示隐藏路线</source>
+      <trans-unit id="8745141653127273827" datatype="html">
+        <source>自动探测巴士路线</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
           <context context-type="linenumber">28,29</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="892802933665969034" datatype="html">
-        <source>显示全部车站</source>
+      <trans-unit id="1748859514072735288" datatype="html">
+        <source>显示隐藏路线</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
           <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6071188328495377912" datatype="html">
+        <source>显示全部车站</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
+          <context context-type="linenumber">42,43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5407672064878596427" datatype="html">
         <source>出站换乘样式</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
-          <context context-type="linenumber">44,45</context>
+          <context context-type="linenumber">51,52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1050278401445458144" datatype="html">
         <source>无玩家在线。</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
-          <context context-type="linenumber">55,56</context>
+          <context context-type="linenumber">62,63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7432087578839147538" datatype="html">
         <source>../en-US/</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
-          <context context-type="linenumber">67,68</context>
+          <context context-type="linenumber">74,75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1520664020879989316" datatype="html">
         <source>English</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
-          <context context-type="linenumber">71,72</context>
+          <context context-type="linenumber">78,79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7103588127254721505" datatype="html">
         <source>主题</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
-          <context context-type="linenumber">79,80</context>
+          <context context-type="linenumber">86,87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3039233625802548177" datatype="html">
         <source>字体样式</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.html</context>
-          <context context-type="linenumber">84,85</context>
+          <context context-type="linenumber">91,92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7373619377359302437" datatype="html">
         <source>玩家</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/search/search.component.ts</context>
@@ -296,14 +303,14 @@
         <source>时间或数据源</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="801511044046681189" datatype="html">
         <source>维度</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/component/main-panel/main-panel.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9046184619677464940" datatype="html">
@@ -542,7 +549,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="795963863809389005" datatype="html">
-        <source>轮渡</source>
+        <source>渡轮</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/data/routeType.ts</context>
           <context context-type="linenumber">10</context>

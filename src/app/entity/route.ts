@@ -13,12 +13,12 @@ export class Route {
 	public readonly depots: string[];
 	public readonly routePlatforms: RoutePlatform[] = [];
 
-	constructor(routeDTO: RouteDTO) {
+	constructor(routeDTO: RouteDTO, type: string) {
 		this.id = routeDTO.id;
 		this.name = routeDTO.name;
 		this.color = routeDTO.color;
 		this.number = routeDTO.number;
-		this.type = routeDTO.type;
+		this.type = type;
 		this.circularState = routeDTO.circularState;
 		this.hidden = routeDTO.hidden;
 		this.depots = routeDTO.depots;

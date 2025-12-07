@@ -1,4 +1,4 @@
-import {arrayAverage, getCookie, getFromArray, getFromArrayU, pushIfNotExists, setIfUndefined} from "../data/utilities";
+import {arrayAverage, getCookie, getFromArray, getFromArrayU, pushIfNotExists, setCookie, setIfUndefined} from "../data/utilities";
 import {ROUTE_TYPES} from "../data/routeType";
 import {LineConnection} from "../entity/lineConnection";
 import {StationConnection} from "../entity/stationConnection";
@@ -34,6 +34,8 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	private hasHiddenRoute: boolean = false;
 	private showAllStations: boolean = false;
 	private hasConnection: boolean = false;
+	private autoDetectBusRoutes: boolean = false;
+	private hasBusRoute: boolean = false;
 
 	public readonly drawMap = new EventEmitter<void>();
 	public readonly animateMap = new EventEmitter<{ x: number, z: number }>();
@@ -47,6 +49,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			this.stations.length = 0;
 			this.hasConnection = false;
 			this.hasHiddenRoute = false;
+			this.hasBusRoute = false;
 
 			// Write routes
 			const routeIdMap: Record<string, { routeDTO: RouteDTO, route: Route }> = {};
@@ -56,7 +59,8 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 				if (routeDTO.stations.length > 1) {
 					if (routeDTO.hidden) this.hasHiddenRoute = true;
 					if (!routeDTO.hidden || this.showHiddenRoutes) {
-						const route = new Route(routeDTO);
+						const type = this.convertToBusType(routeDTO.name, routeDTO.type);
+						const route = new Route(routeDTO, type);
 						this.routes.push(route);
 						routeIdMap[routeDTO.id] = {routeDTO, route};
 						routeDTO.stations.forEach(({id, x, y, z}) => {
@@ -65,7 +69,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 							stationIdToPosition[id].y.push(y);
 							stationIdToPosition[id].z.push(z);
 						});
-						pushIfNotExists(availableRouteTypes, routeDTO.type);
+						pushIfNotExists(availableRouteTypes, type);
 					}
 				}
 			});
@@ -78,6 +82,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 				stationIdMap[stationDTO.id] = {stationDTO, station};
 			}, dto => {
 				if (this.getShowAllStations() && dto.x != undefined && dto.z != undefined) {
+				//if (dto.x != undefined && dto.z != undefined) {
 					const station = new Station(dto, dto.x, 0, dto.z, true);
 					this.stations.push(station);
 					stationIdMap[dto.id] = {stationDTO, station};
@@ -119,6 +124,11 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			this.dimensionService.includeMarkers.set(data.includeMarkers ?? false);
 			this.updateData();
 		}, REFRESH_INTERVAL, dimensionService, false);
+
+		if (environment.enableAutoDetectBusRoutes) {
+			const cookieAutoDetectBusRoutes = getCookie("auto_detect_bus_routes");
+			this.autoDetectBusRoutes = cookieAutoDetectBusRoutes == "true";
+		}
 
 		this.fetchData("");
 
@@ -175,6 +185,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		};
 
 		this.routes.forEach(({routePlatforms, color, type}) => {
+			//if (this.routeTypeVisibility[type] !== "HIDDEN" && (!hidden || this.showHiddenRoutes)) {
 			if (this.routeTypeVisibility[type] !== "HIDDEN") {
 				const iterateStations = (iterateForwards: boolean) => {
 					for (let i = 0; i < routePlatforms.length; i++) {
@@ -377,6 +388,16 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		this.mapLoading = false;
 	}
 
+	private convertToBusType(name: string, type: string) {
+		if (environment.enableAutoDetectBusRoutes && name.toLowerCase().includes("bus")) {
+			this.hasBusRoute = true;
+			if (this.autoDetectBusRoutes) {
+				return "bus_normal";
+			}
+		}
+		return type;
+	}
+
 	getShowHiddenRoutes() {
 		return this.showHiddenRoutes;
 	}
@@ -385,11 +406,33 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		return this.showAllStations;
 	}
 
+	getAutoDetectBusRoutes() {
+		return this.autoDetectBusRoutes;
+	}
+
+	/* setShowHiddenRoutes(value: boolean) {
+		this.showHiddenRoutes = value;
+		setCookie("show_hidden_routes", value.toString());
+		this.updateData();
+		window.location.reload();
+	}
+
+	setShowAllStations(value: boolean) {
+		this.showAllStations = value;
+		setCookie("show_all_stations", value.toString());
+		this.updateData();
+		window.location.reload();
+	} */
+
 	hasHiddenRoutes() {
 		return this.hasHiddenRoute;
 	}
 
 	hasConnections() {
 		return this.hasConnection;
+	}
+
+	hasBusRoutes() {
+		return this.hasBusRoute;
 	}
 }

@@ -22,17 +22,24 @@
 						<app-visibility-toggle [routeType]="routeType[0]"/>
 					</div>
 				}
+				@if (getEnableAutoDetectBusRoutes()) {
+					<div class="row gap center toggle">
+						<div class="material-icons">directions_bus</div>
+						<div class="shrink spacing" i18n>Auto Detect Bus Route(s)</div>
+						<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
+					</div>
+				}
 				@if (getEnableShowHiddenRoutes()) {
 					<div class="row gap center toggle">
 						<div class="material-icons">visibility_off</div>
-						<div class="shrink spacing" i18n>Show Hidden Routes</div>
+						<div class="shrink spacing" i18n>Show Hidden Route(s)</div>
 						<p-toggle-switch inputId="showHiddenRoutesToggle" formControlName="showHiddenRoutesToggle" (onChange)="setShowHiddenRoutes($event.checked)"/>
 					</div>
 				}
 				@if (getEnableShowAllStations()) {
 					<div class="row gap center toggle">
 						<div class="material-icons">visibility_off</div>
-						<div class="shrink spacing" i18n>Show All Stations</div>
+						<div class="shrink spacing" i18n>Show All Station(s)</div>
 						<p-toggle-switch inputId="showAllStationsToggle" formControlName="showAllStationsToggle" (onChange)="setShowAllStations($event.checked)"/>
 					</div>
 				}
