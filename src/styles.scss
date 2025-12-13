@@ -62,6 +62,25 @@ html, body {
 	flex-grow: 1;
 }
 
+.p-drawer-bottom .pc {
+	display: none;
+}
+
+.p-drawer-right .mobile {
+	display: none;
+}
+
+.p-tablist {
+	min-height: 51.8px;
+}
+
+.scrollable {
+	.wrapper, .content {
+		overflow: visible;
+	}
+	overflow-y: auto !important;
+}
+
 .wrapper {
 	overflow: hidden;
 	width: 100%;

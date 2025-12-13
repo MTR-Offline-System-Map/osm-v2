@@ -6,6 +6,10 @@
 	min-height: 41.6px;
 }
 
+.player-accordion .p-accordionpanel {
+	border-style: none;
+}
+
 .bottom {
 	margin-bottom: 1rem;
 }

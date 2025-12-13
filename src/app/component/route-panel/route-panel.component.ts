@@ -121,6 +121,10 @@ export class RoutePanelComponent {
 		return route ? route.hidden : false;
 	}
 
+	getBetterScroll() {
+		return this.dataService.getBetterScroll();
+	}
+
 	getDeveloperMode() {
 		return this.dataService.getDeveloperMode();
 	}

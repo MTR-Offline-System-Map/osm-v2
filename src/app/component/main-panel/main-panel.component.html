@@ -22,13 +22,6 @@
 						<app-visibility-toggle [routeType]="routeType[0]"/>
 					</div>
 				}
-				@if (getEnableAutoDetectBusRoutes()) {
-					<div class="row gap center toggle">
-						<div class="material-icons">directions_bus</div>
-						<div class="shrink spacing" i18n>Auto Detect Bus Route(s)</div>
-						<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
-					</div>
-				}
 				@if (getEnableShowHiddenRoutes()) {
 					<div class="row gap center toggle">
 						<div class="material-icons">visibility_off</div>
@@ -53,7 +46,7 @@
 				</div>
 			}
 			<p-divider/>
-			<div [hidden]="isOffline()">
+			<div [hidden]="isOffline()" class="player-accordion">
 				<p-accordion [multiple]="true">
 					<p-accordion-panel>
 						<p-accordion-header>{{ getPlayersLocalize() }} ({{ getAllClients().length }})</p-accordion-header>
@@ -71,6 +64,7 @@
 					</p-accordion-panel>
 				</p-accordion>
 			</div>
+			<p-divider/>
 			<a i18n-href href="../zh-Hans/">
 				<button pButton class="icon-button" severity="secondary" [fluid]="true">
 					<div class="row gap-small">
@@ -80,7 +74,7 @@
 				</button>
 			</a>
 			<p-divider/>
-			<div class="column gap-small bottom">
+			<div class="column gap-small">
 				<div class="row gap center">
 					<div class="material-icons">palette</div>
 					<div class="shrink spacing" i18n>Theme</div>
@@ -91,14 +85,37 @@
 					<div class="shrink spacing" i18n>Font Style</div>
 					<app-font-style-toggle/>
 				</div>
-				@if (getEnableDeveloperMode()) {
-					<div class="row gap center toggle">
-						<div class="material-icons">code</div>
-						<div class="shrink spacing" i18n>Developer Mode</div>
-						<p-toggle-switch inputId="developerMode" formControlName="developerMode" (onChange)="setDeveloperMode($event.checked)"/>
-					</div>
-				}
 			</div>
+			<p-divider/>
+			<p-accordion [value]="1" [multiple]="true" class="bottom">
+				<p-accordion-panel>
+					<p-accordion-header i18n>Advanced Settings</p-accordion-header>
+					<p-accordion-content>
+						<div class="column gap-small">
+							<div class="row gap center toggle">
+								<div class="material-icons mobile">screenshot</div>
+								<div class="material-icons pc">screenshot_monitor</div>
+								<div class="shrink spacing" i18n>Better Scroll</div>
+								<p-toggle-switch inputId="betterScroll" formControlName="betterScroll" (onChange)="setBetterScroll($event.checked)"/>
+							</div>
+							@if (getEnableAutoDetectBusRoutes()) {
+								<div class="row gap center toggle">
+									<div class="material-icons">directions_bus</div>
+									<div class="shrink spacing" i18n>Auto Detect Bus Route(s)</div>
+									<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
+								</div>
+							}
+							@if (getEnableDeveloperMode()) {
+								<div class="row gap center toggle">
+									<div class="material-icons">code</div>
+									<div class="shrink spacing" i18n>Developer Mode</div>
+									<p-toggle-switch inputId="developerMode" formControlName="developerMode" (onChange)="setDeveloperMode($event.checked)"/>
+								</div>
+							}
+						</div>
+					</p-accordion-content>
+				</p-accordion-panel>
+			</p-accordion>
 		</div>
 		<div class="spacing"></div>
 	</div>

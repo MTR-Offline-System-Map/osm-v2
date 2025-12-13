@@ -17,6 +17,7 @@ export class DrawerComponent {
 	protected drawerVisible = false;
 	protected drawerPosition = "";
 	protected drawerStyle = {};
+	protected drawerClass = "";
 	@Input({required: true}) title = "";
 	@Output() closed = new EventEmitter<void>;
 
@@ -31,6 +32,10 @@ export class DrawerComponent {
 
 	close() {
 		this.drawerVisible = false;
+	}
+
+	setScrollable(value: boolean) {
+		this.drawerClass = value ? "scrollable" : "";
 	}
 
 	private resize() {

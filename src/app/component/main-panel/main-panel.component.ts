@@ -60,6 +60,7 @@ export class MainPanelComponent {
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
+		betterScroll: new FormControl(this.dataService.getBetterScroll()),
 		autoDetectBusRoutes: new FormControl(this.dataService.getAutoDetectBusRoutes()),
 		developerMode: new FormControl(this.dataService.getDeveloperMode()),
 	});
@@ -151,6 +152,10 @@ export class MainPanelComponent {
 		window.location.reload();
 	}
 
+	setBetterScroll(value: boolean) {
+		this.dataService.setBetterScroll(value);
+	}
+
 	setAutoDetectBusRoutes(value: boolean) {
 		setCookie("auto_detect_bus_routes", value.toString());
 		window.location.reload();
@@ -158,5 +163,9 @@ export class MainPanelComponent {
 
 	setDeveloperMode(value: boolean) {
 		this.dataService.setDeveloperMode(value);
+	}
+	
+	isMobile() {
+		return window.innerWidth < window.innerHeight;
 	}
 }

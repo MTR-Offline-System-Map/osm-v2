@@ -37,6 +37,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	private autoDetectBusRoutes: boolean = false;
 	private hasBusRoute: boolean = false;
 	private developerMode: boolean = false;
+	private betterScroll: boolean = false;
 
 	public readonly drawMap = new EventEmitter<void>();
 	public readonly animateMap = new EventEmitter<{ x: number, z: number }>();
@@ -128,24 +129,32 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 		if (environment.enableAutoDetectBusRoutes) {
 			const cookieAutoDetectBusRoutes = getCookie("auto_detect_bus_routes");
-			this.autoDetectBusRoutes = cookieAutoDetectBusRoutes == "true";
+			this.autoDetectBusRoutes = cookieAutoDetectBusRoutes !== "false";
 		}
 
 		this.fetchData("");
 
 		if (environment.enableShowHiddenRoutes) {
 			const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
-			this.showHiddenRoutes = cookieShowHiddenRoutes == "true";
+			this.showHiddenRoutes = cookieShowHiddenRoutes === "true";
 		}
 
 		if (environment.enableShowAllStations) {
 			const cookieShowAllStations = getCookie("show_all_stations");
-			this.showAllStations = cookieShowAllStations == "true";
+			this.showAllStations = cookieShowAllStations === "true";
+		}
+
+		const cookieBetterScroll = getCookie("better_scroll");
+		if (cookieBetterScroll === "true" || cookieBetterScroll === "false") {
+			this.betterScroll = cookieBetterScroll === "true";
+		} else {
+			this.betterScroll = window.innerWidth < window.innerHeight;
+			setCookie("better_scroll", (window.innerWidth < window.innerHeight).toString());
 		}
 
 		if (environment.enableDeveloperMode) {
 			const cookieDeveloperMode = getCookie("developer_mode");
-			this.developerMode = cookieDeveloperMode == "true";
+			this.developerMode = cookieDeveloperMode === "true";
 		}
 
 		const cookieInterchangeStyle = getCookie("interchange_style");
@@ -416,6 +425,10 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		return this.autoDetectBusRoutes;
 	}
 
+	getBetterScroll() {
+		return this.betterScroll;
+	}
+
 	getDeveloperMode() {
 		return this.developerMode;
 	}
@@ -423,6 +436,11 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	setDeveloperMode(value: boolean) {
 		this.developerMode = value;
 		setCookie("developer_mode", value.toString());
+	}
+
+	setBetterScroll(value: boolean) {
+		this.betterScroll = value;
+		setCookie("better_scroll", value.toString());
 	}
 
 	/* setShowHiddenRoutes(value: boolean) {

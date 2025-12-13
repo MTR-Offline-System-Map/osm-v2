@@ -1,4 +1,4 @@
-<div class="column wrapper">
+<div class="column wrapper {{getBetterScroll()?'scrollable':''}}">
 	<div class="column gap padding-sides">
 		<app-title [name]="getRouteName()" [color]="getRouteColor()"/>
 		@if (getDeveloperMode()) {

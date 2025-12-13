@@ -197,6 +197,10 @@ export class StationPanelComponent {
 		return this.fontStyleService.getFontStyle();
 	}
 
+	getBetterScroll() {
+		return this.dataService.getBetterScroll();
+	}
+
 	getDeveloperMode() {
 		return this.dataService.getDeveloperMode();
 	}
