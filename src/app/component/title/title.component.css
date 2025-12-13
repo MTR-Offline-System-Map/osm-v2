@@ -2,6 +2,7 @@
 	font-size: 1.5rem;
 	font-weight: 600;
 	text-align: center;
+	overflow-wrap: break-word;
 }
 
 .name.cjk {
