@@ -12,7 +12,7 @@ export abstract class DataServiceBase<T> {
 	public readonly isLoading = () => this.loading;
 	protected readonly getUrl = (endpoint: string) => environment.dataUrl(endpoint, this.dimensionService.getDimensionIndex());
 	protected readonly fetchData = (id: string) => {
-		if (!this.dimensionService.isOffline() || !this.mustOnline) {
+		if ((!this.dimensionService.isOffline() || !this.mustOnline) && (!this.dimensionService.includeMarkers || !this.needMarkers)) {
 			this.loading = true;
 			this.id = id;
 			clearTimeout(this.timeoutId);
@@ -20,7 +20,7 @@ export abstract class DataServiceBase<T> {
 		}
 	};
 
-	protected constructor(private readonly sendData: () => Observable<T> | void, private readonly processData: (data: T) => void, private readonly refreshInterval: number, protected readonly dimensionService: DimensionService, private readonly mustOnline: boolean=true) {
+	protected constructor(private readonly sendData: () => Observable<T> | void, private readonly processData: (data: T) => void, private readonly refreshInterval: number, protected readonly dimensionService: DimensionService, private readonly mustOnline: boolean=true, private readonly needMarkers: boolean=false) {
 	}
 
 	private getDataInternal() {

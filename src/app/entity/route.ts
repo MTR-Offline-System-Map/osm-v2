@@ -1,6 +1,7 @@
 import {Station} from "./station";
 import {RouteDTO} from "./generated/route";
 import {RouteStationDTO} from "./generated/routeStation";
+import {Depot} from "./depot";
 
 export class Route {
 	public readonly id: string;
@@ -10,7 +11,7 @@ export class Route {
 	public readonly type: string;
 	public readonly circularState: "NONE" | "CLOCKWISE" | "ANTICLOCKWISE";
 	public readonly hidden: boolean;
-	public readonly depots: string[];
+	public readonly depots: Depot[] = [];
 	public readonly routePlatforms: RoutePlatform[] = [];
 
 	constructor(routeDTO: RouteDTO, type: string) {
@@ -21,7 +22,7 @@ export class Route {
 		this.type = type;
 		this.circularState = routeDTO.circularState;
 		this.hidden = routeDTO.hidden;
-		this.depots = routeDTO.depots;
+		this.depots = routeDTO.depots.map(depot => new Depot(undefined, depot));
 	}
 }
 

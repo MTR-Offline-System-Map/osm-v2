@@ -3,6 +3,7 @@ import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MapDataService} from "../../service/map-data.service";
 import {SimplifyStationsPipe} from "../../pipe/simplifyStationsPipe";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
+import {SimplifyDepotsPipe} from "../../pipe/simplifyDepotsPipe";
 import {FormatNamePipe} from "../../pipe/formatNamePipe";
 import {AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent} from "primeng/autocomplete";
 import {DividerModule} from "primeng/divider";
@@ -40,10 +41,12 @@ export class SearchComponent {
 	private readonly dimensionService = inject(DimensionService);
 	private readonly simplifyStationsPipe = inject(SimplifyStationsPipe);
 	private readonly simplifyRoutesPipe = inject(SimplifyRoutesPipe);
+	private readonly simplifyDepotsPipe = inject(SimplifyDepotsPipe);
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
 	@Output() clientClicked = new EventEmitter<string>();
+	@Output() depotClicked = new EventEmitter<string>();
 	@Output() textCleared = new EventEmitter<void>();
 	@Input({required: true}) label = "";
 	@Input({required: true}) parentFormGroup!: FormGroup;
@@ -59,7 +62,7 @@ export class SearchComponent {
 		if (event.query === "") {
 			this.textCleared.emit();
 		} else {
-			const filter = (list: SearchData[]): { value: { key: string, icons: string[], color?: number, name: string, number: string, type: "station" | "route" | "client" } }[] => {
+			const filter = (list: SearchData[]): { value: { key: string, icons: string[], color?: number, name: string, number: string, type: "station" | "route" | "client" | "depot" } }[] => {
 				const matches: { value: SearchData, index: number }[] = [];
 				list.forEach(({key, icons, color, name, number, type}) => {
 					const index = name.toLowerCase().indexOf(event.query.toLowerCase());
@@ -77,6 +80,7 @@ export class SearchComponent {
 			const searchedStations = filter(this.simplifyStationsPipe.transform(this.dataService.stations));
 			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes) : []);
 			const searchedClients = filter(!this.dimensionService.isOffline() ? this.clientsService.allClients.map(client => ({key: client.id, icons: [`https://mc-heads.net/avatar/${client.id}`], name: client.name, number: "", type: "client"})) : []);
+			const searchedDepots = filter(this.simplifyDepotsPipe.transform(this.dataService.depots));
 
 			if (searchedStations.length > 0) {
 				this.data.push({
@@ -98,6 +102,13 @@ export class SearchComponent {
 					items: searchedClients,
 				});
 			}
+
+			if (searchedDepots.length > 0) {
+				this.data.push({
+					label: $localize`Depots`,
+					items: searchedDepots,
+				});
+			}
 		}
 	}
 
@@ -112,6 +123,9 @@ export class SearchComponent {
 					break;
 				case "client":
 					this.clientClicked.emit(event.value.value.key);
+					break;
+				case "depot":
+					this.depotClicked.emit(event.value.value.key);
 					break;
 			}
 		}

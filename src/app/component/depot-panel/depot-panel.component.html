@@ -1,0 +1,45 @@
+<div class="column gap wrapper {{getBetterScroll()?'scrollable':''}}">
+    <div class="column gap padding-sides">
+        <app-title [name]="getDepot()?.name ?? ''" [color]=""/>
+        <div class="row gap-small center">
+            <div class="row gap center" i18n-pTooltip pTooltip="Location" tooltipPosition="left">
+                <div class="material-icons">my_location</div>
+                <div>({{ getCoordinatesText() }}</div>
+            </div>
+            <div class="row center">
+                <button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyLocation(icon)" i18n-pTooltip pTooltip="Copy Location" tooltipPosition="bottom">
+                    <div class="material-icons" #icon>content_copy</div>
+                </button>
+                <button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" i18n-pTooltip pTooltip="Focus on Map" tooltipPosition="bottom">
+                    <div class="material-icons">filter_center_focus</div>
+                </button>
+                @if (getEnableViewOnWorldMap()) {
+                    <button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" i18n-pTooltip pTooltip="View on World Map" tooltipPosition="bottom">
+                        <div class="material-icons">map</div>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+	<div class="padding-sides">
+		<p-divider/>
+	</div>
+
+    @if (getRoutes().length > 0) {
+        <div class="column gap padding-sides content">
+            <div class="row gap-small center">
+                <p-checkbox #showDetailsCheckbox inputId="showDetailsCheckbox" [binary]="true"/>
+                <label for="showDetailsCheckbox" i18n>Show Details</label>
+            </div>
+            <div class="column">
+                @for (route of getRoutes(); track $index) {
+                    <div class="column">
+                        <p-divider class="small-divider"/>
+                        <app-data-list-entry [icons]="[route.typeIcon, route.hidden ? 'visibility_off' : '']" [title]="[route.name | formatName, route.number | formatName]" [subtitles]="showDetailsCheckbox.checked ? mapRouteVariations(route.variations) : []" [color]="route.color | formatColor" [useLightColor]="false" [clickable]="true" (entryClicked)="routeClicked.emit(getRouteKey(route))"/>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

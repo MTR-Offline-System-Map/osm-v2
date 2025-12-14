@@ -42,6 +42,7 @@ export class ClientPanelComponent {
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
 	@Output() directionsOpened = new EventEmitter<{ clientDetails: { clientId: string, isStartClient: boolean } }>;
+	@Output() depotClicked = new EventEmitter<string>();
 
 	getName() {
 		return this.clientService.getClient()?.name ?? "";

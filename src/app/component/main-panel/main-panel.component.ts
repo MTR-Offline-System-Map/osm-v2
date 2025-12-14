@@ -53,6 +53,7 @@ export class MainPanelComponent {
 	@Output() routeClicked = new EventEmitter<string>();
 	@Output() clientClicked = new EventEmitter<string>();
 	@Output() directionsOpened = new EventEmitter<void>();
+	@Output() depotClicked = new EventEmitter<string>();
 
 	protected readonly formGroup = new FormGroup({
 		search: new FormControl(""),
@@ -60,6 +61,7 @@ export class MainPanelComponent {
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
+		showDepots: new FormControl(this.dataService.getShowDepots()),
 		betterScroll: new FormControl(this.dataService.getBetterScroll()),
 		autoDetectBusRoutes: new FormControl(this.dataService.getAutoDetectBusRoutes()),
 		developerMode: new FormControl(this.dataService.getDeveloperMode()),
@@ -118,12 +120,21 @@ export class MainPanelComponent {
 		this.formGroup.patchValue({search: undefined});
 	}
 
+	clickDepot(id: string) {
+		this.depotClicked.emit(id);
+		this.formGroup.patchValue({search: undefined});
+	}
+
 	getEnableShowHiddenRoutes() {
 		return environment.enableShowHiddenRoutes && this.dataService.hasHiddenRoutes();
 	}
 
 	getEnableShowAllStations() {
-		return environment.enableShowAllStations && this.dimensionService.includeMarkers();;
+		return environment.enableShowAllStations && this.dimensionService.includeMarkers();
+	}
+
+	getEnableShowDepots() {
+		return environment.enableShowDepots && this.dimensionService.includeMarkers();
 	}
 
 	getEnableAutoDetectBusRoutes() {
@@ -150,6 +161,10 @@ export class MainPanelComponent {
 	setShowAllStations(value: boolean) {
 		setCookie("show_all_stations", value.toString());
 		window.location.reload();
+	}
+
+	setShowDepots(value: boolean) {
+		this.dataService.setShowDepots(value);
 	}
 
 	setBetterScroll(value: boolean) {

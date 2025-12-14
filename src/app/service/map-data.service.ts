@@ -13,6 +13,8 @@ import {Station} from "../entity/station";
 import {RouteDTO} from "../entity/generated/route";
 import {StationForMap} from "../entity/stationForMap";
 import {environment} from "../../environments/environment";
+import { Depot } from "../entity/depot";
+import { DepotDTO } from "../entity/generated/depot";
 
 const REFRESH_INTERVAL = 30000;
 
@@ -22,6 +24,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 	public readonly routes: Route[] = [];
 	public readonly stations: Station[] = [];
+	public readonly depots: Depot[] = [];
 	public readonly routeTypeVisibility: Record<string, "HIDDEN" | "SOLID" | "HOLLOW" | "DASHED"> = {};
 	public interchangeStyle: "HIDDEN" | "DOTTED" | "HOLLOW";
 	public readonly stationConnections: StationConnection[] = [];
@@ -33,11 +36,12 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	private showHiddenRoutes: boolean = false;
 	private hasHiddenRoute: boolean = false;
 	private showAllStations: boolean = false;
+	private showDepots: boolean = false;
+	private developerMode: boolean = false;
+	private betterScroll: boolean = false;
 	private hasConnection: boolean = false;
 	private autoDetectBusRoutes: boolean = false;
 	private hasBusRoute: boolean = false;
-	private developerMode: boolean = false;
-	private betterScroll: boolean = false;
 
 	public readonly drawMap = new EventEmitter<void>();
 	public readonly animateMap = new EventEmitter<{ x: number, z: number }>();
@@ -49,6 +53,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(this.getUrl("stations-and-routes")), ({data}) => {
 			this.routes.length = 0;
 			this.stations.length = 0;
+			this.depots.length = 0;
 			this.hasConnection = false;
 			this.hasHiddenRoute = false;
 			this.hasBusRoute = false;
@@ -61,7 +66,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 				if (routeDTO.stations.length > 1) {
 					if (routeDTO.hidden) this.hasHiddenRoute = true;
 					if (!routeDTO.hidden || this.showHiddenRoutes) {
-						const type = this.convertToBusType(routeDTO.name, routeDTO.type);
+						const type = !this.autoDetectBusRoutes || data.disableAutoDetectBusRoutes ? routeDTO.type : this.convertToBusType(routeDTO.name, routeDTO.type);
 						const route = new Route(routeDTO, type);
 						this.routes.push(route);
 						routeIdMap[routeDTO.id] = {routeDTO, route};
@@ -91,10 +96,20 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 				}
 			}));
 
+			// Write depots
+			const depotIdMap: Record<string, { depotDTO: DepotDTO, depot: Depot }> = {};
+			if (data.depots != undefined && data.depots.length != 0) {
+				data.depots.forEach(depotDTO => {
+					const depot = new Depot(depotDTO);
+					this.depots.push(depot);
+					depotIdMap[depotDTO.id] = {depotDTO, depot};
+				});
+			}
+
 			// Write station connection cache
 			this.stations.forEach(station => getFromArray(stationIdMap, station.id, stationCache => stationCache.stationDTO.connections.forEach(connection => getFromArray(stationIdMap, connection, stationCacheConnection => station.connections.push(stationCacheConnection.station)))));
 
-			// Write route platform cache and station route cache
+			// Write route platform cache, station route cache and depot route cache
 			this.routes.forEach(route => getFromArray(routeIdMap, route.id, routeCache => {
 				for (let i = 0; i < routeCache.routeDTO.stations.length; i++) {
 					const routeStationDTO = routeCache.routeDTO.stations[i];
@@ -102,6 +117,16 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 						stationCache.station.routes.push(route);
 						route.routePlatforms.push(new RoutePlatform(routeStationDTO, stationCache.station, i === routeCache.routeDTO.stations.length - 1 ? 0 : routeCache.routeDTO.durations[i]));
 					});
+				}
+				if (data.depots != undefined && data.depots.length != 0) {
+					route.depots.length = 0;
+					for (let i = 0; i < routeCache.routeDTO.depots.length; i++) {
+						const depot = routeCache.routeDTO.depots[i];
+						getFromArray(depotIdMap, depot, depotCache => {
+							pushIfNotExists(depotCache.depot.routes, route);
+							route.depots.push(depotCache.depot);
+						});
+					}
 				}
 			}));
 
@@ -142,6 +167,11 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		if (environment.enableShowAllStations) {
 			const cookieShowAllStations = getCookie("show_all_stations");
 			this.showAllStations = cookieShowAllStations === "true";
+		}
+
+		if (environment.enableShowDepots) {
+			const cookieShowDepots = getCookie("show_depots");
+			this.showDepots = cookieShowDepots === "true";
 		}
 
 		const cookieBetterScroll = getCookie("better_scroll");
@@ -404,11 +434,9 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	private convertToBusType(name: string, type: string) {
-		if (environment.enableAutoDetectBusRoutes && name.toLowerCase().includes("bus")) {
+		if (name.toLowerCase().includes("bus")) {
 			this.hasBusRoute = true;
-			if (this.autoDetectBusRoutes) {
-				return "bus_normal";
-			}
+			return "bus_normal";
 		}
 		return type;
 	}
@@ -421,6 +449,10 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		return this.showAllStations;
 	}
 
+	getShowDepots() {
+		return this.showDepots;
+	}
+
 	getAutoDetectBusRoutes() {
 		return this.autoDetectBusRoutes;
 	}
@@ -431,6 +463,12 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 	getDeveloperMode() {
 		return this.developerMode;
+	}
+
+	setShowDepots(value: boolean) {
+		this.showDepots = value;
+		setCookie("show_depots", value.toString());
+		this.updateData();
 	}
 
 	setDeveloperMode(value: boolean) {

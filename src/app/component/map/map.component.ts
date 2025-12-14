@@ -56,6 +56,7 @@ export class MapComponent implements AfterViewInit {
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() clientClicked = new EventEmitter<string>();
+	@Output() depotClicked = new EventEmitter<string>();
 	@ViewChild("wrapper") private readonly wrapperRef!: ElementRef<HTMLDivElement>;
 	@ViewChild("canvas") private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
 	@ViewChild("stats") private readonly statsRef!: ElementRef<HTMLDivElement>;
@@ -294,15 +295,44 @@ export class MapComponent implements AfterViewInit {
 			return shape;
 		};
 
-		const processShape = (x: number, y: number, radius: number, newWidth: number, newHeight: number, newRotate: boolean, offset: number, color: number) => {
+		const processShape = (x: number, y: number, radius: number, newWidth: number, newHeight: number, newRotate: boolean, offset: number, color: number, solidLine: boolean=true) => {
 			const shapePoints = createShape(radius, newWidth, newHeight).getPoints(2);
-			for (let i = 1; i < shapePoints.length; i++) {
-				positions.push(x, y, offset);
-				const point1 = new THREE.Vector2(shapePoints[i - 1].x + x, shapePoints[i - 1].y + y).rotateAround(new THREE.Vector2(x, y), newRotate ? Math.PI / 4 : 0);
-				positions.push(point1.x, point1.y, offset);
-				const point2 = new THREE.Vector2(shapePoints[i].x + x, shapePoints[i].y + y).rotateAround(new THREE.Vector2(x, y), newRotate ? Math.PI / 4 : 0);
-				positions.push(point2.x, point2.y, offset);
-				MapComponent.setColor(color, colors, 3);
+			if (solidLine) {
+				for (let i = 1; i < shapePoints.length; i++) {
+					positions.push(x, y, offset);
+					const point1 = new THREE.Vector2(shapePoints[i - 1].x + x, shapePoints[i - 1].y + y).rotateAround(new THREE.Vector2(x, y), newRotate ? Math.PI / 4 : 0);
+					positions.push(point1.x, point1.y, offset);
+					const point2 = new THREE.Vector2(shapePoints[i].x + x, shapePoints[i].y + y).rotateAround(new THREE.Vector2(x, y), newRotate ? Math.PI / 4 : 0);
+					positions.push(point2.x, point2.y, offset);
+					MapComponent.setColor(color, colors, 3);
+				}
+			} else {
+				const dashLength = 1;
+				const gapLength = 1;
+				
+				const totalPoints = shapePoints.length;
+				let currentIndex = 0;
+				let isDash = true;
+				
+				while (currentIndex < totalPoints - 1) {
+					if (isDash) {
+						const endIndex = Math.min(currentIndex + dashLength, totalPoints - 1);
+						for (let i = currentIndex; i < endIndex; i++) {
+							positions.push(x, y, offset);
+							const point1 = new THREE.Vector2(shapePoints[i].x + x, shapePoints[i].y + y)
+								.rotateAround(new THREE.Vector2(x, y), newRotate ? Math.PI / 4 : 0);
+							positions.push(point1.x, point1.y, offset);
+							const point2 = new THREE.Vector2(shapePoints[i + 1].x + x, shapePoints[i + 1].y + y)
+								.rotateAround(new THREE.Vector2(x, y), newRotate ? Math.PI / 4 : 0);
+							positions.push(point2.x, point2.y, offset);
+							MapComponent.setColor(color, colors, 3);
+						}
+						currentIndex = endIndex;
+					} else {
+						currentIndex += gapLength;
+					}
+					isDash = !isDash;
+				}
 			}
 		};
 
@@ -325,6 +355,15 @@ export class MapComponent implements AfterViewInit {
 				}
 			}
 		});
+
+		if (this.mapDataService.getShowDepots()) {
+			this.mapDataService.depots.forEach(({id, x, z}) => {
+				const depotSelected = this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id);
+				const adjustZ = depotSelected ? 20 : 0;
+				processShape(x, -z, 7, 0, 0, false, adjustZ - 1, this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, depotSelected), false);
+				processShape(x, -z, 5, 0, 0, false, adjustZ, this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, depotSelected));
+			})
+		}
 
 		if (!this.dimensionService.isOffline()) {
 			Object.values(this.clientsService.allClients).forEach(({id, rawX, rawZ}) => this.clientPositions[id] = {x: rawX, y: -rawZ});
@@ -584,10 +623,37 @@ export class MapComponent implements AfterViewInit {
 					y: canvasY + halfCanvasHeight - textOffset,
 					stationWidth: Math.max(rotate ? rotatedSize : newWidth, clientsWidth) * 2 + 18 * SETTINGS.scale,
 					stationHeight: Math.max(rotate ? rotatedSize : newHeight, clientsHeight) * 2 + 18 * SETTINGS.scale,
+					isStation: true,
 				});
 				renderedTextCount++;
 			}
 		});
+
+		if (this.mapDataService.getShowDepots()) {
+			this.mapDataService.depots.forEach(({id, name, x, z, getIcons}) => {
+				const canvasX = (x - this.camera.position.x) * this.camera.zoom;
+				const canvasY = (z + this.camera.position.y) * this.camera.zoom;
+				if (Math.abs(canvasX) <= halfCanvasWidth && Math.abs(canvasY) <= halfCanvasHeight && (renderedTextCount < SETTINGS.maxText * 2) && (this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id))) {
+					const textOffset = 9 * SETTINGS.scale;
+					const icons = getIcons(type => this.mapDataService.routeTypeVisibility[type] === "HIDDEN");
+					this.textLabels.push({
+						hoverOverride: false,
+						id,
+						text: name,
+						icons,
+						shouldRenderText: renderedTextCount < SETTINGS.maxText,
+						clients: [],
+						clientImagePadding: clientImagePadding * SETTINGS.scale,
+						x: canvasX + halfCanvasWidth,
+						y: canvasY + halfCanvasHeight - textOffset,
+						stationWidth: 18 * SETTINGS.scale,
+						stationHeight: 18 * SETTINGS.scale,
+						isStation: false,
+					});
+					renderedTextCount++;
+				}
+			});
+		}
 
 		this.clientGroupsOnRoute.length = 0;
 		this.clientGroupsOnRouteRaw.forEach(({clients, x, y}) => {
@@ -694,4 +760,5 @@ class TextLabel {
 	public readonly y: number = 0;
 	public readonly stationWidth: number = 0;
 	public readonly stationHeight: number = 0;
+	public readonly isStation: boolean = true;
 }

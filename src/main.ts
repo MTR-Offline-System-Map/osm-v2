@@ -15,6 +15,7 @@ import {providePrimeNG} from "primeng/config";
 import {myPreset} from "./theme-preset";
 import {provideTransloco} from "@jsverse/transloco";
 import {TranslocoHttpLoader} from "./transloco-loader";
+import {SimplifyDepotsPipe} from "./app/pipe/simplifyDepotsPipe";
 
 bootstrapApplication(AppComponent, {
 	providers: [
@@ -37,6 +38,7 @@ bootstrapApplication(AppComponent, {
 		}),
 		SimplifyStationsPipe,
 		SimplifyRoutesPipe,
+		SimplifyDepotsPipe,
 		SplitNamePipe,
 		FormatNamePipe,
 		FormatTimePipe,

@@ -9,6 +9,7 @@ export abstract class SelectableDataServiceBase<T, U> extends DataServiceBase<T>
 
 	public readonly getSelectedData = () => this.selectedData;
 	public readonly select = (dataKey: string) => {
+		console.log(dataKey);
 		this.reset();
 		this.selectedData = this.convert(dataKey);
 		this.selectionChanged.emit();
@@ -19,11 +20,11 @@ export abstract class SelectableDataServiceBase<T, U> extends DataServiceBase<T>
 		this.selectionChanged.emit();
 	};
 
-	protected constructor(private readonly convert: (dataKey: string) => U | undefined, private readonly reset: () => void, sendData: (selectedData: U) => Observable<T> | void, processData: (data: T) => void, refreshInterval: number, dimensionService: DimensionService, mustOnline: boolean = true) {
+	protected constructor(private readonly convert: (dataKey: string) => U | undefined, private readonly reset: () => void, sendData: (selectedData: U) => Observable<T> | void, processData: (data: T) => void, refreshInterval: number, dimensionService: DimensionService, mustOnline: boolean = true, needMarkers: boolean = false) {
 		super(() => {
 			if (this.selectedData) {
 				return sendData(this.selectedData);
 			}
-		}, processData, refreshInterval, dimensionService, mustOnline);
+		}, processData, refreshInterval, dimensionService, mustOnline, needMarkers);
 	}
 }

@@ -117,6 +117,7 @@ export class RouteKeyService extends SelectableDataServiceBase<void, Route[]> {
 		super(routeKey => {
 			mapSelectionService.selectedStationConnections.length = 0;
 			mapSelectionService.selectedStations.length = 0;
+			mapSelectionService.selectedDepots.length = 0;
 			const selectedRouteVariations: Route[] = [];
 			const tempStationConnections: Record<string, { stationIds: [string, string], routeColor: number }> = {};
 			let mapUpdated = false;

@@ -16,23 +16,29 @@ import {FormsModule} from "@angular/forms";
 import {DimensionService} from "../../service/dimension.service";
 import {MapDataService} from "../../service/map-data.service";
 import {ButtonModule} from "primeng/button";
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from "primeng/tabs";
 
 @Component({
 	selector: "app-route-panel",
 	imports: [
-		ButtonModule,
-		FloatLabelModule,
-		SelectModule,
-		CheckboxModule,
-		DividerModule,
-		TooltipModule,
-		FormatNamePipe,
-		FormatTimePipe,
-		RouteDisplayComponent,
-		DataListEntryComponent,
-		TitleComponent,
-		FormsModule,
-	],
+    ButtonModule,
+    FloatLabelModule,
+    SelectModule,
+    CheckboxModule,
+    DividerModule,
+    TooltipModule,
+    FormatNamePipe,
+    FormatTimePipe,
+    RouteDisplayComponent,
+    DataListEntryComponent,
+    TitleComponent,
+    FormsModule,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel
+],
 	templateUrl: "./route-panel.component.html",
 	styleUrl: "./route-panel.component.css",
 })
@@ -46,6 +52,7 @@ export class RoutePanelComponent {
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
 	@Output() directionsOpened = new EventEmitter<void>();
+	@Output() depotClicked = new EventEmitter<string>();
 	protected dropdownValue?: { name: string; id: string; };
 
 	constructor() {
@@ -119,6 +126,10 @@ export class RoutePanelComponent {
 	getRouteHidden() {
 		const route = this.routeVariationService.getSelectedData();
 		return route ? route.hidden : false;
+	}
+
+	getEnableRouteDepotsDetails() {
+		return this.dataService.getShowDepots();
 	}
 
 	getBetterScroll() {

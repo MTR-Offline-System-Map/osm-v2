@@ -11,7 +11,7 @@ export function setCookie(name: string, value: string) {
 	document.cookie = `${name}=${value}; expires=${new Date(2999, 11, 31).toUTCString()}; path=/`;
 }
 
-export function pushIfNotExists(array: string[], element: string) {
+export function pushIfNotExists<T>(array: T[], element: T) {
 	if (!array.includes(element)) {
 		array.push(element);
 	}

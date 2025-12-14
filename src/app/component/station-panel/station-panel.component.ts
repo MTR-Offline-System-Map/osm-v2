@@ -53,7 +53,8 @@ export class StationPanelComponent {
 	protected dialogData?: Arrival;
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
-	@Output() directionsOpened = new EventEmitter<{ stationDetails: { stationId: string, isStartStation: boolean } }>;
+	@Output() directionsOpened = new EventEmitter<{ stationDetails: { stationId: string, isStartStation: boolean } }>
+	@Output() depotClicked = new EventEmitter<string>();
 
 	getStation() {
 		return this.stationService.getSelectedData();

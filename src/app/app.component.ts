@@ -13,20 +13,23 @@ import {TooltipModule} from "primeng/tooltip";
 import {ClientService} from "./service/client.service";
 import {ClientPanelComponent} from "./component/client-panel/client-panel.component";
 import {DimensionService} from "./service/dimension.service";
+import {DepotKeyService} from "./service/depot.service";
+import {DepotPanelComponent} from "./component/depot-panel/depot-panel.component";
 
 @Component({
 	selector: "app-root",
 	imports: [
-		MapComponent,
-		ButtonModule,
-		TooltipModule,
-		StationPanelComponent,
-		DrawerComponent,
-		ClientPanelComponent,
-		DirectionsComponent,
-		MainPanelComponent,
-		RoutePanelComponent,
-	],
+    MapComponent,
+    ButtonModule,
+    TooltipModule,
+    StationPanelComponent,
+    DrawerComponent,
+    ClientPanelComponent,
+    DirectionsComponent,
+    MainPanelComponent,
+    RoutePanelComponent,
+    DepotPanelComponent
+],
 	templateUrl: "./app.component.html",
 	styleUrls: ["./app.component.css"],
 })
@@ -36,65 +39,89 @@ export class AppComponent {
 	private readonly clientService = inject(ClientService);
 	private readonly directionsService = inject(DirectionsService);
 	private readonly dimensionService = inject(DimensionService);
+	private readonly depotKeyService = inject(DepotKeyService);
 
-	onClickMain(sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent) {
+	onClickMain(sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
 		sideMain.open();
 		sideStation.close();
 		sideClient.close();
 		sideDirections.close();
 		sideRoute.close();
+		sideDepot.close();
 		this.onCloseStation();
 		this.onCloseClient();
 		this.onCloseDirections();
 		this.onCloseRoute();
+		this.onCloseDepot();
 	}
 
-	onClickStation(stationId: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, zoomToStation: boolean) {
+	onClickStation(stationId: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent, zoomToStation: boolean) {
 		this.stationService.setStation(stationId, zoomToStation);
 		sideMain.close();
 		sideStation.open();
 		sideClient.close();
 		sideDirections.close();
 		sideRoute.close();
+		sideDepot.close();
 		this.onCloseClient();
 		this.onCloseDirections();
 		this.onCloseRoute();
+		this.onCloseDepot();
 	}
 
-	onClickRoute(routeKey: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent) {
+	onClickRoute(routeKey: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
 		this.routeKeyService.select(routeKey);
 		sideMain.close();
 		sideStation.close();
 		sideClient.close();
 		sideDirections.close();
 		sideRoute.open();
+		sideDepot.close();
+		this.onCloseStation();
+		this.onCloseClient();
+		this.onCloseDirections();
+		this.onCloseDepot();
+	}
+
+	onClickDepot(depotKey: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
+		this.depotKeyService.select(depotKey);
+		sideMain.close();
+		sideStation.close();
+		sideClient.close();
+		sideDirections.close();
+		sideRoute.close();
+		sideDepot.open();
 		this.onCloseStation();
 		this.onCloseClient();
 		this.onCloseDirections();
 	}
 
-	onClickClient(clientId: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent) {
+	onClickClient(clientId: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
 		this.clientService.setClient(clientId);
 		sideMain.close();
 		sideStation.close();
 		sideClient.open();
 		sideDirections.close();
 		sideRoute.close();
+		sideDepot.close();
 		this.onCloseStation();
 		this.onCloseRoute();
 		this.onCloseDirections();
+		this.onCloseDepot();
 	}
 
-	onOpenDirections(directionsSelection: { stationDetails?: { stationId: string, isStartStation: boolean }, clientDetails?: { clientId: string, isStartClient: boolean } } | undefined, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent) {
+	onOpenDirections(directionsSelection: { stationDetails?: { stationId: string, isStartStation: boolean }, clientDetails?: { clientId: string, isStartClient: boolean } } | undefined, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
 		this.directionsService.directionsPanelOpened.emit(directionsSelection);
 		sideMain.close();
 		sideStation.close();
 		sideClient.close();
 		sideDirections.open();
 		sideRoute.close();
+		sideDepot.close();
 		this.onCloseStation();
 		this.onCloseClient();
 		this.onCloseRoute();
+		this.onCloseDepot();
 	}
 
 	onCloseStation() {
@@ -111,6 +138,10 @@ export class AppComponent {
 
 	onCloseRoute() {
 		this.routeKeyService.clear();
+	}
+
+	onCloseDepot() {
+		this.depotKeyService.clear();
 	}
 
 	isOffline() {

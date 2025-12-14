@@ -81,6 +81,10 @@ html, body {
 	overflow-y: auto !important;
 }
 
+.small-divider {
+	--p-divider-horizontal-margin: 1px 0;
+}
+
 .wrapper {
 	overflow: hidden;
 	width: 100%;

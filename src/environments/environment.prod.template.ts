@@ -11,6 +11,7 @@ export const environment = {
   },
   enableShowHiddenRoutes: false,
   enableShowAllStations: false,
+  enableShowDepots: false,
   enableAutoDetectBusRoutes: false,
   enableDeveloperMode: false,
 };

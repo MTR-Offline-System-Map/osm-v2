@@ -1,6 +1,6 @@
 <div class="column gap wrapper" [formGroup]="formGroup">
 	<div class="column gap-small padding-sides">
-		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeRoutes]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)"/>
+		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeRoutes]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)" (depotClicked)="clickDepot($event)"/>
 		<p-float-label variant="in">
 			<p-select inputId="dropdown" formControlName="dimension" [options]="getDimensions()" (onChange)="setDimension()" [fluid]="true"/>
 			<label for="dropdown">{{ getDimensionLocalize() }}</label>
@@ -34,6 +34,13 @@
 						<div class="material-icons">visibility_off</div>
 						<div class="shrink spacing" i18n>Show All Station(s)</div>
 						<p-toggle-switch inputId="showAllStationsToggle" formControlName="showAllStationsToggle" (onChange)="setShowAllStations($event.checked)"/>
+					</div>
+				}
+				@if (getEnableShowDepots()) {
+					<div class="row gap center toggle">
+						<div class="material-icons">home</div>
+						<div class="shrink spacing" i18n>Show Depot(s)</div>
+						<p-toggle-switch inputId="showDepots" formControlName="showDepots" (onChange)="setShowDepots($event.checked)"/>
 					</div>
 				}
 			</div>
