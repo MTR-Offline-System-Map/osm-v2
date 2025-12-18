@@ -2,8 +2,8 @@
 	<div class="column padding-sides">
 		<div class="row gap-small center">
 			<div class="column gap-small spacing">
-				<app-search i18n-label label="Start" [parentFormGroup]="formGroup" childFormControlName="startInput" [includeRoutes]="false" (stationClicked)="onClickStation($event, true)" (clientClicked)="onClickClient($event, true)" (textCleared)="onClearInput(true)"/>
-				<app-search i18n-label label="End" [parentFormGroup]="formGroup" childFormControlName="endInput" [includeRoutes]="false" (stationClicked)="onClickStation($event, false)" (clientClicked)="onClickClient($event, false)" (textCleared)="onClearInput(false)"/>
+				<app-search i18n-label label="Start" [parentFormGroup]="formGroup" childFormControlName="startInput" [includeRoutes]="false" [includeDepots]="false" (stationClicked)="onClickStation($event, true)" (clientClicked)="onClickClient($event, true)" (textCleared)="onClearInput(true)"/>
+				<app-search i18n-label label="End" [parentFormGroup]="formGroup" childFormControlName="endInput" [includeRoutes]="false" [includeDepots]="false" (stationClicked)="onClickStation($event, false)" (clientClicked)="onClickClient($event, false)" (textCleared)="onClearInput(false)"/>
 			</div>
 			<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="swapStations()" [disabled]="cannotSwap()" i18n-pTooltip pTooltip="Swap Stations">
 				<div class="material-icons">swap_vert</div>

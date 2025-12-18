@@ -9,7 +9,6 @@ export abstract class SelectableDataServiceBase<T, U> extends DataServiceBase<T>
 
 	public readonly getSelectedData = () => this.selectedData;
 	public readonly select = (dataKey: string) => {
-		console.log(dataKey);
 		this.reset();
 		this.selectedData = this.convert(dataKey);
 		this.selectionChanged.emit();

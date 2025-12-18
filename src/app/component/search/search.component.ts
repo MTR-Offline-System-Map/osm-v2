@@ -52,6 +52,7 @@ export class SearchComponent {
 	@Input({required: true}) parentFormGroup!: FormGroup;
 	@Input({required: true}) childFormControlName = "";
 	@Input({required: true}) includeRoutes = true;
+	@Input({required: true}) includeDepots = true;
 	@Input() setText!: EventEmitter<string>;
 
 	protected data: SelectItemGroup[] = [];
@@ -80,7 +81,7 @@ export class SearchComponent {
 			const searchedStations = filter(this.simplifyStationsPipe.transform(this.dataService.stations));
 			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes) : []);
 			const searchedClients = filter(!this.dimensionService.isOffline() ? this.clientsService.allClients.map(client => ({key: client.id, icons: [`https://mc-heads.net/avatar/${client.id}`], name: client.name, number: "", type: "client"})) : []);
-			const searchedDepots = filter(this.simplifyDepotsPipe.transform(this.dataService.depots));
+			const searchedDepots = filter(this.includeDepots ? this.simplifyDepotsPipe.transform(this.dataService.depots) : []);
 
 			if (searchedStations.length > 0) {
 				this.data.push({

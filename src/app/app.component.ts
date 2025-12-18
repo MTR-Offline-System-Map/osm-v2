@@ -13,8 +13,8 @@ import {TooltipModule} from "primeng/tooltip";
 import {ClientService} from "./service/client.service";
 import {ClientPanelComponent} from "./component/client-panel/client-panel.component";
 import {DimensionService} from "./service/dimension.service";
-import {DepotKeyService} from "./service/depot.service";
 import {DepotPanelComponent} from "./component/depot-panel/depot-panel.component";
+import {DepotService} from "./service/depot.service";
 
 @Component({
 	selector: "app-root",
@@ -39,7 +39,7 @@ export class AppComponent {
 	private readonly clientService = inject(ClientService);
 	private readonly directionsService = inject(DirectionsService);
 	private readonly dimensionService = inject(DimensionService);
-	private readonly depotKeyService = inject(DepotKeyService);
+	private readonly depotService = inject(DepotService);
 
 	onClickMain(sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
 		sideMain.open();
@@ -83,8 +83,8 @@ export class AppComponent {
 		this.onCloseDepot();
 	}
 
-	onClickDepot(depotKey: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
-		this.depotKeyService.select(depotKey);
+	onClickDepot(depotKey: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent, zoomToDepot: boolean) {
+		this.depotService.setDepot(depotKey, zoomToDepot);
 		sideMain.close();
 		sideStation.close();
 		sideClient.close();
@@ -92,6 +92,7 @@ export class AppComponent {
 		sideRoute.close();
 		sideDepot.open();
 		this.onCloseStation();
+		this.onCloseRoute();
 		this.onCloseClient();
 		this.onCloseDirections();
 	}
@@ -141,7 +142,7 @@ export class AppComponent {
 	}
 
 	onCloseDepot() {
-		this.depotKeyService.clear();
+		this.depotService.clear();
 	}
 
 	isOffline() {
