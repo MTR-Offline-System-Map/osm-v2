@@ -1,16 +1,16 @@
-import { Component, EventEmitter, inject, Output } from "@angular/core";
-import { MapDataService } from "../../service/map-data.service";
-import { DimensionService } from "../../service/dimension.service";
-import { DepotService } from "../../service/depot.service";
-import { TitleComponent } from "../title/title.component";
-import { DividerModule } from "primeng/divider";
-import { Checkbox } from "primeng/checkbox";
-import { FormatNamePipe } from "../../pipe/formatNamePipe";
-import { FormatColorPipe } from "../../pipe/formatColorPipe";
-import { DataListEntryComponent } from "../data-list-entry/data-list-entry.component";
-import { ButtonModule } from "primeng/button";
-import { environment } from "../../../environments/environment";
-import { SimplifyRoutesPipe } from "../../pipe/simplifyRoutesPipe";
+import {Component, EventEmitter, inject, Output} from "@angular/core";
+import {MapDataService} from "../../service/map-data.service";
+import {DimensionService} from "../../service/dimension.service";
+import {DepotService} from "../../service/depot.service";
+import {TitleComponent} from "../title/title.component";
+import {DividerModule} from "primeng/divider";
+import {Checkbox} from "primeng/checkbox";
+import {FormatNamePipe} from "../../pipe/formatNamePipe";
+import {FormatColorPipe} from "../../pipe/formatColorPipe";
+import {DataListEntryComponent} from "../data-list-entry/data-list-entry.component";
+import {ButtonModule} from "primeng/button";
+import {environment} from "../../../environments/environment";
+import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 
 @Component({
     selector: "app-depot-panel",

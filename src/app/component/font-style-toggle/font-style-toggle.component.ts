@@ -1,8 +1,8 @@
-import { Component, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { SelectButtonChangeEvent, SelectButtonModule } from "primeng/selectbutton";
-import { TooltipModule } from "primeng/tooltip";
-import { FontStyleService } from "../../service/font-style.service";
+import {Component, inject} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {SelectButtonChangeEvent, SelectButtonModule} from "primeng/selectbutton";
+import {TooltipModule} from "primeng/tooltip";
+import {FontStyleService} from "../../service/font-style.service";
 
 @Component({
     selector: "app-font-style-toggle",

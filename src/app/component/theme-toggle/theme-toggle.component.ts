@@ -1,8 +1,8 @@
-import { Component, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { SelectButtonChangeEvent, SelectButtonModule } from "primeng/selectbutton";
-import { TooltipModule } from "primeng/tooltip";
-import { ThemeService } from "../../service/theme.service";
+import {Component, inject} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {SelectButtonChangeEvent, SelectButtonModule} from "primeng/selectbutton";
+import {TooltipModule} from "primeng/tooltip";
+import {ThemeService} from "../../service/theme.service";
 
 @Component({
     selector: "app-theme-toggle",

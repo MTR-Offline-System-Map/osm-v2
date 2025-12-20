@@ -25,7 +25,7 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {SearchData} from "../../entity/searchData";
 import {Station} from "../../entity/station";
 import {ClientsService} from "../../service/clients.service";
-import { FontStyleService } from "../../service/font-style.service";
+import {FontStyleService} from "../../service/font-style.service";
 
 @Component({
 	selector: "app-directions",

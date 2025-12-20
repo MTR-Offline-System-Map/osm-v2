@@ -1,4 +1,4 @@
-import {arrayAverage, getCookie, getFromArray, getFromArrayU, pushIfNotExists, setCookie, setIfUndefined} from "../data/utilities";
+import {arrayAverage, getCookie, getFromArray, getFromArrayElse, pushIfNotExists, setCookie, setIfUndefined} from "../data/utilities";
 import {ROUTE_TYPES} from "../data/routeType";
 import {LineConnection} from "../entity/lineConnection";
 import {StationConnection} from "../entity/stationConnection";
@@ -13,8 +13,8 @@ import {Station} from "../entity/station";
 import {RouteDTO} from "../entity/generated/route";
 import {StationForMap} from "../entity/stationForMap";
 import {environment} from "../../environments/environment";
-import { Depot } from "../entity/depot";
-import { DepotDTO } from "../entity/generated/depot";
+import {Depot} from "../entity/depot";
+import {DepotDTO} from "../entity/generated/depot";
 
 const REFRESH_INTERVAL = 30000;
 
@@ -83,7 +83,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 			// Write stations
 			const stationIdMap: Record<string, { stationDTO: StationDTO, station: Station }> = {};
-			data.stations.forEach(stationDTO => getFromArrayU(stationIdToPosition, stationDTO, stationDTO.id, position => {
+			data.stations.forEach(stationDTO => getFromArrayElse(stationIdToPosition, stationDTO, stationDTO.id, position => {
 				const station = new Station(stationDTO, arrayAverage(position.x), arrayAverage(position.y), arrayAverage(position.z), false);
 				this.stations.push(station);
 				stationIdMap[stationDTO.id] = {stationDTO, station};

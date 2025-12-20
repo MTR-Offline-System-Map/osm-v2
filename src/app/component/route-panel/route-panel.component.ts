@@ -16,7 +16,7 @@ import {FormsModule} from "@angular/forms";
 import {DimensionService} from "../../service/dimension.service";
 import {MapDataService} from "../../service/map-data.service";
 import {ButtonModule} from "primeng/button";
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from "primeng/tabs";
+import {Tabs, TabList, Tab, TabPanels, TabPanel} from "primeng/tabs";
 
 @Component({
 	selector: "app-route-panel",

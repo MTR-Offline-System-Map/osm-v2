@@ -1,7 +1,7 @@
 import {Component, inject, Input} from "@angular/core";
 import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {FormatColorPipe} from "../../pipe/formatColorPipe";
-import { FontStyleService } from "../../service/font-style.service";
+import {FontStyleService} from "../../service/font-style.service";
 
 @Component({
 	selector: "app-title",

@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { getCookie, setCookie } from "../data/utilities";
+import {Injectable} from "@angular/core";
+import {getCookie, setCookie} from "../data/utilities";
 
 @Injectable({providedIn: "root"})
 export class FontStyleService {

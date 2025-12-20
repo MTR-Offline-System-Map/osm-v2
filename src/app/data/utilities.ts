@@ -33,7 +33,7 @@ export function getFromArray<T>(map: Record<string, T>, key: string, consumer: (
 	}
 }
 
-export function getFromArrayU<T, U>(map: Record<string, T>, bk: U, key: string, consumer: (data: T) => void, consumer2: (data: U) => void) {
+export function getFromArrayElse<T, U>(map: Record<string, T>, bk: U, key: string, consumer: (data: T) => void, consumer2: (data: U) => void) {
 	if (key in map) {
 		consumer(map[key]);
 	} else {

@@ -1,11 +1,11 @@
-import { inject, Injectable } from "@angular/core";
-import { SelectableDataServiceBase } from "./selectable-data-service-base";
-import { Depot } from "../entity/depot";
-import { MapDataService } from "./map-data.service";
-import { DimensionService } from "./dimension.service";
-import { MapSelectionService } from "./map-selection.service";
-import { ROUTE_TYPES } from "../data/routeType";
-import { SimplifyRoutesPipe } from "../pipe/simplifyRoutesPipe";
+import {inject, Injectable} from "@angular/core";
+import {SelectableDataServiceBase} from "./selectable-data-service-base";
+import {Depot} from "../entity/depot";
+import {MapDataService} from "./map-data.service";
+import {DimensionService} from "./dimension.service";
+import {MapSelectionService} from "./map-selection.service";
+import {ROUTE_TYPES} from "../data/routeType";
+import {SimplifyRoutesPipe} from "../pipe/simplifyRoutesPipe";
 
 @Injectable({providedIn: "root"})
 export class DepotService extends SelectableDataServiceBase<void, Depot> {
