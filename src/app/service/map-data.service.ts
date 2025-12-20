@@ -98,7 +98,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 			// Write depots
 			const depotIdMap: Record<string, { depotDTO: DepotDTO, depot: Depot }> = {};
-			if (data.depots != undefined && data.depots.length != 0) {
+			if (data.includeMarkers && data.depots != undefined && data.depots.length != 0) {
 				data.depots.forEach(depotDTO => {
 					const depot = new Depot(depotDTO);
 					this.depots.push(depot);
@@ -446,11 +446,11 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	getShowAllStations() {
-		return this.showAllStations;
+		return this.showAllStations && this.dimensionService.includeMarkers();
 	}
 
 	getShowDepots() {
-		return this.showDepots;
+		return this.showDepots && this.dimensionService.includeMarkers();
 	}
 
 	getAutoDetectBusRoutes() {

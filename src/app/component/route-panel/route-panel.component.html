@@ -57,7 +57,7 @@
 	<p-tabs class="wrapper" value="0">
 		<p-tablist>
 			<p-tab value="0" i18n>Stations</p-tab>
-			@if (getRouteDepots().length > 0 && getEnableRouteDepotsDetails()) {
+			@if (getEnableRouteDepotsDetails() && getRouteDepots().length > 0) {
 				<p-tab value="1" i18n>Depots</p-tab>
 			}
 		</p-tablist>
@@ -102,7 +102,7 @@
 				</div>
 			</p-tabpanel>
 
-			@if (getEnableRouteDepotsDetails()) {
+			@if (getEnableRouteDepotsDetails() && getRouteDepots().length > 0) {
 				<p-tabpanel value="1">
 					<div class="column gap padding-top-bottom padding-sides content">
 						<div class="column">
