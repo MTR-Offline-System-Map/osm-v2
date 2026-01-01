@@ -108,7 +108,7 @@
 						<div class="column">
 							@for (depot of getRouteDepots(); track $index) {
 								<div class="column">
-									<app-data-list-entry [icons]="depot.getIcons()" [title]="[depot.name | formatName, '']" [subtitles]="[]" [useLightColor]="false" [clickable]="true" (entryClicked)="depotClicked.emit(depot.id)"/>
+									<app-data-list-entry [icons]="depot.getIcons()" [title]="[depot.name | formatName, '']" [subtitles]="[]" [color]="depot.color | formatColor" [useLightColor]="false" [clickable]="true" (entryClicked)="depotClicked.emit(depot.id)"/>
 									<p-divider class="small-divider"/>
 								</div>
 							}

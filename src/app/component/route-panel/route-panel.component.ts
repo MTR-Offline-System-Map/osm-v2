@@ -17,6 +17,7 @@ import {DimensionService} from "../../service/dimension.service";
 import {MapDataService} from "../../service/map-data.service";
 import {ButtonModule} from "primeng/button";
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from "primeng/tabs";
+import {FormatColorPipe} from "../../pipe/formatColorPipe";
 
 @Component({
 	selector: "app-route-panel",
@@ -37,7 +38,8 @@ import {Tabs, TabList, Tab, TabPanels, TabPanel} from "primeng/tabs";
     TabList,
     Tab,
     TabPanels,
-    TabPanel
+    TabPanel,
+    FormatColorPipe,
 ],
 	templateUrl: "./route-panel.component.html",
 	styleUrl: "./route-panel.component.css",

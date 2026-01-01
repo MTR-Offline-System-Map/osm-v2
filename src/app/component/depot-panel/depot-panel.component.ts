@@ -37,6 +37,11 @@ export class DepotPanelComponent {
         return this.depotService.getSelectedData();
     }
 
+    getDepotColor() {
+        const depot = this.depotService.getSelectedData();
+        return depot === undefined ? undefined : depot.color;
+    }
+
     getCoordinatesText() {
         const depot = this.depotService.getSelectedData();
         return depot === undefined ? "" : `${depot.x}, ${depot.z})`;

@@ -10,6 +10,6 @@ import {Depot} from "../entity/depot";
 export class SimplifyDepotsPipe implements PipeTransform {
 
 	transform(depots: Depot[]): SearchData[] {
-		return depots.map(depot => ({key: depot.id, icons: depot.getIcons(), name: depot.name, number: "", type: "depot"}));
+		return depots.map(depot => ({key: depot.id, icons: depot.getIcons(), color: depot.color, name: depot.name, number: "", type: "depot"}));
 	}
 }

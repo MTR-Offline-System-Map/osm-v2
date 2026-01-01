@@ -1,6 +1,6 @@
 <div class="column gap wrapper {{getBetterScroll()?'scrollable':''}}">
     <div class="column gap padding-sides">
-        <app-title [name]="getDepot()?.name ?? ''" [color]=""/>
+        <app-title [name]="getDepot()?.name ?? ''" [color]="getDepotColor()"/>
         <div class="row gap-small center">
             <div class="row gap center" i18n-pTooltip pTooltip="Location" tooltipPosition="left">
                 <div class="material-icons">my_location</div>
