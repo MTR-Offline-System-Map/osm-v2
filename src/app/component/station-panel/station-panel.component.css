@@ -13,4 +13,6 @@
 	font-size: 0.8rem;
 	font-weight: 600;
 	line-height: 1.2rem;
+	overflow-wrap: break-word; /* Compatibility */
+	overflow-wrap: anywhere;
 }
