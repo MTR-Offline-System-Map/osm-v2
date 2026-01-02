@@ -17,6 +17,7 @@ export class MapSelectionService {
 		if (this.key === key) {
 			this.selectedStationConnections.length = 0;
 			this.selectedStations.length = 0;
+			this.selectedDepots.length = 0;
 			this.updateSelection.emit();
 		}
 	}

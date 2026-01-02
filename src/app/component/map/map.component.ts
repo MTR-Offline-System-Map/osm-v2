@@ -338,7 +338,7 @@ export class MapComponent implements AfterViewInit {
 
 		this.mapDataService.stationsForMap.forEach(({station, rotate, width, height}) => {
 			const {id, x, z} = station;
-			const stationSelected = this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id);
+			const stationSelected = (this.mapSelectionService.selectedStations.length === 0 && this.mapSelectionService.selectedDepots.length === 0) || this.mapSelectionService.selectedStations.includes(id);
 			const adjustZ = stationSelected ? 20 : 0;
 			const newWidth = width * 3 * SETTINGS.scale / this.camera.zoom;
 			const newHeight = height * 3 * SETTINGS.scale / this.camera.zoom;
@@ -358,7 +358,7 @@ export class MapComponent implements AfterViewInit {
 
 		if (this.mapDataService.getShowDepots()) {
 			this.mapDataService.depots.forEach(({id, x, z}) => {
-				const depotSelected = this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id);
+				const depotSelected = (this.mapSelectionService.selectedStations.length === 0 && this.mapSelectionService.selectedDepots.length === 0) || this.mapSelectionService.selectedDepots.includes(id);
 				const adjustZ = depotSelected ? 20 : 0;
 				processShape(x, -z, 7, 0, 0, false, adjustZ - 1, this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, depotSelected), false);
 				processShape(x, -z, 5, 0, 0, false, adjustZ, this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, depotSelected));

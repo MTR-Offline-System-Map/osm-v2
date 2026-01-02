@@ -138,6 +138,12 @@ export class RouteKeyService extends SelectableDataServiceBase<void, Route[]> {
 						pushIfNotExists(mapSelectionService.selectedStations, stationId2);
 					}
 
+					if (mapDataService.getShowDepots()) {
+						route.depots.forEach(depot => {
+							pushIfNotExists(mapSelectionService.selectedDepots, depot.id);
+						});
+					}
+
 					// Update map visibility
 					if (mapDataService.routeTypeVisibility[route.type] === "HIDDEN") {
 						mapDataService.routeTypeVisibility[route.type] = "SOLID";
