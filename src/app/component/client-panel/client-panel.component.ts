@@ -76,6 +76,10 @@ export class ClientPanelComponent {
 		return client ? `${Math.round(client.rawX)}, ${Math.round(client.rawZ)}` : "";
 	}
 
+	usePathfinder() {
+		return this.mapDataService.getDirectionEngine() === "pathfinder";
+	}
+
 	focus() {
 		const clientId = this.clientService.getSelectedData();
 		if (clientId) {

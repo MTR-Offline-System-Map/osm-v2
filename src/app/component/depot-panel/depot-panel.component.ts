@@ -32,6 +32,7 @@ export class DepotPanelComponent {
     private readonly dimensionService = inject(DimensionService);
 
     @Output() routeClicked = new EventEmitter<string>();
+    @Output() directionsOpened = new EventEmitter<{ depotDetails: { depotId: string, isStartDepot: boolean } }>();
 
     getDepot() {
         return this.depotService.getSelectedData();
@@ -73,6 +74,17 @@ export class DepotPanelComponent {
 		}
 	}
 
+    usePathfinder() {
+        return this.dataService.getDirectionEngine() === "pathfinder";
+    }
+
+	openDirections(isStartDepot: boolean) {
+		const depot = this.depotService.getSelectedData();
+		if (depot) {
+			this.directionsOpened.emit({depotDetails: {depotId: depot.id, isStartDepot}});
+		}
+	}
+
     getEnableViewOnWorldMap() {
         return environment.worldMapLink.enable(this.dimensionService.getDimensionIndex());
     }
@@ -83,6 +95,10 @@ export class DepotPanelComponent {
 			location.assign(environment.worldMapLink.exec(this.dimensionService.getDimensionIndex(), Math.round(depot.x), Math.round(depot.z)));
 		}
 	}
+
+    isOffline() {
+        return this.dimensionService.isOffline();
+    }
 
     getBetterScroll() {
         return this.dataService.getBetterScroll();

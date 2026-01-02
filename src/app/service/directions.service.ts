@@ -10,6 +10,7 @@ import {DirectionsRequestDTO} from "../entity/generated/directionsRequest";
 import {MapDataService} from "./map-data.service";
 import {Station} from "../entity/station";
 import {ClientsService} from "./clients.service";
+import {Depot} from "../entity/depot";
 
 const REFRESH_INTERVAL = 3000;
 
@@ -42,6 +43,8 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 			const {
 				startStationId,
 				endStationId,
+				startDepotId,
+				endDepotId,
 				startPositionX,
 				startPositionY,
 				startPositionZ,
@@ -50,9 +53,29 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 				endPositionZ,
 				startClientId,
 				endClientId,
+				enableWalkingWild,
+				maxWalkingDistance,
+				ignoredLines,
+				avoidStations,
+				onlyLightRail,
+				noHSR,
+				noBoats,
+				inTheory,
 			} = JSON.parse(selectedData);
-			return (startStationId || startClientId) && (endStationId || endClientId) ? {
-				directionsRequest: {
+			return (startStationId || startClientId || startDepotId) && (endStationId || endClientId || endDepotId) ? {
+				directionsRequest: mapDataService.getDirectionEngine() === "pathfinder" ? {
+					startStationId,
+					endStationId,
+					ignoredLines,
+					avoidStations,
+					enableWalkingWild,
+					maxWalkingDistance,
+					onlyLightRail,
+					noHSR,
+					noBoats,
+					inTheory,
+					startTime: 0,
+				} : {
 					startPositionX: startClientId ? undefined : startPositionX,
 					startPositionY: startClientId ? undefined : startPositionY,
 					startPositionZ: startClientId ? undefined : startPositionZ,
@@ -70,7 +93,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 			this.newDirections.length = 0;
 			mapSelectionService.reset("directions");
 			clearTimeout(this.directionsTimeoutId);
-		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(this.getUrl("directions"), JSON.stringify(directionsRequest)), ({data}) => {
+		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(this.getUrl(mapDataService.getDirectionEngine() === "official" ? "directions" : "pathfinder"), JSON.stringify(directionsRequest)), ({data}) => {
 			this.newDirections.length = 0;
 			const selectedData = this.getSelectedData();
 			const directions = data.connections;
@@ -142,19 +165,28 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 		}, REFRESH_INTERVAL, dimensionService);
 	}
 
-	public selectData(startStation: Station | undefined, endStation: Station | undefined, startClientId: string | undefined, endClientId: string | undefined, maxWalkingDistanceString: string) {
+	public selectData(startStation: Station | undefined, endStation: Station | undefined, startClientId: string | undefined, endClientId: string | undefined, startDepot: Depot | undefined, endDepot: Depot | undefined, enableWalkingWild: boolean, maxWalkingDistanceString: string, ignoredLines: string[], avoidStations: string[], onlyLightRail?: boolean, noHSR?: boolean, noBoats?: boolean, inTheory?: boolean) {
 		const key = JSON.stringify({
 			startStationId: startStation?.id,
 			endStationId: endStation?.id,
-			startPositionX: startStation?.x,
-			startPositionY: startStation?.y,
-			startPositionZ: startStation?.z,
-			endPositionX: endStation?.x,
-			endPositionY: endStation?.y,
-			endPositionZ: endStation?.z,
+			startDepotId: startDepot?.id,
+			endDepotId: endDepot?.id,
+			startPositionX: startStation?.x ?? startDepot?.x,
+			startPositionY: startStation?.y ?? 0,
+			startPositionZ: startStation?.z ?? startDepot?.z,
+			endPositionX: endStation?.x ?? endDepot?.x,
+			endPositionY: endStation?.y ?? 0,
+			endPositionZ: endStation?.z ?? endDepot?.z,
 			startClientId,
 			endClientId,
+			enableWalkingWild,
 			maxWalkingDistance: parseInt(maxWalkingDistanceString),
+			ignoredLines,
+			avoidStations,
+			onlyLightRail,
+			noHSR,
+			noBoats,
+			inTheory,
 		});
 		this.select(key);
 		this.fetchData(key);

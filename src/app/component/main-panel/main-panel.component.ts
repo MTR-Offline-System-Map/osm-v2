@@ -59,6 +59,7 @@ export class MainPanelComponent {
 		search: new FormControl(""),
 		dimension: new FormControl(""),
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
+		directionEngine: new FormControl<"official" | "pathfinder">(this.dataService.getDirectionEngine()),
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
 		showDepots: new FormControl(this.dataService.getShowDepots()),
@@ -90,6 +91,10 @@ export class MainPanelComponent {
 		return this.dimensionService.isOffline();
 	}
 
+	getEnablePathfinder() {
+		return environment.pathfinder(this.dimensionService.getDimensionIndex());
+	}
+
 	getDimensions() {
 		return this.dimensionService.getDimensions();
 	}
@@ -98,6 +103,13 @@ export class MainPanelComponent {
 		const data = this.formGroup.getRawValue();
 		if (data.dimension) {
 			this.dataService.setDimension(data.dimension);
+		}
+	}
+
+	setDirectionEngine() {
+		const data = this.formGroup.getRawValue();
+		if (data.directionEngine) {
+			this.dataService.setDirectionEngine(data.directionEngine);
 		}
 	}
 
@@ -165,6 +177,10 @@ export class MainPanelComponent {
 
 	setShowDepots(value: boolean) {
 		this.dataService.setShowDepots(value);
+	}
+
+	getBetterScroll() {
+		return this.dataService.getBetterScroll();
 	}
 
 	setBetterScroll(value: boolean) {

@@ -33,6 +33,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	private centerX = 0;
 	private centerY = 0;
 	private mapLoading = true;
+	private directionEngine: "official" | "pathfinder" = "official";
 	private showHiddenRoutes: boolean = false;
 	private hasHiddenRoute: boolean = false;
 	private showAllStations: boolean = false;
@@ -159,6 +160,9 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 		this.fetchData("");
 
+		const cookieDirectionEngine = getCookie("direction_engine");
+		this.directionEngine = cookieDirectionEngine === "official" || cookieDirectionEngine === "pathfinder" ? cookieDirectionEngine : "official";
+
 		if (environment.enableShowHiddenRoutes) {
 			const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
 			this.showHiddenRoutes = cookieShowHiddenRoutes === "true";
@@ -196,6 +200,15 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 				this.routeTypeVisibility[routeTypeKey] = visibility;
 			}
 		});
+	}
+
+	public getDirectionEngine() {
+		return environment.pathfinder(this.dimensionService.getDimensionIndex()) ? this.directionEngine : "official";
+	}
+
+	public setDirectionEngine(engine: "official" | "pathfinder") {
+		this.directionEngine = engine;
+		setCookie("direction_engine", engine);
 	}
 
 	public setDimension(dimension: string) {
@@ -450,7 +463,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	getShowDepots() {
-		return this.showDepots && this.dimensionService.includeMarkers();
+		return this.showDepots && this.dimensionService.includeMarkers() && this.depots.length > 0;
 	}
 
 	getAutoDetectBusRoutes() {

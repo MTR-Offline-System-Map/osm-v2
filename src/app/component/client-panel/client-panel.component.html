@@ -15,7 +15,7 @@
 				<div class="material-icons">filter_center_focus</div>
 			</button>
 		</div>
-		<div class="row center">
+		<div class="row center" [style.display]="usePathfinder() ? 'none' : ''">
 			<div class="material-icons" i18n-pTooltip pTooltip="Directions" tooltipPosition="left">directions</div>
 			<p-button i18n-label label="Start" variant="text" (onClick)="openDirections(true)"/>
 			<p-button i18n-label label="End" variant="text" (onClick)="openDirections(false)"/>

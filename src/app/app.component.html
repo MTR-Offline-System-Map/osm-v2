@@ -42,7 +42,8 @@
 
 <app-drawer #sideDepot i18n-title title="Depot Details" (closed)="onCloseDepot()">
 	<app-depot-panel
-			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"/>
+			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
+			(directionsOpened)="onOpenDirections($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"/>
 </app-drawer>
 
 <app-map

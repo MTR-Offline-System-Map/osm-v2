@@ -5,7 +5,7 @@ import {SimplifyStationsPipe} from "../../pipe/simplifyStationsPipe";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 import {SimplifyDepotsPipe} from "../../pipe/simplifyDepotsPipe";
 import {FormatNamePipe} from "../../pipe/formatNamePipe";
-import {AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent} from "primeng/autocomplete";
+import {AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent, AutoCompleteUnselectEvent} from "primeng/autocomplete";
 import {DividerModule} from "primeng/divider";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {InputTextModule} from "primeng/inputtext";
@@ -49,10 +49,14 @@ export class SearchComponent {
 	@Output() depotClicked = new EventEmitter<string>();
 	@Output() textCleared = new EventEmitter<void>();
 	@Input({required: true}) label = "";
+	@Input() multiple: boolean = false;
 	@Input({required: true}) parentFormGroup!: FormGroup;
 	@Input({required: true}) childFormControlName = "";
+	@Input({required: true}) includeStations = true;
 	@Input({required: true}) includeRoutes = true;
 	@Input({required: true}) includeDepots = true;
+	@Input({required: true}) includeClients = true;
+	@Input() selectedValues: string[] = [];
 	@Input() setText!: EventEmitter<string>;
 
 	protected data: SelectItemGroup[] = [];
@@ -78,9 +82,9 @@ export class SearchComponent {
 				return result.slice(0, maxResults);
 			};
 
-			const searchedStations = filter(this.simplifyStationsPipe.transform(this.dataService.stations));
+			const searchedStations = filter(this.includeStations ? this.simplifyStationsPipe.transform(this.dataService.stations) : []);
 			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes) : []);
-			const searchedClients = filter(!this.dimensionService.isOffline() ? this.clientsService.allClients.map(client => ({key: client.id, icons: [`https://mc-heads.net/avatar/${client.id}`], name: client.name, number: "", type: "client"})) : []);
+			const searchedClients = filter(this.includeClients && !this.dimensionService.isOffline() ? this.clientsService.allClients.map(client => ({key: client.id, icons: [`https://mc-heads.net/avatar/${client.id}`], name: client.name, number: "", type: "client"})) : []);
 			const searchedDepots = filter(this.includeDepots ? this.simplifyDepotsPipe.transform(this.dataService.depots) : []);
 
 			if (searchedStations.length > 0) {
@@ -115,6 +119,9 @@ export class SearchComponent {
 
 	onSelect(event: AutoCompleteSelectEvent) {
 		if (event?.value?.value) {
+			if (this.multiple) {
+				this.selectedValues.push(event.value.value.key);
+			}
 			switch (event.value.value.type) {
 				case "station":
 					this.stationClicked.emit(event.value.value.key);
@@ -130,6 +137,19 @@ export class SearchComponent {
 					break;
 			}
 		}
+	}
+
+	onUnselect(event: AutoCompleteUnselectEvent) {
+		const index = this.selectedValues.findIndex(item => item === event.value.value.key);
+		if (index > -1) {
+			this.selectedValues.splice(index, 1);
+		}
+		this.textCleared.emit();
+	}
+
+	onClear() {
+		this.selectedValues.length = 0;
+		this.textCleared.emit();
 	}
 
 	getName(entry: { value?: { name?: string } }) {

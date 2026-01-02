@@ -1,10 +1,16 @@
-<div class="column gap wrapper" [formGroup]="formGroup">
+<div class="column gap wrapper {{getBetterScroll()?'scrollable':''}}" [formGroup]="formGroup">
 	<div class="column gap-small padding-sides">
-		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeRoutes]="true" [includeDepots]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)" (depotClicked)="clickDepot($event)"/>
+		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeStations]="true" [includeRoutes]="true" [includeDepots]="true" [includeClients]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)" (depotClicked)="clickDepot($event)"/>
 		<p-float-label variant="in">
 			<p-select inputId="dropdown" formControlName="dimension" [options]="getDimensions()" (onChange)="setDimension()" [fluid]="true"/>
 			<label for="dropdown">{{ getDimensionLocalize() }}</label>
 		</p-float-label>
+		@if (getEnablePathfinder()) {
+			<p-float-label variant="in">
+				<p-select inputId="dropdownDirection" formControlName="directionEngine" [options]="['official', 'pathfinder']" (onChange)="setDirectionEngine()" [fluid]="true"/>
+				<label for="dropdownDirection" i18n>Direction Engine</label>
+			</p-float-label>
+		}
 		<button pButton class="icon-button" severity="secondary" (click)="directionsOpened.emit()" [fluid]="true" [style.display]="isOffline() ? 'none' : ''">
 			<div class="row gap-small">
 				<div class="material-icons">directions</div>

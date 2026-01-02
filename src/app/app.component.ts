@@ -111,7 +111,7 @@ export class AppComponent {
 		this.onCloseDepot();
 	}
 
-	onOpenDirections(directionsSelection: { stationDetails?: { stationId: string, isStartStation: boolean }, clientDetails?: { clientId: string, isStartClient: boolean } } | undefined, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
+	onOpenDirections(directionsSelection: { stationDetails?: { stationId: string, isStartStation: boolean }, clientDetails?: { clientId: string, isStartClient: boolean }, depotDetails?: { depotId: string, isStartDepot: boolean } } | undefined, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
 		this.directionsService.directionsPanelOpened.emit(directionsSelection);
 		sideMain.close();
 		sideStation.close();

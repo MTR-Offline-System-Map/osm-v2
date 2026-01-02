@@ -1,26 +1,54 @@
-<div class="column wrapper" [formGroup]="formGroup">
+<div class="column wrapper {{getBetterScroll()?'scrollable':''}}" [formGroup]="formGroup">
 	<div class="column padding-sides">
-		<div class="row gap-small center">
+		<div class="column gap-small spacing">
+			<div class="row gap-small center">
+				<div class="spacing">
+					<app-search i18n-label label="Start" [parentFormGroup]="formGroup" childFormControlName="startInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, true)" (clientClicked)="onClickClient($event, true)" (textCleared)="onClearInput(true)"/>
+				</div>
+				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="swapStations()" [disabled]="cannotSwap()" i18n-pTooltip pTooltip="Swap Stations">
+					<div class="material-icons">swap_vert</div>
+				</button>
+			</div>
+			<div class="row gap-small center">
+				<div class="spacing">
+					<app-search i18n-label label="End" [parentFormGroup]="formGroup" childFormControlName="endInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, false)" (clientClicked)="onClickClient($event, false)" (textCleared)="onClearInput(false)"/>
+				</div>
+				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="refreshDirections()" [disabled]="cannotManuallyRefresh()" i18n-pTooltip pTooltip="Refresh Directions">
+					<div class="material-icons">refresh</div>
+				</button>
+			</div>
+		</div>
+		@if (usePathfinder()) {
+			<p-divider/>
 			<div class="column gap-small spacing">
-				<app-search i18n-label label="Start" [parentFormGroup]="formGroup" childFormControlName="startInput" [includeRoutes]="false" [includeDepots]="false" (stationClicked)="onClickStation($event, true)" (clientClicked)="onClickClient($event, true)" (textCleared)="onClearInput(true)"/>
-				<app-search i18n-label label="End" [parentFormGroup]="formGroup" childFormControlName="endInput" [includeRoutes]="false" [includeDepots]="false" (stationClicked)="onClickStation($event, false)" (clientClicked)="onClickClient($event, false)" (textCleared)="onClearInput(false)"/>
+				<div class="row gap-small center">
+					<div class="spacing">
+						<p-float-label variant="in">
+							<p-input-number inputId="max-walking-distance" formControlName="maxWalkingDistance" [min]="0" [max]="1000000000" (onInput)="updateMaxWalkingDistance()" [fluid]="true"/>
+							<label for="max-walking-distance" i18n>Maximum Walking Distance (m)</label>
+						</p-float-label>					
+					</div>
+					<p-checkbox (onChange)="checkStatus()" inputId="enable-walking-wild" formControlName="enableWalkingWild" [binary]="true" pTooltip="Walking Wild" tooltipPosition="left"/>
+				</div>
+				<app-search i18n-label label="Ignored Routes" [parentFormGroup]="formGroup" childFormControlName="ignoredRoutesInput" (routeClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="ignoredRoutes" [includeStations]="false" [includeRoutes]="true" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>
+				<app-search i18n-label label="Avoid Stations" [parentFormGroup]="formGroup" childFormControlName="avoidStationsInput" (stationClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="avoidStations" [includeStations]="true" [includeRoutes]="false" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>
 			</div>
-			<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="swapStations()" [disabled]="cannotSwap()" i18n-pTooltip pTooltip="Swap Stations">
-				<div class="material-icons">swap_vert</div>
-			</button>
-		</div>
-		<p-divider/>
-		<div class="row gap-small center">
-			<div class="spacing">
-				<p-float-label variant="in">
-					<p-input-number inputId="max-walking-distance" formControlName="maxWalkingDistance" [min]="0" [max]="1000000000" (onInput)="updateMaxWalkingDistance()" [fluid]="true"/>
-					<label for="max-walking-distance" i18n>Maximum Walking Distance (m)</label>
-				</p-float-label>
+			<p-divider/>
+			<div class="column gap-small spacing">
+				<div class="row gap-small center">
+						<p-check-box (onChange)="checkStatus()" inputId="only-lrt" formControlName="onlyLightRail" [binary]="true"/>
+						<label for="only-lrt" i18n>Only LRT</label>
+						<p-check-box (onChange)="checkStatus()" inputId="no-hsr" formControlName="noHSR" [binary]="true"/>
+						<label for="no-hsr" i18n>No HSR</label>
+				</div>
+				<div class="row gap-small center">
+						<p-check-box (onChange)="checkStatus()" inputId="no-boats" formControlName="noBoats" [binary]="true"/>
+						<label for="no-boats" i18n>No Boats</label>
+						<p-check-box (onChange)="checkStatus()" inputId="in-theory" formControlName="inTheory" [binary]="true"/>
+						<label for="in-theory" i18n>In Theory</label>
+				</div>
 			</div>
-			<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="refreshDirections()" [disabled]="cannotManuallyRefresh()" i18n-pTooltip pTooltip="Refresh Directions">
-				<div class="material-icons">refresh</div>
-			</button>
-		</div>
+		}
 		<p-divider/>
 	</div>
 	@if (isLoading()) {

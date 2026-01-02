@@ -9,6 +9,7 @@ export const environment = {
     enable: false,
     onlineDimensions: 3,
   },
+  pathfinder: (dimensionIndex: number) => false,
   enableShowHiddenRoutes: false,
   enableShowAllStations: false,
   enableShowDepots: false,

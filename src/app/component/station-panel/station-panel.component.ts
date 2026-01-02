@@ -80,6 +80,10 @@ export class StationPanelComponent {
 		return station === undefined ? "" : `${station.zone1}, ${station.zone2}, ${station.zone3}`;
 	}
 
+	usePathfinder() {
+		return this.dataService.getDirectionEngine() === "pathfinder";
+	}
+
 	getConnections(): Station[] {
 		const station = this.stationService.getSelectedData();
 		if (station === undefined) {

@@ -39,13 +39,11 @@
 				<div>({{ getZoneText() }})</div>
 			</div>
 		</div>
-		@if (!getSingleStation()) {
-			<div class="row center" [style.display]="isOffline() ? 'none' : ''">
-				<div class="material-icons" i18n-pTooltip pTooltip="Directions" tooltipPosition="left">directions</div>
-				<p-button i18n-label label="Start" variant="text" (onClick)="openDirections(true)"/>
-				<p-button i18n-label label="End" variant="text" (onClick)="openDirections(false)"/>
-			</div>
-		}
+		<div class="row center" [style.display]="isOffline() && !usePathfinder() ? 'none' : ''">
+			<div class="material-icons" i18n-pTooltip pTooltip="Directions" tooltipPosition="left">directions</div>
+			<p-button i18n-label label="Start" variant="text" (onClick)="openDirections(true)"/>
+			<p-button i18n-label label="End" variant="text" (onClick)="openDirections(false)"/>
+		</div>
 	</div>
 
 	<p-tabs class="wrapper" (valueChange)="resetArrivalFilter()" value="1">
