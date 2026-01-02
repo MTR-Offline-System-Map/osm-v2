@@ -633,7 +633,7 @@ export class MapComponent implements AfterViewInit {
 			this.mapDataService.depots.forEach(({id, name, x, z, getIcons}) => {
 				const canvasX = (x - this.camera.position.x) * this.camera.zoom;
 				const canvasY = (z + this.camera.position.y) * this.camera.zoom;
-				if (Math.abs(canvasX) <= halfCanvasWidth && Math.abs(canvasY) <= halfCanvasHeight && (renderedTextCount < SETTINGS.maxText * 2) && (this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id))) {
+				if (Math.abs(canvasX) <= halfCanvasWidth && Math.abs(canvasY) <= halfCanvasHeight && (renderedTextCount < SETTINGS.maxText * 2) && ((this.mapSelectionService.selectedStations.length === 0 && this.mapSelectionService.selectedDepots.length === 0) || this.mapSelectionService.selectedDepots.includes(id))) {
 					const textOffset = 9 * SETTINGS.scale;
 					const icons = getIcons(type => this.mapDataService.routeTypeVisibility[type] === "HIDDEN");
 					this.textLabels.push({
