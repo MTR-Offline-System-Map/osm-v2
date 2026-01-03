@@ -3,6 +3,7 @@ import {FormsModule} from "@angular/forms";
 import {SelectButtonChangeEvent, SelectButtonModule} from "primeng/selectbutton";
 import {TooltipModule} from "primeng/tooltip";
 import {FontStyleService} from "../../service/font-style.service";
+import {TranslocoPipe} from "@jsverse/transloco";
 
 @Component({
     selector: "app-font-style-toggle",
@@ -10,6 +11,7 @@ import {FontStyleService} from "../../service/font-style.service";
         SelectButtonModule,
         TooltipModule,
         FormsModule,
+        TranslocoPipe,
     ],
     templateUrl: "./font-style-toggle.component.html",
     styleUrl: "./font-style-toggle.component.css",
@@ -21,12 +23,12 @@ export class FontStyleToggleComponent {
         {
             class: "sans",
             value: "SANS",
-            tooltip: $localize`Sans Serif`,
+            tooltip: "font_style.sans_serif",
         },
         {
             class: "serif",
             value: "SERIF",
-            tooltip: $localize`Serif`,
+            tooltip: "font_style.serif",
         },
     ];
 

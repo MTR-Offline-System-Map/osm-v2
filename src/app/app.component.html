@@ -1,8 +1,8 @@
 <div class="banner" [hidden]="!isOffline()">
-  <p i18n>Please refer to the actual situation.</p>
+  <p>{{ 'app.offline' | transloco }}</p>
 </div>
 
-<app-drawer #sideMain title="Transport System Map" i18n-title>
+<app-drawer #sideMain [title]="'app.title' | transloco">
 	<app-main-panel
 			class="wrapper"
 			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"
@@ -12,7 +12,7 @@
 			(depotClicked)="onClickDepot($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"/>
 </app-drawer>
 
-<app-drawer #sideStation i18n-title title="Station Details" (closed)="onCloseStation()">
+<app-drawer #sideStation [title]="'app.details.station' | transloco" (closed)="onCloseStation()">
 	<app-station-panel
 			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"
 			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
@@ -21,7 +21,7 @@
 </app-drawer>
 
 
-<app-drawer #sideClient i18n-title title="Player" (closed)="onCloseClient()">
+<app-drawer #sideClient [title]="'app.details.player' | transloco" (closed)="onCloseClient()">
 	<app-client-panel
 			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"
 			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
@@ -29,18 +29,18 @@
 			(depotClicked)="onClickDepot($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"/>
 </app-drawer>
 
-<app-drawer #sideDirections i18n-title title="Directions" (closed)="onCloseDirections()">
+<app-drawer #sideDirections [title]="'directions.title' | transloco" (closed)="onCloseDirections()">
 	<app-directions/>
 </app-drawer>
 
-<app-drawer #sideRoute i18n-title title="Route Details" (closed)="onCloseRoute()">
+<app-drawer #sideRoute [title]="'app.details.route' | transloco" (closed)="onCloseRoute()">
 	<app-route-panel
 			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"
 			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
 			(depotClicked)="onClickDepot($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"/>
 </app-drawer>
 
-<app-drawer #sideDepot i18n-title title="Depot Details" (closed)="onCloseDepot()">
+<app-drawer #sideDepot [title]="'app.details.depot' | transloco" (closed)="onCloseDepot()">
 	<app-depot-panel
 			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
 			(directionsOpened)="onOpenDirections($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"/>
@@ -50,6 +50,6 @@
 		(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, false)"
 		(clientClicked)="onClickClient($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
 		(depotClicked)="onClickDepot($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, false)"/>
-<button pButton class="button-corner" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="onClickMain(sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)" i18n-pTooltip pTooltip="Menu" tooltipPosition="left">
+<button pButton class="button-corner" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="onClickMain(sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)" [pTooltip]="'app.menu' | transloco" tooltipPosition="left">
 	<div class="material-icons">menu</div>
 </button>

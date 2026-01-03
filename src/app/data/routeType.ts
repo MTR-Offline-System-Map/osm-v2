@@ -4,15 +4,15 @@ export class RouteType {
 }
 
 export const ROUTE_TYPES: Record<string, RouteType> = {
-	train_normal: new RouteType("directions_railway", $localize`Train`),
-	train_light_rail: new RouteType("tram", $localize`Light Rail`),
-	train_high_speed: new RouteType("train", $localize`High Speed`),
-	boat_normal: new RouteType("sailing", $localize`Ferry`),
-	boat_light_rail: new RouteType("directions_boat", $localize`Cruise`),
-	boat_high_speed: new RouteType("snowmobile", $localize`Fast Ferry`),
-	cable_car_normal: new RouteType("airline_seat_recline_extra", $localize`Cable Car`),
-	bus_normal: new RouteType("directions_bus", $localize`Bus`),
-	bus_light_rail: new RouteType("local_taxi", $localize`Minibus`),
-	bus_high_speed: new RouteType("airport_shuttle", $localize`Express Bus`),
-	airplane_normal: new RouteType("flight", $localize`Plane`),
+	train_normal: new RouteType("directions_railway", "route_type.train_normal"),
+	train_light_rail: new RouteType("tram", "route_type.train_light_rail"),
+	train_high_speed: new RouteType("train", "route_type.train_high_speed"),
+	boat_normal: new RouteType("sailing", "route_type.boat_normal"),
+	boat_light_rail: new RouteType("directions_boat", "route_type.boat_light_rail"),
+	boat_high_speed: new RouteType("snowmobile", "route_type.boat_high_speed"),
+	cable_car_normal: new RouteType("airline_seat_recline_extra", "route_type.cable_car_normal"),
+	bus_normal: new RouteType("directions_bus", "route_type.bus_normal"),
+	bus_light_rail: new RouteType("local_taxi", "route_type.bus_light_rail"),
+	bus_high_speed: new RouteType("airport_shuttle", "route_type.bus_high_speed"),
+	airplane_normal: new RouteType("flight", "route_type.airplane_normal"),
 } as const;

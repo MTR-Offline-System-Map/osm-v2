@@ -3,6 +3,7 @@ import {FormsModule} from "@angular/forms";
 import {SelectButtonChangeEvent, SelectButtonModule} from "primeng/selectbutton";
 import {TooltipModule} from "primeng/tooltip";
 import {ThemeService} from "../../service/theme.service";
+import {TranslocoPipe} from "@jsverse/transloco";
 
 @Component({
     selector: "app-theme-toggle",
@@ -10,6 +11,7 @@ import {ThemeService} from "../../service/theme.service";
         SelectButtonModule,
         TooltipModule,
         FormsModule,
+        TranslocoPipe,
     ],
     templateUrl: "./theme-toggle.component.html",
     styleUrl: "./theme-toggle.component.css",
@@ -21,17 +23,17 @@ export class ThemeToggleComponent {
         {
             icon: "light_mode",
             value: "LIGHT",
-            tooltip: $localize`Light`,
+            tooltip: "theme.light",
         },
         {
             icon: "contrast",
             value: "SYSTEM",
-            tooltip: $localize`System`,
+            tooltip: "theme.system",
         },
         {
             icon: "dark_mode",
             value: "DARK",
-            tooltip: $localize`Dark`,
+            tooltip: "theme.dark",
         },
     ];
 

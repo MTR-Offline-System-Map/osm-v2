@@ -15,6 +15,7 @@ import {FormatColorPipe} from "../../pipe/formatColorPipe";
 import {FormatNamePipe} from "../../pipe/formatNamePipe";
 import {ROUTE_TYPES} from "../../data/routeType";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
+import {TranslocoPipe} from "@jsverse/transloco";
 
 @Component({
 	selector: "app-client-panel",
@@ -32,6 +33,7 @@ import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 		DataListEntryComponent,
 		FormatColorPipe,
 		FormatNamePipe,
+		TranslocoPipe,
 	],
 	templateUrl: "./client-panel.component.html",
 	styleUrl: "./client-panel.component.css",
@@ -77,7 +79,7 @@ export class ClientPanelComponent {
 	}
 
 	usePathfinder() {
-		return this.mapDataService.getDirectionEngine() === "pathfinder";
+		return this.mapDataService.getDirectionsEngine() === "pathfinder";
 	}
 
 	focus() {

@@ -1,5 +1,3 @@
-/// <reference types="@angular/localize" />
-
 import "reflect-metadata";
 import {bootstrapApplication} from "@angular/platform-browser";
 import {AppComponent} from "./app/app.component";
@@ -29,8 +27,8 @@ bootstrapApplication(AppComponent, {
 		}),
 		provideTransloco({
 			config: {
-				availableLangs: ["en", "zh"],
-				defaultLang: "en",
+				availableLangs: ["en-US", "zh-CN"],
+				defaultLang: "en-US",
 				reRenderOnLangChange: true,
 				prodMode: !isDevMode(),
 			},

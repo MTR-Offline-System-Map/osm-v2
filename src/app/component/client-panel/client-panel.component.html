@@ -7,18 +7,18 @@
 			<app-title [name]="getName()" [color]=""/>
 		</div>
 		<div class="row gap-small center">
-			<div class="row gap center" i18n-pTooltip pTooltip="Location" tooltipPosition="left">
+			<div class="row gap center" [pTooltip]="'app.location' | transloco" tooltipPosition="left">
 				<div class="material-icons">my_location</div>
 				<div>({{ getCoordinatesText() }})</div>
 			</div>
-			<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" i18n-pTooltip pTooltip="Focus on Map" tooltipPosition="bottom">
+			<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" [pTooltip]="'app.focus_on_map' | transloco" tooltipPosition="bottom">
 				<div class="material-icons">filter_center_focus</div>
 			</button>
 		</div>
 		<div class="row center" [style.display]="usePathfinder() ? 'none' : ''">
-			<div class="material-icons" i18n-pTooltip pTooltip="Directions" tooltipPosition="left">directions</div>
-			<p-button i18n-label label="Start" variant="text" (onClick)="openDirections(true)"/>
-			<p-button i18n-label label="End" variant="text" (onClick)="openDirections(false)"/>
+			<div class="material-icons" [pTooltip]="'directions.title' | transloco" tooltipPosition="left">directions</div>
+			<p-button [label]="'app.start' | transloco" variant="text" (onClick)="openDirections(true)"/>
+			<p-button [label]="'app.end' | transloco" variant="text" (onClick)="openDirections(false)"/>
 		</div>
 	</div>
 

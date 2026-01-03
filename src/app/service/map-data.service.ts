@@ -33,7 +33,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	private centerX = 0;
 	private centerY = 0;
 	private mapLoading = true;
-	private directionEngine: "official" | "pathfinder" = "official";
+	private directionsEngine: "official" | "pathfinder" = "official";
 	private showHiddenRoutes: boolean = false;
 	private hasHiddenRoute: boolean = false;
 	private showAllStations: boolean = false;
@@ -160,8 +160,8 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 		this.fetchData("");
 
-		const cookieDirectionEngine = getCookie("direction_engine");
-		this.directionEngine = cookieDirectionEngine === "official" || cookieDirectionEngine === "pathfinder" ? cookieDirectionEngine : "official";
+		const cookieDirectionsEngine = getCookie("directions_engine");
+		this.directionsEngine = cookieDirectionsEngine === "official" || cookieDirectionsEngine === "pathfinder" ? cookieDirectionsEngine : "official";
 
 		if (environment.enableShowHiddenRoutes) {
 			const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
@@ -202,13 +202,13 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		});
 	}
 
-	public getDirectionEngine() {
-		return environment.pathfinder(this.dimensionService.getDimensionIndex()) ? this.directionEngine : "official";
+	public getDirectionsEngine() {
+		return environment.pathfinder(this.dimensionService.getDimensionIndex()) ? this.directionsEngine : "official";
 	}
 
-	public setDirectionEngine(engine: "official" | "pathfinder") {
-		this.directionEngine = engine;
-		setCookie("direction_engine", engine);
+	public setDirectionsEngine(engine: "official" | "pathfinder") {
+		this.directionsEngine = engine;
+		setCookie("directions_engine", engine);
 	}
 
 	public setDimension(dimension: string) {

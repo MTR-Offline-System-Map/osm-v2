@@ -1,4 +1,4 @@
-import {Component, inject} from "@angular/core";
+import {Component, inject, ViewChild} from "@angular/core";
 import {MapComponent} from "./component/map/map.component";
 import {StationPanelComponent} from "./component/station-panel/station-panel.component";
 import {StationService} from "./service/station.service";
@@ -15,25 +15,29 @@ import {ClientPanelComponent} from "./component/client-panel/client-panel.compon
 import {DimensionService} from "./service/dimension.service";
 import {DepotPanelComponent} from "./component/depot-panel/depot-panel.component";
 import {DepotService} from "./service/depot.service";
+import {TranslocoPipe} from "@jsverse/transloco";
+import {LanguageService} from "./service/language.service";
 
 @Component({
 	selector: "app-root",
 	imports: [
-    MapComponent,
-    ButtonModule,
-    TooltipModule,
-    StationPanelComponent,
-    DrawerComponent,
-    ClientPanelComponent,
-    DirectionsComponent,
-    MainPanelComponent,
-    RoutePanelComponent,
-    DepotPanelComponent
-],
+		MapComponent,
+		ButtonModule,
+		TooltipModule,
+		StationPanelComponent,
+		DrawerComponent,
+		ClientPanelComponent,
+		DirectionsComponent,
+		MainPanelComponent,
+		RoutePanelComponent,
+		DepotPanelComponent,
+		TranslocoPipe,
+	],
 	templateUrl: "./app.component.html",
 	styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
+	private readonly languageService = inject(LanguageService);
 	private readonly stationService = inject(StationService);
 	private readonly routeKeyService = inject(RouteKeyService);
 	private readonly clientService = inject(ClientService);

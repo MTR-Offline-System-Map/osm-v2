@@ -4,6 +4,7 @@ import {setCookie} from "../../data/utilities";
 import {TooltipModule} from "primeng/tooltip";
 import {SelectButtonChangeEvent, SelectButtonModule} from "primeng/selectbutton";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {TranslocoPipe} from "@jsverse/transloco";
 
 @Component({
 	selector: "app-visibility-toggle",
@@ -12,6 +13,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 		TooltipModule,
 		FormsModule,
 		ReactiveFormsModule,
+		TranslocoPipe,
 	],
 	templateUrl: "./visibility-toggle.component.html",
 	styleUrl: "./visibility-toggle.component.css",
@@ -24,22 +26,22 @@ export class VisibilityToggleComponent {
 		{
 			icon: "visibility_off",
 			value: "HIDDEN",
-			tooltip: $localize`Hidden`,
+			tooltip: "line_style.hidden",
 		},
 		{
 			icon: "horizontal_rule",
 			value: "SOLID",
-			tooltip: $localize`Solid`,
+			tooltip: "line_style.solid",
 		},
 		{
 			icon: "drag_handle",
 			value: "HOLLOW",
-			tooltip: $localize`Hollow`,
+			tooltip: "line_style.hollow",
 		},
 		{
 			icon: "more_horiz",
 			value: "DASHED",
-			tooltip: $localize`Dashed`,
+			tooltip: "line_style.dashed",
 		},
 	];
 

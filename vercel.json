@@ -7,31 +7,5 @@
     "GH_REPO": "",
     "GH_PATH": "/v2/",
     "GH_BRANCH": "main"
-  },
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/zh-Hans/",
-      "has": [
-        {
-          "type": "header",
-          "key": "Accept-Language",
-          "value": "zh"
-        }
-      ],
-      "permanent": true
-    },
-    {
-      "source": "/",
-      "destination": "/en-US/",
-      "missing": [
-        {
-          "type": "header",
-          "key": "Accept-Language",
-          "value": "zh"
-        }
-      ],
-      "permanent": true
-    }
-  ]
+  }
 }

@@ -2,6 +2,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 import {ROUTE_TYPES} from "../data/routeType";
 import {Route} from "../entity/route";
 import {SearchData} from "../entity/searchData";
+import {TranslocoService} from "@jsverse/transloco";
 
 @Pipe({
 	name: "simplifyRoutes",
@@ -9,6 +10,7 @@ import {SearchData} from "../entity/searchData";
 	standalone: true,
 })
 export class SimplifyRoutesPipe implements PipeTransform {
+	constructor(private translocoService: TranslocoService) {}
 
 	transform(routes: Route[]): SearchData[] {
 		const newRoutes: Record<string, SearchData> = {};
@@ -40,6 +42,6 @@ export class SimplifyRoutesPipe implements PipeTransform {
 	}
 
 	public static getDeviationString(realtime: boolean, deviation: number) {
-		return realtime ? deviation > 0 ? $localize`delay` : $localize`early` : $localize`Scheduled`;
+		return realtime ? deviation > 0 ? "deviation.delay" : "deviation.early" : "deviation.scheduled";
 	}
 }

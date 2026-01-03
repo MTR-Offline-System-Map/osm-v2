@@ -27,31 +27,34 @@ import {Station} from "../../entity/station";
 import {ClientsService} from "../../service/clients.service";
 import {FontStyleService} from "../../service/font-style.service";
 import {Depot} from "../../entity/depot";
+import {TranslocoPipe, TranslocoService} from "@jsverse/transloco";
 
 @Component({
 	selector: "app-directions",
 	imports: [
-		FloatLabelModule,
-		InputNumberModule,
-		ProgressSpinnerModule,
-		AccordionModule,
-		SliderModule,
-		InputTextModule,
-		CheckboxModule,
-		ButtonModule,
-		TooltipModule,
-		DividerModule,
-		SearchComponent,
-		RouteDisplayComponent,
-		FormatNamePipe,
-		DataListEntryComponent,
-		FormatDatePipe,
-		ReactiveFormsModule,
-	],
+    FloatLabelModule,
+    InputNumberModule,
+    ProgressSpinnerModule,
+    AccordionModule,
+    SliderModule,
+    InputTextModule,
+    CheckboxModule,
+    ButtonModule,
+    TooltipModule,
+    DividerModule,
+    SearchComponent,
+    RouteDisplayComponent,
+    FormatNamePipe,
+    DataListEntryComponent,
+    FormatDatePipe,
+    ReactiveFormsModule,
+	TranslocoPipe,
+],
 	templateUrl: "./directions.component.html",
 	styleUrl: "./directions.component.css",
 })
 export class DirectionsComponent {
+	private readonly translocoService = inject(TranslocoService);
 	private readonly directionsService = inject(DirectionsService);
 	private readonly mapDataService = inject(MapDataService);
 	private readonly clientsService = inject(ClientsService);
@@ -112,7 +115,7 @@ export class DirectionsComponent {
 	}
 
 	usePathfinder() {
-		return this.mapDataService.getDirectionEngine() === "pathfinder";
+		return this.mapDataService.getDirectionsEngine() === "pathfinder";
 	}
 
 	onClickStation(stationId: string | undefined, isStartStation: boolean) {
@@ -197,11 +200,11 @@ export class DirectionsComponent {
 	}
 
 	getStationName(station?: Station) {
-		return station ? this.formatNamePipe.transform(station.name) : $localize`(Untitled)`;
+		return station ? this.formatNamePipe.transform(station.name) : this.translocoService.translate("app.untitled");
 	}
 
 	getPlatformName(platformName?: string) {
-		return platformName ? $localize`Platform` + " " + this.formatNamePipe.transform(platformName) : "";
+		return platformName ? this.translocoService.translate("app.platform") + " " + this.formatNamePipe.transform(platformName) : "";
 	}
 
 	getRouteName(route: Route) {
@@ -292,15 +295,7 @@ export class DirectionsComponent {
 		return this.fontStyleService.getFontStyle();
 	}
 
-	isEnglish() {
-		return LOCALE_ID.toString() === "en-US";
-	}
-
-	getIntermediateStationLocalize() {
-		return $localize`intermediate station`;
-	}
-
     getBetterScroll() {
-        return this.mapDataService.getBetterScroll();
+        return this.mapDataService.getBetterScroll() || this.usePathfinder();
     }
 }

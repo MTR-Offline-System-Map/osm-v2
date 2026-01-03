@@ -63,7 +63,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 				inTheory,
 			} = JSON.parse(selectedData);
 			return (startStationId || startClientId || startDepotId) && (endStationId || endClientId || endDepotId) ? {
-				directionsRequest: mapDataService.getDirectionEngine() === "pathfinder" ? {
+				directionsRequest: mapDataService.getDirectionsEngine() === "pathfinder" ? {
 					startStationId,
 					endStationId,
 					ignoredLines,
@@ -93,7 +93,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 			this.newDirections.length = 0;
 			mapSelectionService.reset("directions");
 			clearTimeout(this.directionsTimeoutId);
-		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(this.getUrl(mapDataService.getDirectionEngine() === "official" ? "directions" : "pathfinder"), JSON.stringify(directionsRequest)), ({data}) => {
+		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(this.getUrl(mapDataService.getDirectionsEngine() === "official" ? "directions" : "pathfinder"), JSON.stringify(directionsRequest)), ({data}) => {
 			this.newDirections.length = 0;
 			const selectedData = this.getSelectedData();
 			const directions = data.connections;

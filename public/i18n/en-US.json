@@ -1,0 +1,123 @@
+{
+  "app": {
+    "title": "Transport System Map",
+    "offline": "Please refer to the actual situation.",
+    "details": {
+      "station": "Station Details",
+      "player": "Player",
+      "route": "Route Details",
+      "depot": "Depot Details"
+    },
+    "menu": "Menu",
+    "id": "ID",
+    "copy_id": "Copy ID",
+    "location": "Location",
+    "copy_location": "Copy Location",
+    "focus_on_map": "Focus on Map",
+    "view_on_world_map": "View on World Map",
+    "start": "Start",
+    "end": "End",
+    "stations": "Stations",
+    "routes": "Routes",
+    "players": "Players",
+    "depot": "Depots",
+    "show_details": "Show Details",
+    "untitled": "(Untitled)",
+    "none": "(None)",
+    "platform": "Platform"
+  },
+  "main": {
+    "search": "Search for anything...",
+    "dimension": "Dimension",
+    "time_or_data_source": "Time or Data Source",
+    "directions_engine": "Directions Engine",
+    "language": "Language",
+    "directions": "Find Directions",
+    "show_hidden_routes": "Show Hidden Route(s)",
+    "show_all_stations": "Show All Station(s)",
+    "show_depots": "Show Depot(s)",
+    "no_players": "There are no players online.",
+    "interchange_style": "Interchange Style",
+    "font_style": "Font Style",
+    "advanced_settings": "Advanced Settings",
+    "better_scroll": "Better Scroll",
+    "auto_detect_bus_routes": "Auto Detect Bus Route(s)",
+    "developer_mode": "Developer Mode"
+  },
+  "directions": {
+    "title": "Directions",
+    "swap_stations": "Swap Stations",
+    "refresh_directions": "Refresh Directions",
+    "maximum_walking_distance": "Maximum Walking Distance (m)",
+    "ignored_routes": "Ignored Routes",
+    "avoid_stations": "Avoid Stations",
+    "only_lrt": "Only LRT",
+    "no_hsr": "No HSR",
+    "no_boats": "No Boats",
+    "in_theory": "In Theory",
+    "no_directions_found": "No directions found.",
+    "intermediate_station": "intermediate station(s)"
+  },
+  "station": {
+    "fare_zones": "Fare Zones",
+    "connections": "Connections",
+    "arrivals": {
+      "title": "Arrivals",
+      "show_terminating": "Show Terminating",
+      "every_8_seconds": "Every 8 Seconds",
+      "arrived": "Arrived",
+      "dialog": {
+        "title": "Arrival Details",
+        "departure_index": "Departure Index",
+        "car_vehicle": "-Car Vehicle",
+        "close": "close"
+      }
+    }
+  },
+  "route": {
+    "hidden_route": "Hidden Route",
+    "hidden_info": "Please confirm that this route is open.",
+    "variation": "Route Variation",
+    "total_duration": "Total Duration",
+    "depots_for_route": "Depot(s) For Route",
+    "show_travel_times": "Show Travel Times",
+    "show_dwell_times": "Show Dwell Times",
+    "dwell_time": "Dwell Time",
+    "travel_time": "Travel Time"
+  },
+  "deviation": {
+    "delay": "delay",
+    "early": "early",
+    "scheduled": "Scheduled"
+  },
+  "route_type": {
+    "train_normal": "Train",
+    "train_light_rail": "Light Rail",
+    "train_high_speed": "High Speed",
+    "boat_normal": "Ferry",
+    "boat_light_rail": "Cruise",
+    "boat_high_speed": "Fast Ferry",
+    "cable_car_normal": "Cable Car",
+    "bus_normal": "Bus",
+    "bus_light_rail": "Minibus",
+    "bus_high_speed": "Express Bus",
+    "airplane_normal": "Plane"
+  },
+  "line_style": {
+    "hidden": "Hidden",
+    "solid": "Solid",
+    "dotted": "Dotted",
+    "hollow": "Hollow",
+    "dashed": "Dashed"
+  },
+  "font_style": {
+    "sans_serif": "Sans Serif",
+    "serif": "Serif"
+  },
+  "theme": {
+    "title": "Theme",
+    "light": "Light",
+    "system": "System",
+    "dark": "Dark"
+  }
+}

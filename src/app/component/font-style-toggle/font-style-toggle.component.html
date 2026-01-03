@@ -1,5 +1,5 @@
 <p-select-button [options]="fontStyleOptions" [ngModel]="getFontStyle()" (onChange)="setFontStyle($event)" [allowEmpty]="false">
     <ng-template #item let-item>
-        <div [className]="item.class" [pTooltip]="item.tooltip" tooltipPosition="bottom">A</div>
+        <div [className]="item.class" [pTooltip]="item.tooltip | transloco" tooltipPosition="bottom">A</div>
     </ng-template>
 </p-select-button>

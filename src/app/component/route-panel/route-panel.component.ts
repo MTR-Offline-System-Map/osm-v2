@@ -18,6 +18,7 @@ import {MapDataService} from "../../service/map-data.service";
 import {ButtonModule} from "primeng/button";
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from "primeng/tabs";
 import {FormatColorPipe} from "../../pipe/formatColorPipe";
+import {TranslocoPipe, TranslocoService} from "@jsverse/transloco";
 
 @Component({
 	selector: "app-route-panel",
@@ -40,11 +41,13 @@ import {FormatColorPipe} from "../../pipe/formatColorPipe";
     TabPanels,
     TabPanel,
     FormatColorPipe,
+	TranslocoPipe,
 ],
 	templateUrl: "./route-panel.component.html",
 	styleUrl: "./route-panel.component.css",
 })
 export class RoutePanelComponent {
+	private readonly translocoService = inject(TranslocoService);
 	private readonly dataService = inject(MapDataService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly routeVariationService = inject(RouteVariationService);
@@ -68,7 +71,7 @@ export class RoutePanelComponent {
 	}
 
 	getDropdownRoutes() {
-		return this.routeKeyService.getSelectedData()?.map(route => ({name: route.name.split("||")[1] ?? $localize`(Untitled)`, id: route.id}));
+		return this.routeKeyService.getSelectedData()?.map(route => ({name: route.name.split("||")[1] ?? this.translocoService.translate("app.untitled"), id: route.id}));
 	}
 
 	selectRoute(id: string) {
@@ -102,7 +105,7 @@ export class RoutePanelComponent {
 
 	getVehicleIcons(vehicles: { deviation: number, percentage: number }[], displayHeight: number) {
 		const icon = this.getRouteIcon() ?? "";
-		return vehicles.map(vehicle => ({icon, offset: vehicle.percentage * displayHeight / 2, tooltip: `${this.formatTimePipe.transform(Math.abs(Math.round(vehicle.deviation / 1000)), "")} ${SimplifyRoutesPipe.getDeviationString(true, vehicle.deviation)}`}));
+		return vehicles.map(vehicle => ({icon, offset: vehicle.percentage * displayHeight / 2, tooltip: `${this.formatTimePipe.transform(Math.abs(Math.round(vehicle.deviation / 1000)), "")} ${this.translocoService.translate(SimplifyRoutesPipe.getDeviationString(true, vehicle.deviation))}`}));
 	}
 
 	getRouteStationDetails() {

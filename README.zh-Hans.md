@@ -13,8 +13,8 @@
 
 语言: English (英语), 简体中文
 
-[Netlify demo](//mtr-osm-v2.netlify.app/zh-Hans/)
+[Netlify demo](//mtr-osm-v2.netlify.app)
 
-[Cloudflare Pages demo](//mtr-osm-v2.pages.dev/zh-Hans/)
+[Cloudflare Pages demo](//mtr-osm-v2.pages.dev)
 
-[Vercel demo](//mtr-osm-v2.vercel.app/zh-Hans/)
+[Vercel demo](//mtr-osm-v2.vercel.app)

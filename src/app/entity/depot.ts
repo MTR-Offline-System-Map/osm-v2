@@ -13,7 +13,7 @@ export class Depot {
     public constructor(depot?: DepotDTO, name?: string) {
         this.id = depot?.id ?? "";
         this.color = depot?.color ?? 0;
-        this.name = depot?.name ?? name ?? $localize`(Untitled)`;
+        this.name = depot?.name ?? name ?? "(Untitled)";
         this.x = depot?.x ?? 0;
         this.z = depot?.z ?? 0;
     }

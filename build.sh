@@ -10,5 +10,3 @@ sed -i "s|\$GH_PATH|${GH_PATH}|g" ./src/environments/environment.prod.ts
 sed -i "s|\$GH_BRANCH|${GH_BRANCH}|g" ./src/environments/environment.prod.ts
 
 npm run prod
-
-cp ./_redirects ./dist/osm/browser/

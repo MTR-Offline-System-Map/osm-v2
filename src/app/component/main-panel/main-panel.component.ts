@@ -20,6 +20,8 @@ import {environment} from "../../../environments/environment";
 import {setCookie} from "../../data/utilities";
 import {ThemeToggleComponent} from "../theme-toggle/theme-toggle.component";
 import {FontStyleToggleComponent} from "../font-style-toggle/font-style-toggle.component";
+import {TranslocoPipe} from "@jsverse/transloco";
+import { LanguageService } from "../../service/language.service";
 
 @Component({
 	selector: "app-main-panel",
@@ -39,7 +41,8 @@ import {FontStyleToggleComponent} from "../font-style-toggle/font-style-toggle.c
     InterchangeStyleToggleComponent,
     DataListEntryComponent,
     ThemeToggleComponent,
-    FontStyleToggleComponent
+    FontStyleToggleComponent,
+	TranslocoPipe,
 ],
 	templateUrl: "./main-panel.component.html",
 	styleUrl: "./main-panel.component.css",
@@ -48,6 +51,7 @@ export class MainPanelComponent {
 	private readonly dataService = inject(MapDataService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly clientsService = inject(ClientsService);
+	private readonly languageService = inject(LanguageService);
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
@@ -59,7 +63,8 @@ export class MainPanelComponent {
 		search: new FormControl(""),
 		dimension: new FormControl(""),
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
-		directionEngine: new FormControl<"official" | "pathfinder">(this.dataService.getDirectionEngine()),
+		directionsEngine: new FormControl<"official" | "pathfinder">(this.dataService.getDirectionsEngine()),
+		language: new FormControl(this.languageService.getLanguageName()),
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
 		showDepots: new FormControl(this.dataService.getShowDepots()),
@@ -106,10 +111,21 @@ export class MainPanelComponent {
 		}
 	}
 
-	setDirectionEngine() {
+	setDirectionsEngine() {
 		const data = this.formGroup.getRawValue();
-		if (data.directionEngine) {
-			this.dataService.setDirectionEngine(data.directionEngine);
+		if (data.directionsEngine) {
+			this.dataService.setDirectionsEngine(data.directionsEngine);
+		}
+	}
+
+	getSupportedLanguages() {
+		return Object.values(this.languageService.getSupportedLanguages());
+	}
+
+	setLanguage() {
+		const data = this.formGroup.getRawValue();
+		if (data.language) {
+			this.languageService.switchLanguage(this.languageService.getLanguageCode(data.language)!);
 		}
 	}
 
@@ -157,12 +173,8 @@ export class MainPanelComponent {
 		return environment.enableDeveloperMode;
 	}
 
-	getPlayersLocalize() {
-		return $localize`Players`;
-	}
-
-	getDimensionLocalize() {
-		return environment.historicalMap.enable ? $localize`Time or Data Source` : $localize`Dimension`
+	getHistoricalMap() {
+		return environment.historicalMap.enable;
 	}
 
 	setShowHiddenRoutes(value: boolean) {

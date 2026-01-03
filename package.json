@@ -4,12 +4,15 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve --host 0.0.0.0",
+		"prestart": "crowdin download",
 		"build": "ng lint && ng build --base-href a",
+		"prebuild": "crowdin download",
 		"watch": "ng lint && ng build --watch --configuration development",
 		"test": "ng test",
 		"lint": "ng lint",
 		"update-all": "npx npm-check-updates -u && npm install --force",
-		"prod": "ng build --configuration=production"
+		"prod": "ng build --configuration=production",
+		"download-translations": "crowdin download"
 	},
 	"private": true,
 	"dependencies": {
@@ -34,7 +37,7 @@
 		"@angular-devkit/build-angular": "^20.3.5",
 		"@angular/cli": "^20.3.5",
 		"@angular/compiler-cli": "^20.3.4",
-		"@angular/localize": "^20.3.4",
+		"@crowdin/cli": "^4.12.0",
 		"@types/jasmine": "~5.1.10",
 		"angular-eslint": "20.4.0",
 		"eslint": "^9.37.0",

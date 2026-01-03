@@ -3,57 +3,57 @@
 		<app-title [name]="getStation()?.name ?? ''" [color]="getStationColor()"/>
 		@if (getDeveloperMode()) {
 			<div class="row gap-small center">
-				<div class="row gap center" i18n-pTooltip pTooltip="ID" tooltipPosition="left">
+				<div class="row gap center" [pTooltip]="'app.id' | transloco" tooltipPosition="left">
 					<div class="material-icons">code</div>
 					<div>{{ getID() }}</div>
 				</div>
 				<div class="row center">
-					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyID(id_icon)" i18n-pTooltip pTooltip="Copy ID" tooltipPosition="bottom">
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyID(id_icon)" [pTooltip]="'app.copy_id' | transloco" tooltipPosition="bottom">
 						<div class="material-icons" #id_icon>content_copy</div>
 					</button>
 				</div>
 			</div>
 		}
 		<div class="row gap-small center">
-			<div class="row gap center" i18n-pTooltip pTooltip="Location" tooltipPosition="left">
+			<div class="row gap center" [pTooltip]="'app.location' | transloco" tooltipPosition="left">
 				<div class="material-icons">my_location</div>
 				<div>({{ getCoordinatesText() }})</div>
 			</div>
 			<div class="row center">
-				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyLocation(icon)" i18n-pTooltip pTooltip="Copy Location" tooltipPosition="bottom">
+				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyLocation(icon)" [pTooltip]="'app.copy_location' | transloco" tooltipPosition="bottom">
 					<div class="material-icons" #icon>content_copy</div>
 				</button>
-				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" i18n-pTooltip pTooltip="Focus on Map" tooltipPosition="bottom">
+				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" [pTooltip]="'app.focus_on_map' | transloco" tooltipPosition="bottom">
 					<div class="material-icons">filter_center_focus</div>
 				</button>
 				@if (getEnableViewOnWorldMap()) {
-					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" i18n-pTooltip pTooltip="View on World Map" tooltipPosition="bottom">
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" [pTooltip]="'app.view_on_world_map' | transloco" tooltipPosition="bottom">
 						<div class="material-icons">map</div>
 					</button>
 				}
 			</div>
 		</div>
 		<div class="row gap center">
-			<div class="row gap center" i18n-pTooltip pTooltip="Fare Zones" tooltipPosition="left">
+			<div class="row gap center" [pTooltip]="'station.fare_zones' | transloco" tooltipPosition="left">
 				<div class="material-icons">sell</div>
 				<div>({{ getZoneText() }})</div>
 			</div>
 		</div>
 		<div class="row center" [style.display]="isOffline() && !usePathfinder() ? 'none' : ''">
-			<div class="material-icons" i18n-pTooltip pTooltip="Directions" tooltipPosition="left">directions</div>
-			<p-button i18n-label label="Start" variant="text" (onClick)="openDirections(true)"/>
-			<p-button i18n-label label="End" variant="text" (onClick)="openDirections(false)"/>
+			<div class="material-icons" [pTooltip]="'directions.title' | transloco" tooltipPosition="left">directions</div>
+			<p-button [label]="'app.start' | transloco" variant="text" (onClick)="openDirections(true)"/>
+			<p-button [label]="'app.end' | transloco" variant="text" (onClick)="openDirections(false)"/>
 		</div>
 	</div>
 
 	<p-tabs class="wrapper" (valueChange)="resetArrivalFilter()" value="1">
 		<p-tablist>
 			@if (!getSingleStation()) {
-				<p-tab value="0" [hidden]="isOffline()" i18n>Arrivals</p-tab>
-				<p-tab value="1" i18n>Routes</p-tab>
+				<p-tab value="0" [hidden]="isOffline()">{{ 'station.arrivals.title' | transloco }}</p-tab>
+				<p-tab value="1">{{ 'app.routes' | transloco }}</p-tab>
 			}
 			@if (getConnections().length > 0) {
-				<p-tab value="2" i18n>Connections</p-tab>
+				<p-tab value="2">{{ 'station.connections' | transloco }}</p-tab>
 			}
 		</p-tablist>
 
@@ -93,16 +93,16 @@
 
 							<div class="row gap-small center" [style.display]="getHasTerminating() ? '' : 'none'">
 								<p-checkbox #showTerminatingCheckbox inputId="showTerminatingCheckbox" [binary]="true" (onChange)="updateArrivalFilter(showTerminatingCheckbox.checked)"/>
-								<label for="showTerminatingCheckbox" i18n>Show Terminating</label>
+								<label for="showTerminatingCheckbox">{{ 'station.arrivals.show_terminating' | transloco }}</label>
 							</div>
 
 							<div class="column">
 								@for (arrival of getArrivals(); track $index) {
 									<div class="column">
 										<p-divider class="small-divider"/>
-										<app-data-list-entry [icons]="[arrival.routeTypeIcon, getCircularStateIcon(arrival.circularState)]" [title]="[arrival.destination | formatName, arrival.getArrivalTime() | formatTime : getArrivedLocalize()]" [subtitles]="[
-											[(arrival.routeName | formatName) + ' ' + (arrival.routeNumber | formatName), arrival.isContinuous ? getEvery8SecondsLocalize() : arrival.arrival | formatDate],
-											[getPlatformLocalize() + ' ' + arrival.platformName, arrival.isContinuous ? '' : (arrival.getDeviation() | formatTime :'') + ' ' + arrival.getDeviationString()]
+										<app-data-list-entry [icons]="[arrival.routeTypeIcon, getCircularStateIcon(arrival.circularState)]" [title]="[arrival.destination | formatName, arrival.getArrivalTime() | formatTime : 'station.arrivals.arrived' | transloco]" [subtitles]="[
+											[(arrival.routeName | formatName) + ' ' + (arrival.routeNumber | formatName), arrival.isContinuous ? ('station.arrivals.every_8_seconds' | transloco) : arrival.arrival | formatDate],
+											[('app.platform' | transloco) + ' ' + arrival.platformName, arrival.isContinuous ? '' : (arrival.getDeviation() | formatTime :'') + ' ' + (arrival.getDeviationString() | transloco)]
 										]" [color]="arrival.routeColor | formatColor" [useLightColor]="!arrival.realtime" [clickable]="true" (entryClicked)="showDetails(arrival)"/>
 									</div>
 								}
@@ -115,7 +115,7 @@
 					<div class="column gap padding-top-bottom padding-sides content">
 						<div class="row gap-small center">
 							<p-checkbox #showDetailsCheckbox inputId="showDetailsCheckbox" [binary]="true"/>
-							<label for="showDetailsCheckbox" i18n>Show Details</label>
+							<label for="showDetailsCheckbox">{{ 'app.show_details' | transloco }}</label>
 						</div>
 						<div class="column">
 							@for (route of getRoutes(); track $index) {
@@ -147,20 +147,20 @@
 	</p-tabs>
 </div>
 
-<p-dialog i18n-header header="Arrival Details" [visible]="!!dialogData" [modal]="true" [dismissableMask]="true" [closable]="false">
+<p-dialog [header]="'station.arrivals.dialog.title' | transloco" [visible]="!!dialogData" [modal]="true" [dismissableMask]="true" [closable]="false">
 	<div class="column gap">
 		<div class="column">
-			<div class="title" i18n>Departure Index</div>
+			<div class="title">{{ 'station.arrivals.dialog.departure_index' | transloco }}</div>
 			<div>{{ dialogData?.departureIndex }}</div>
 		</div>
 		<div class="column">
-			<div class="title">{{ dialogData?.cars?.length }}<span i18n>-Car Vehicle</span></div>
+			<div class="title">{{ dialogData?.cars?.length }}{{ 'station.arrivals.dialog.car_vehicle' | transloco}}</div>
 			@for (car of dialogData?.cars; track $index) {
 				<div>{{ car }}</div>
 			}
 		</div>
 	</div>
 	<ng-template #footer>
-		<p-button i18n-label label="Close" (onClick)="dialogData = undefined"/>
+		<p-button [label]="'station.arrivals.dialog.close' | transloco" (onClick)="dialogData = undefined"/>
 	</ng-template>
 </p-dialog>

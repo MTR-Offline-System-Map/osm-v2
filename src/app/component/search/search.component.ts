@@ -15,7 +15,7 @@ import {FormatColorPipe} from "../../pipe/formatColorPipe";
 import {SearchData} from "../../entity/searchData";
 import {ClientsService} from "../../service/clients.service";
 import {DimensionService} from "../../service/dimension.service";
-
+import {TranslocoService} from "@jsverse/transloco";
 
 const maxResults = 50;
 
@@ -36,6 +36,7 @@ const maxResults = 50;
 	styleUrl: "./search.component.css",
 })
 export class SearchComponent {
+	private readonly translocoService = inject(TranslocoService);
 	private readonly dataService = inject(MapDataService);
 	private readonly clientsService = inject(ClientsService);
 	private readonly dimensionService = inject(DimensionService);
@@ -89,28 +90,28 @@ export class SearchComponent {
 
 			if (searchedStations.length > 0) {
 				this.data.push({
-					label: $localize`Stations`,
+					label: this.translocoService.translate("app.stations"),
 					items: searchedStations,
 				});
 			}
 
 			if (searchedRoutes.length > 0) {
 				this.data.push({
-					label: $localize`Routes`,
+					label: this.translocoService.translate("app.routes"),
 					items: searchedRoutes,
 				});
 			}
 
 			if (searchedClients.length > 0) {
 				this.data.push({
-					label: $localize`Players`,
+					label: this.translocoService.translate("app.clients"),
 					items: searchedClients,
 				});
 			}
 
 			if (searchedDepots.length > 0) {
 				this.data.push({
-					label: $localize`Depots`,
+					label: this.translocoService.translate("app.depots"),
 					items: searchedDepots,
 				});
 			}

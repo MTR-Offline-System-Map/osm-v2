@@ -3,12 +3,12 @@
 		<app-title [name]="getRouteName()" [color]="getRouteColor()"/>
 		@if (getDeveloperMode()) {
 			<div class="row gap-small center">
-				<div class="row gap center" i18n-pTooltip pTooltip="ID" tooltipPosition="left">
+				<div class="row gap center" [pTooltip]="'app.id' | transloco" tooltipPosition="left">
 					<div class="material-icons">code</div>
 					<div>{{ getRouteID() }}</div>
 				</div>
 				<div class="row center">
-					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyRouteID(id_icon)" i18n-pTooltip pTooltip="Copy ID" tooltipPosition="bottom">
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyRouteID(id_icon)" [pTooltip]="'app.copy_id' | transloco" tooltipPosition="bottom">
 						<div class="material-icons" #id_icon>content_copy</div>
 					</button>
 				</div>
@@ -16,9 +16,9 @@
 		}
 		@if (getRouteHidden()) {
 			<div class="row gap center">
-				<div class="row gap center" i18n-pTooltip pTooltip="Hidden Route" tooltipPosition="left">
+				<div class="row gap center" [pTooltip]="'route.hidden_route' | transloco" tooltipPosition="left">
 					<div class="material-icons">visibility_off</div>
-					<div i18n>Please confirm that this route is open.</div>
+					<div>{{ 'route.hidden_info' | transloco }}</div>
 				</div>
 			</div>
 		}
@@ -26,11 +26,11 @@
 			<p-select inputId="dropdown" [options]="getDropdownRoutes()" optionLabel="name" (onChange)="selectRoute($event.value.id)" [(ngModel)]="dropdownValue" [fluid]="true">
 				<ng-template #item let-route>{{ route.name | formatName }}</ng-template>
 			</p-select>
-			<label for="dropdown" i18n>Route Variation</label>
+			<label for="dropdown">{{ 'route.variation' | transloco }}</label>
 		</p-float-label>
 		@if (getTotalDurationSeconds(); as totalDurationSeconds) {
 			<div class="row gap center">
-				<div class="row gap center" i18n-pTooltip pTooltip="Total Duration" tooltipPosition="left">
+				<div class="row gap center" [pTooltip]="'route.total_duration' | transloco" tooltipPosition="left">
 					<div class="material-icons">schedule</div>
 					<div>{{ totalDurationSeconds | formatTime : "" }}</div>
 				</div>
@@ -38,10 +38,10 @@
 		}
 		@if (!getEnableRouteDepotsDetails()) {
 			<div class="row gap center">
-				<div class="row gap center" i18n-pTooltip pTooltip="Depot(s) For Route" tooltipPosition="left">
+				<div class="row gap center" [pTooltip]="'route.depots_for_route' | transloco" tooltipPosition="left">
 					<div class="material-icons">home</div>
 					@if (getRouteDepots().length === 0) {
-						<div i18n>(None)</div>
+						<div>{{ 'app.none' | transloco }}</div>
 					} @else {
 						<div class="column gap-small">
 							@for (depot of getRouteDepots(); track $index) {
@@ -56,9 +56,9 @@
 
 	<p-tabs class="wrapper" value="0">
 		<p-tablist>
-			<p-tab value="0" i18n>Stations</p-tab>
+			<p-tab value="0">{{ 'app.stations' | transloco}}</p-tab>
 			@if (getEnableRouteDepotsDetails() && getRouteDepots().length > 0) {
-				<p-tab value="1" i18n>Depots</p-tab>
+				<p-tab value="1">{{ 'app.depots' | transloco}}</p-tab>
 			}
 		</p-tablist>
 
@@ -67,11 +67,11 @@
 				<div class="column gap padding-top-bottom padding-sides content">
 					<div class="row gap-small center" [style.display]="isOnline() && hasDurations() ? '' : 'none'">
 						<p-checkbox #showDurationsCheckbox inputId="showDurationsCheckbox" [binary]="true"/>
-						<label for="showDurationsCheckbox" i18n>Show Travel Times</label>
+						<label for="showDurationsCheckbox">{{ 'route.show_travel_times' | transloco}}</label>
 					</div>
 					<div class="row gap-small center" [style.display]="isOnline() && hasDwellTimes() ? '' : 'none'">
 						<p-checkbox #showDwellTimesCheckbox inputId="showDwellTimesCheckbox" [binary]="true"/>
-						<label for="showDwellTimesCheckbox" i18n>Show Dwell Times</label>
+						<label for="showDwellTimesCheckbox">{{ 'route.show_dwell_times' | transloco }}</label>
 					</div>
 					<div class="column">
 						@for (stationDetails of getRouteStationDetails(); track $index) {
@@ -79,7 +79,7 @@
 								<div class="row center">
 									<app-data-list-entry class="spacing" [icons]="[]" [title]="[stationDetails.name | formatName, '']" [subtitles]="[]" [useLightColor]="false" [clickable]="true" (entryClicked)="stationClicked.emit(stationDetails.id)"/>
 									@if (showDwellTimesCheckbox.checked && stationDetails.dwellTimeSeconds && isOnline()) {
-										<div class="row center duration" i18n-pTooltip pTooltip="Dwell Time">
+										<div class="row center duration" [pTooltip]="'route.dwell_time' | transloco">
 											<div class="material-icons">hourglass_empty</div>
 											<div>&nbsp;{{ stationDetails.dwellTimeSeconds | formatTime :"" }}</div>
 										</div>
@@ -90,7 +90,7 @@
 								@if (showDurationsCheckbox.checked && stationDetails.durationSeconds && isOnline()) {
 									<div class="row">
 										<div class="spacing"></div>
-										<div class="row center duration" i18n-pTooltip pTooltip="Travel Time">
+										<div class="row center duration" [pTooltip]="'route.travel_time' | transloco">
 											<div class="material-icons">{{ getRouteIcon() }}</div>
 											<div>&nbsp;{{ stationDetails.durationSeconds | formatTime :"" }}</div>
 										</div>

@@ -19,13 +19,8 @@ jobs:
         run: npm ci
       - name: Build Angular
         run: bash build.sh
-      - name: Capture English build artifact
+      - name: Capture build artifact
         uses: actions/upload-artifact@main
         with:
-          name: English
-          path: dist/osm/en-US/
-      - name: Capture Simplified Chinese build artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: Simplified Chinese
-          path: dist/osm/zh-Hans/
+          name: Artifact
+          path: dist/osm/

@@ -21,6 +21,7 @@ import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {DimensionService} from "../../service/dimension.service";
 import {environment} from "../../../environments/environment";
 import {FontStyleService} from "../../service/font-style.service";
+import {TranslocoPipe} from "@jsverse/transloco";
 
 @Component({
 	selector: "app-station-panel",
@@ -40,6 +41,7 @@ import {FontStyleService} from "../../service/font-style.service";
 		SplitNamePipe,
 		DataListEntryComponent,
 		TitleComponent,
+		TranslocoPipe,
 	],
 	templateUrl: "./station-panel.component.html",
 	styleUrl: "./station-panel.component.css",
@@ -81,7 +83,7 @@ export class StationPanelComponent {
 	}
 
 	usePathfinder() {
-		return this.dataService.getDirectionEngine() === "pathfinder";
+		return this.dataService.getDirectionsEngine() === "pathfinder";
 	}
 
 	getConnections(): Station[] {
@@ -208,17 +210,5 @@ export class StationPanelComponent {
 
 	getDeveloperMode() {
 		return this.dataService.getDeveloperMode();
-	}
-
-	getPlatformLocalize() {
-		return $localize`Platform`;
-	}
-
-	getEvery8SecondsLocalize() {
-		return $localize`Every 8 Seconds`;
-	}
-
-	getArrivedLocalize() {
-		return $localize`Arrived`;
 	}
 }

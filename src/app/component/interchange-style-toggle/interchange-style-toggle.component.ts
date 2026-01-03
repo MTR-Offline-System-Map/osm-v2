@@ -4,6 +4,7 @@ import {setCookie} from "../../data/utilities";
 import {TooltipModule} from "primeng/tooltip";
 import {SelectButtonChangeEvent, SelectButtonModule} from "primeng/selectbutton";
 import {FormsModule} from "@angular/forms";
+import {TranslocoPipe} from "@jsverse/transloco";
 
 @Component({
 	selector: "app-interchange-style-toggle",
@@ -11,6 +12,7 @@ import {FormsModule} from "@angular/forms";
 		SelectButtonModule,
 		TooltipModule,
 		FormsModule,
+		TranslocoPipe,
 	],
 	templateUrl: "./interchange-style-toggle.component.html",
 	styleUrl: "./interchange-style-toggle.component.css",
@@ -22,17 +24,17 @@ export class InterchangeStyleToggleComponent {
 		{
 			icon: "visibility_off",
 			value: "HIDDEN",
-			tooltip: $localize`Hidden`,
+			tooltip: "line_style.hidden",
 		},
 		{
 			icon: "more_horiz",
 			value: "DOTTED",
-			tooltip: $localize`Dotted`,
+			tooltip: "line_style.dotted",
 		},
 		{
 			icon: "drag_handle",
 			value: "HOLLOW",
-			tooltip: $localize`Hollow`,
+			tooltip: "line_style.hollow",
 		},
 	];
 

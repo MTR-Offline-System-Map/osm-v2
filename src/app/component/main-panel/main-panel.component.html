@@ -1,20 +1,24 @@
 <div class="column gap wrapper {{getBetterScroll()?'scrollable':''}}" [formGroup]="formGroup">
 	<div class="column gap-small padding-sides">
-		<app-search i18n-label label="Search for anything..." [parentFormGroup]="formGroup" childFormControlName="search" [includeStations]="true" [includeRoutes]="true" [includeDepots]="true" [includeClients]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)" (depotClicked)="clickDepot($event)"/>
+		<app-search [label]="'main.search' | transloco" [parentFormGroup]="formGroup" childFormControlName="search" [includeStations]="true" [includeRoutes]="true" [includeDepots]="true" [includeClients]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)" (depotClicked)="clickDepot($event)"/>
 		<p-float-label variant="in">
 			<p-select inputId="dropdown" formControlName="dimension" [options]="getDimensions()" (onChange)="setDimension()" [fluid]="true"/>
-			<label for="dropdown">{{ getDimensionLocalize() }}</label>
+			<label for="dropdown">{{ (getHistoricalMap() ? 'main.time_or_data_source' : 'main.dimension') | transloco }}</label>
 		</p-float-label>
 		@if (getEnablePathfinder()) {
 			<p-float-label variant="in">
-				<p-select inputId="dropdownDirection" formControlName="directionEngine" [options]="['official', 'pathfinder']" (onChange)="setDirectionEngine()" [fluid]="true"/>
-				<label for="dropdownDirection" i18n>Direction Engine</label>
+				<p-select inputId="dropdownDirection" formControlName="directionsEngine" [options]="['official', 'pathfinder']" (onChange)="setDirectionsEngine()" [fluid]="true"/>
+				<label for="dropdownDirection">{{ 'main.directions_engine' | transloco }}</label>
 			</p-float-label>
 		}
+		<p-float-label variant="in">
+			<p-select inputId="dropdownLanguage" formControlName="language" [options]="getSupportedLanguages()" (onChange)="setLanguage()" [fluid]="true"/>
+			<label for="dropdownLanguage">{{ 'main.language' | transloco }}</label>
+		</p-float-label>
 		<button pButton class="icon-button" severity="secondary" (click)="directionsOpened.emit()" [fluid]="true" [style.display]="isOffline() ? 'none' : ''">
 			<div class="row gap-small">
 				<div class="material-icons">directions</div>
-				<div i18n>Find Directions</div>
+				<div>{{ 'main.directions' | transloco}}</div>
 			</div>
 		</button>
 	</div>
@@ -24,28 +28,28 @@
 				@for (routeType of routeTypes; track $index) {
 					<div class="row gap center">
 						<div class="material-icons">{{ routeType[1].icon }}</div>
-						<div class="shrink spacing">{{ routeType[1].text }}</div>
+						<div class="shrink spacing">{{ routeType[1].text | transloco }}</div>
 						<app-visibility-toggle [routeType]="routeType[0]"/>
 					</div>
 				}
 				@if (getEnableShowHiddenRoutes()) {
 					<div class="row gap center toggle">
 						<div class="material-icons">visibility_off</div>
-						<div class="shrink spacing" i18n>Show Hidden Route(s)</div>
+						<div class="shrink spacing">{{ 'main.show_hidden_routes' | transloco }}</div>
 						<p-toggle-switch inputId="showHiddenRoutesToggle" formControlName="showHiddenRoutesToggle" (onChange)="setShowHiddenRoutes($event.checked)"/>
 					</div>
 				}
 				@if (getEnableShowAllStations()) {
 					<div class="row gap center toggle">
 						<div class="material-icons">visibility_off</div>
-						<div class="shrink spacing" i18n>Show All Station(s)</div>
+						<div class="shrink spacing">{{ 'main.show_all_stations' | transloco }}</div>
 						<p-toggle-switch inputId="showAllStationsToggle" formControlName="showAllStationsToggle" (onChange)="setShowAllStations($event.checked)"/>
 					</div>
 				}
 				@if (getEnableShowDepots()) {
 					<div class="row gap center toggle">
 						<div class="material-icons">home</div>
-						<div class="shrink spacing" i18n>Show Depot(s)</div>
+						<div class="shrink spacing">{{ 'main.show_depots' | transloco}}</div>
 						<p-toggle-switch inputId="showDepots" formControlName="showDepots" (onChange)="setShowDepots($event.checked)"/>
 					</div>
 				}
@@ -54,7 +58,7 @@
 				<p-divider/>
 				<div class="row gap center">
 					<div class="material-icons">polyline</div>
-					<div class="shrink spacing" i18n>Interchange Style</div>
+					<div class="shrink spacing">{{ 'main.interchange_style' | transloco}}</div>
 					<app-interchange-style-toggle/>
 				</div>
 			}
@@ -62,10 +66,10 @@
 			<div [hidden]="isOffline()" class="player-accordion">
 				<p-accordion [multiple]="true">
 					<p-accordion-panel>
-						<p-accordion-header>{{ getPlayersLocalize() }} ({{ getAllClients().length }})</p-accordion-header>
+						<p-accordion-header>{{ 'app.players' | transloco }} ({{ getAllClients().length }})</p-accordion-header>
 						<p-accordion-content>
 							@if (getAllClients().length === 0) {
-								<div i18n>There are no players online.</div>
+								<div>{{ 'main.no_players' | transloco}}</div>
 							} @else {
 								<div class="column gap-small">
 									@for (client of getAllClients(); track $index) {
@@ -78,50 +82,41 @@
 				</p-accordion>
 			</div>
 			<p-divider/>
-			<a i18n-href href="../zh-Hans/">
-				<button pButton class="icon-button" severity="secondary" [fluid]="true">
-					<div class="row gap-small">
-						<div class="material-icons">translate</div>
-						<div i18n>简体中文</div>
-					</div>
-				</button>
-			</a>
-			<p-divider/>
 			<div class="column gap-small">
 				<div class="row gap center">
 					<div class="material-icons">palette</div>
-					<div class="shrink spacing" i18n>Theme</div>
+					<div class="shrink spacing">{{ 'theme.title' | transloco }}</div>
 					<app-theme-toggle/>
 				</div>
 				<div class="row gap center">
 					<div class="material-icons">text_format</div>
-					<div class="shrink spacing" i18n>Font Style</div>
+					<div class="shrink spacing">{{ 'main.font_style' | transloco }}</div>
 					<app-font-style-toggle/>
 				</div>
 			</div>
 			<p-divider/>
 			<p-accordion [value]="1" [multiple]="true" class="bottom">
 				<p-accordion-panel>
-					<p-accordion-header i18n>Advanced Settings</p-accordion-header>
+					<p-accordion-header>{{ 'main.advanced_settings' | transloco }}</p-accordion-header>
 					<p-accordion-content>
 						<div class="column gap-small">
 							<div class="row gap center toggle">
 								<div class="material-icons mobile">screenshot</div>
 								<div class="material-icons pc">screenshot_monitor</div>
-								<div class="shrink spacing" i18n>Better Scroll</div>
+								<div class="shrink spacing">{{ 'main.better_scroll' | transloco }}</div>
 								<p-toggle-switch inputId="betterScroll" formControlName="betterScroll" (onChange)="setBetterScroll($event.checked)"/>
 							</div>
 							@if (getEnableAutoDetectBusRoutes()) {
 								<div class="row gap center toggle">
 									<div class="material-icons">directions_bus</div>
-									<div class="shrink spacing" i18n>Auto Detect Bus Route(s)</div>
+									<div class="shrink spacing">{{ 'main.auto_detect_bus_routes' | transloco}}</div>
 									<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
 								</div>
 							}
 							@if (getEnableDeveloperMode()) {
 								<div class="row gap center toggle">
 									<div class="material-icons">code</div>
-									<div class="shrink spacing" i18n>Developer Mode</div>
+									<div class="shrink spacing">{{ 'main.developer_mode' | transloco}}</div>
 									<p-toggle-switch inputId="developerMode" formControlName="developerMode" (onChange)="setDeveloperMode($event.checked)"/>
 								</div>
 							}

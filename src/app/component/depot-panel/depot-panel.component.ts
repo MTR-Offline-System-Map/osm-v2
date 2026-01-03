@@ -11,6 +11,8 @@ import {DataListEntryComponent} from "../data-list-entry/data-list-entry.compone
 import {ButtonModule} from "primeng/button";
 import {environment} from "../../../environments/environment";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
+import {TooltipModule} from "primeng/tooltip";
+import {TranslocoPipe} from "@jsverse/transloco";
 
 @Component({
     selector: "app-depot-panel",
@@ -22,6 +24,8 @@ import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
         FormatNamePipe,
         FormatColorPipe,
         DataListEntryComponent,
+		TooltipModule,
+        TranslocoPipe,
     ],
     templateUrl: "./depot-panel.component.html",
     styleUrl: "./depot-panel.component.css",
@@ -75,7 +79,7 @@ export class DepotPanelComponent {
 	}
 
     usePathfinder() {
-        return this.dataService.getDirectionEngine() === "pathfinder";
+        return this.dataService.getDirectionsEngine() === "pathfinder";
     }
 
 	openDirections(isStartDepot: boolean) {

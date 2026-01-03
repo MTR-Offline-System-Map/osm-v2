@@ -3,17 +3,17 @@
 		<div class="column gap-small spacing">
 			<div class="row gap-small center">
 				<div class="spacing">
-					<app-search i18n-label label="Start" [parentFormGroup]="formGroup" childFormControlName="startInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, true)" (clientClicked)="onClickClient($event, true)" (textCleared)="onClearInput(true)"/>
+					<app-search [label]="'app.start' | transloco" [parentFormGroup]="formGroup" childFormControlName="startInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, true)" (clientClicked)="onClickClient($event, true)" (textCleared)="onClearInput(true)"/>
 				</div>
-				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="swapStations()" [disabled]="cannotSwap()" i18n-pTooltip pTooltip="Swap Stations">
+				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="swapStations()" [disabled]="cannotSwap()" [pTooltip]="'directions.swap_stations' | transloco">
 					<div class="material-icons">swap_vert</div>
 				</button>
 			</div>
 			<div class="row gap-small center">
 				<div class="spacing">
-					<app-search i18n-label label="End" [parentFormGroup]="formGroup" childFormControlName="endInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, false)" (clientClicked)="onClickClient($event, false)" (textCleared)="onClearInput(false)"/>
+					<app-search [label]="'app.end' | transloco" [parentFormGroup]="formGroup" childFormControlName="endInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, false)" (clientClicked)="onClickClient($event, false)" (textCleared)="onClearInput(false)"/>
 				</div>
-				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="refreshDirections()" [disabled]="cannotManuallyRefresh()" i18n-pTooltip pTooltip="Refresh Directions">
+				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="refreshDirections()" [disabled]="cannotManuallyRefresh()" [pTooltip]="'directions.refresh_directions' | transloco">
 					<div class="material-icons">refresh</div>
 				</button>
 			</div>
@@ -25,27 +25,27 @@
 					<div class="spacing">
 						<p-float-label variant="in">
 							<p-input-number inputId="max-walking-distance" formControlName="maxWalkingDistance" [min]="0" [max]="1000000000" (onInput)="updateMaxWalkingDistance()" [fluid]="true"/>
-							<label for="max-walking-distance" i18n>Maximum Walking Distance (m)</label>
+							<label for="max-walking-distance">{{ 'directions.maximum_walking_distance' | transloco }}</label>
 						</p-float-label>					
 					</div>
 					<p-checkbox (onChange)="checkStatus()" inputId="enable-walking-wild" formControlName="enableWalkingWild" [binary]="true" pTooltip="Walking Wild" tooltipPosition="left"/>
 				</div>
-				<app-search i18n-label label="Ignored Routes" [parentFormGroup]="formGroup" childFormControlName="ignoredRoutesInput" (routeClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="ignoredRoutes" [includeStations]="false" [includeRoutes]="true" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>
-				<app-search i18n-label label="Avoid Stations" [parentFormGroup]="formGroup" childFormControlName="avoidStationsInput" (stationClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="avoidStations" [includeStations]="true" [includeRoutes]="false" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>
+				<app-search [label]="'directions.ignored_routes' | transloco" [parentFormGroup]="formGroup" childFormControlName="ignoredRoutesInput" (routeClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="ignoredRoutes" [includeStations]="false" [includeRoutes]="true" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>
+				<app-search [label]="'directions.avoid_stations' | transloco" [parentFormGroup]="formGroup" childFormControlName="avoidStationsInput" (stationClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="avoidStations" [includeStations]="true" [includeRoutes]="false" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>
 			</div>
 			<p-divider/>
 			<div class="column gap-small spacing">
 				<div class="row gap-small center">
 						<p-check-box (onChange)="checkStatus()" inputId="only-lrt" formControlName="onlyLightRail" [binary]="true"/>
-						<label for="only-lrt" i18n>Only LRT</label>
+						<label for="only-lrt">{{ 'directions.only_lrt' | transloco }}</label>
 						<p-check-box (onChange)="checkStatus()" inputId="no-hsr" formControlName="noHSR" [binary]="true"/>
-						<label for="no-hsr" i18n>No HSR</label>
+						<label for="no-hsr">{{ 'directions.no_hsr' | transloco }}</label>
 				</div>
 				<div class="row gap-small center">
 						<p-check-box (onChange)="checkStatus()" inputId="no-boats" formControlName="noBoats" [binary]="true"/>
-						<label for="no-boats" i18n>No Boats</label>
+						<label for="no-boats">{{ 'directions.no_boats' | transloco}}</label>
 						<p-check-box (onChange)="checkStatus()" inputId="in-theory" formControlName="inTheory" [binary]="true"/>
-						<label for="in-theory" i18n>In Theory</label>
+						<label for="in-theory">{{ 'directions.in_theory' | transloco}}</label>
 				</div>
 			</div>
 		}
@@ -62,7 +62,7 @@
 			<div class="column center wrapper">
 				<div class="spacing"></div>
 				<div class="material-icons big-icon">remove_road</div>
-				<div i18n>No directions found.</div>
+				<div>{{ 'directions.no_directions found' | transloco }}</div>
 				<div class="spacing"></div>
 			</div>
 		} @else {
@@ -98,7 +98,7 @@
 							<div class="intermediate-stations">
 								<p-accordion [multiple]="true" value="0">
 									<p-accordion-panel>
-										<p-accordion-header>{{ direction.intermediateStations.length }} {{ getIntermediateStationLocalize() }}{{ direction.intermediateStations.length > 1 && isEnglish() ? 's' : '' }}</p-accordion-header>
+										<p-accordion-header>{{ direction.intermediateStations.length }} {{ 'directions.intermediate_station' | transloco }}</p-accordion-header>
 										<p-accordion-content>
 											<div class="column gap-small">
 												@for (intermediateStation of direction.intermediateStations; track $index) {
