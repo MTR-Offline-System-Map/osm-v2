@@ -463,7 +463,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	getShowDepots() {
-		return this.showDepots && this.dimensionService.includeMarkers() && this.depots.length > 0;
+		return this.showDepots && this.dimensionService.includeMarkers();
 	}
 
 	getAutoDetectBusRoutes() {
@@ -476,6 +476,20 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 	getDeveloperMode() {
 		return this.developerMode;
+	}
+
+	setShowHiddenRoutes(value: boolean) {
+		this.mapLoading = true;
+		this.showHiddenRoutes = value;
+		setCookie("show_hidden_routes", value.toString());
+		this.fetchData("");
+	}
+
+	setShowAllStations(value: boolean) {
+		this.mapLoading = true;
+		this.showAllStations = value;
+		setCookie("show_all_stations", value.toString());
+		this.fetchData("");
 	}
 
 	setShowDepots(value: boolean) {

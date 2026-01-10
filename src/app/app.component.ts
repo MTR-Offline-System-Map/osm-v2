@@ -1,11 +1,11 @@
-import {Component, inject, ViewChild} from "@angular/core";
+import {Component, inject} from "@angular/core";
 import {MapComponent} from "./component/map/map.component";
 import {StationPanelComponent} from "./component/station-panel/station-panel.component";
 import {StationService} from "./service/station.service";
 import {DrawerComponent} from "./component/drawer/drawer.component";
 import {DirectionsComponent} from "./component/directions/directions.component";
 import {MainPanelComponent} from "./component/main-panel/main-panel.component";
-import {RouteKeyService} from "./service/route.service";
+import {RouteKeyService, RouteVariationService} from "./service/route.service";
 import {RoutePanelComponent} from "./component/route-panel/route-panel.component";
 import {DirectionsService} from "./service/directions.service";
 import {ButtonModule} from "primeng/button";
@@ -16,7 +16,6 @@ import {DimensionService} from "./service/dimension.service";
 import {DepotPanelComponent} from "./component/depot-panel/depot-panel.component";
 import {DepotService} from "./service/depot.service";
 import {TranslocoPipe} from "@jsverse/transloco";
-import {LanguageService} from "./service/language.service";
 
 @Component({
 	selector: "app-root",
@@ -37,9 +36,9 @@ import {LanguageService} from "./service/language.service";
 	styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
-	private readonly languageService = inject(LanguageService);
 	private readonly stationService = inject(StationService);
 	private readonly routeKeyService = inject(RouteKeyService);
+	private readonly routeVariationService = inject(RouteVariationService);
 	private readonly clientService = inject(ClientService);
 	private readonly directionsService = inject(DirectionsService);
 	private readonly dimensionService = inject(DimensionService);
@@ -73,8 +72,11 @@ export class AppComponent {
 		this.onCloseDepot();
 	}
 
-	onClickRoute(routeKey: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent) {
+	onClickRoute(routeKey: string, sideMain: DrawerComponent, sideStation: DrawerComponent, sideClient: DrawerComponent, sideDirections: DrawerComponent, sideRoute: DrawerComponent, sideDepot: DrawerComponent, routeId?: string) {
 		this.routeKeyService.select(routeKey);
+		if (routeId) {
+			this.routeVariationService.select(routeId);
+		}
 		sideMain.close();
 		sideStation.close();
 		sideClient.close();

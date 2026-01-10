@@ -82,10 +82,3 @@ export function rotate(x: number, z: number, angle: number) {
 	const [cos, sin] = trig45(angle);
 	return [x * cos + z * sin, z * cos - x * sin];
 }
-
-export function getKeyByValue<T extends Record<string, any>>(
-    obj: T, 
-    value: T[keyof T]
-): keyof T | undefined {
-    return Object.keys(obj).find(key => obj[key] === value) as keyof T | undefined;
-}

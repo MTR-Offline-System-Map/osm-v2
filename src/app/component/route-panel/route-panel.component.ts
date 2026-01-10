@@ -68,6 +68,15 @@ export class RoutePanelComponent {
 				this.dropdownValue = dropdownRoutes ? dropdownRoutes[0] : undefined;
 			}, 0);
 		});
+		this.routeVariationService.selectionChanged.subscribe(() => {
+			setTimeout(() => {
+				const dropdownRoutes = this.getDropdownRoutes();
+				const route = this.routeVariationService.getSelectedData();
+				if (dropdownRoutes && route) {
+					this.dropdownValue = dropdownRoutes.find(routeDropdown => routeDropdown.id === route.id);
+				}
+			}, 0);
+		})
 	}
 
 	getDropdownRoutes() {
@@ -134,7 +143,7 @@ export class RoutePanelComponent {
 	}
 
 	getEnableRouteDepotsDetails() {
-		return this.dataService.getShowDepots();
+		return this.dataService.getShowDepots() && this.dataService.depots.length > 0;
 	}
 
 	getBetterScroll() {

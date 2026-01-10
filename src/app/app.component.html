@@ -24,7 +24,7 @@
 <app-drawer #sideClient [title]="'app.details.player' | transloco" (closed)="onCloseClient()">
 	<app-client-panel
 			(stationClicked)="onClickStation($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"
-			(routeClicked)="onClickRoute($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
+			(routeClicked)="onClickRoute($event.key, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, $event.id)"
 			(directionsOpened)="onOpenDirections($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot)"
 			(depotClicked)="onClickDepot($event, sideMain, sideStation, sideClient, sideDirections, sideRoute, sideDepot, true)"/>
 </app-drawer>

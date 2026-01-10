@@ -138,7 +138,7 @@ export class RouteKeyService extends SelectableDataServiceBase<void, Route[]> {
 						pushIfNotExists(mapSelectionService.selectedStations, stationId2);
 					}
 
-					if (mapDataService.getShowDepots()) {
+					if (mapDataService.getShowDepots() && mapDataService.depots.length > 0) {
 						route.depots.forEach(depot => {
 							pushIfNotExists(mapSelectionService.selectedDepots, depot.id);
 						});

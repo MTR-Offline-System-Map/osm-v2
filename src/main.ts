@@ -27,7 +27,7 @@ bootstrapApplication(AppComponent, {
 		}),
 		provideTransloco({
 			config: {
-				availableLangs: ["en-US", "zh-CN"],
+				availableLangs: ["en-US", "zh-Hans"],
 				defaultLang: "en-US",
 				reRenderOnLangChange: true,
 				prodMode: !isDevMode(),

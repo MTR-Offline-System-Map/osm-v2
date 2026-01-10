@@ -1,36 +1,36 @@
 import {inject, Injectable} from "@angular/core";
-import {getCookie, getKeyByValue, setCookie} from "../data/utilities";
+import {getCookie, setCookie} from "../data/utilities";
 import {TranslocoService} from "@jsverse/transloco";
 
 @Injectable({providedIn: "root"})
 export class LanguageService {
 	private readonly translocoService = inject(TranslocoService);
 
-	private readonly languages = {
-		"en-US": "English",
-		"zh-CN": "简体中文",
-	};
+	private readonly languages = [
+		{ id: "en-US", name: "English", browserLang: [] },
+		{ id: "zh-Hans", name: "简体中文", browserLang: ["zh-CN"] },
+	];
 
 	constructor() {
 		const cookieLang = getCookie("language");
-		const supportLangCodes = Object.keys(this.languages);
+		const supportLangCodes = this.languages.map(lang => [lang.id, ...lang.browserLang]).flat();
 		if (supportLangCodes.includes(cookieLang)) {
-			this.switchLanguage(cookieLang);
+			this.switchLanguage(this.languages.find(lang => [lang.id, ...lang.browserLang].includes(cookieLang))!.id);
 		} else {
 			const browserLang = navigator.language;
 			if (supportLangCodes.includes(browserLang)) {
-				this.switchLanguage(browserLang);
+				this.switchLanguage(this.languages.find(lang => [lang.id, ...lang.browserLang].includes(browserLang))!.id);
 			}
 		}
 	}
 
     public getSupportedLanguages() {
-        return this.languages;
+        return this.languages.map(lang => lang.name);
     }
 
-	public getLanguage(): "en-US" | "zh-CN" {
+	public getLanguage() {
         const lang = this.translocoService.getActiveLang();
-		return lang === "en-US" || lang === "zh-CN" ? lang : "en-US";
+		return lang === "en-US" || lang === "zh-Hans" ? lang : "en-US";
 	}
 
 	public switchLanguage(langCode: string) {
@@ -38,11 +38,11 @@ export class LanguageService {
 		setCookie("language", langCode);
 	}
 
-    public getLanguageCode(lang: string) {
-        return getKeyByValue(this.languages, lang);
+    public getLanguageCode(name: string) {
+        return this.languages.find(lang => lang.name == name)?.id;
     }
 
-    public getLanguageName() {
-        return this.languages[this.getLanguage()];
+    public getLanguageName(code: string) {
+        return this.languages.find(lang => lang.id == code)?.name;
     }
 }

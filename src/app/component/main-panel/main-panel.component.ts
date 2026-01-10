@@ -21,7 +21,7 @@ import {setCookie} from "../../data/utilities";
 import {ThemeToggleComponent} from "../theme-toggle/theme-toggle.component";
 import {FontStyleToggleComponent} from "../font-style-toggle/font-style-toggle.component";
 import {TranslocoPipe} from "@jsverse/transloco";
-import { LanguageService } from "../../service/language.service";
+import {LanguageService} from "../../service/language.service";
 
 @Component({
 	selector: "app-main-panel",
@@ -64,7 +64,7 @@ export class MainPanelComponent {
 		dimension: new FormControl(""),
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
 		directionsEngine: new FormControl<"official" | "pathfinder">(this.dataService.getDirectionsEngine()),
-		language: new FormControl(this.languageService.getLanguageName()),
+		language: new FormControl(this.languageService.getLanguageName(this.languageService.getLanguage())),
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
 		showDepots: new FormControl(this.dataService.getShowDepots()),
@@ -125,7 +125,7 @@ export class MainPanelComponent {
 	setLanguage() {
 		const data = this.formGroup.getRawValue();
 		if (data.language) {
-			this.languageService.switchLanguage(this.languageService.getLanguageCode(data.language)!);
+			this.languageService.switchLanguage(this.languageService.getLanguageCode(data.language) ?? "en-US");
 		}
 	}
 
@@ -178,13 +178,11 @@ export class MainPanelComponent {
 	}
 
 	setShowHiddenRoutes(value: boolean) {
-		setCookie("show_hidden_routes", value.toString());
-		window.location.reload();
+		this.dataService.setShowHiddenRoutes(value);
 	}
 
 	setShowAllStations(value: boolean) {
-		setCookie("show_all_stations", value.toString());
-		window.location.reload();
+		this.dataService.setShowAllStations(value);
 	}
 
 	setShowDepots(value: boolean) {

@@ -43,7 +43,7 @@ export class ClientPanelComponent {
 	private readonly mapDataService = inject(MapDataService);
 
 	@Output() stationClicked = new EventEmitter<string>();
-	@Output() routeClicked = new EventEmitter<string>();
+	@Output() routeClicked = new EventEmitter<{ key: string, id?: string }>();
 	@Output() directionsOpened = new EventEmitter<{ clientDetails: { clientId: string, isStartClient: boolean } }>;
 	@Output() depotClicked = new EventEmitter<string>();
 
