@@ -76,6 +76,7 @@
     }
   },
   "route": {
+    "copy_route_key": "Copy Route Key",
     "hidden_route": "Hidden Route",
     "hidden_info": "Please confirm that this route is open.",
     "variation": "Route Variation",

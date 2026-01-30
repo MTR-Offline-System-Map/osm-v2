@@ -160,4 +160,11 @@ export class RoutePanelComponent {
 		navigator.clipboard.writeText(route ? route.id : "");
 		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
+
+	copyRouteKey(icon: HTMLDivElement) {
+		icon.innerText = "check";
+		const route = this.routeVariationService.getSelectedData();
+		navigator.clipboard.writeText(route ? SimplifyRoutesPipe.getRouteKey(route) : "");
+		setTimeout(() => icon.innerText = "copy_all", 1000);
+	}
 }

@@ -11,6 +11,9 @@
 					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyRouteID(id_icon)" [pTooltip]="'app.copy_id' | transloco" tooltipPosition="bottom">
 						<div class="material-icons" #id_icon>content_copy</div>
 					</button>
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyRouteKey(key_icon)" [pTooltip]="'route.copy_route_key' | transloco" tooltipPosition="bottom">
+						<div class="material-icons" #key_icon>copy_all</div>
+					</button>
 				</div>
 			</div>
 		}
