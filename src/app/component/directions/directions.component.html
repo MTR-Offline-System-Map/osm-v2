@@ -43,9 +43,11 @@
 				</div>
 				<div class="row gap-small center">
 						<p-check-box (onChange)="checkStatus()" inputId="no-boats" formControlName="noBoats" [binary]="true"/>
-						<label for="no-boats">{{ 'directions.no_boats' | transloco}}</label>
-						<p-check-box (onChange)="checkStatus()" inputId="in-theory" formControlName="inTheory" [binary]="true"/>
-						<label for="in-theory">{{ 'directions.in_theory' | transloco}}</label>
+						<label for="no-boats">{{ 'directions.no_boats' | transloco }}</label>
+						@if (getShowHiddenRoutes()) {
+							<p-check-box (onChange)="checkStatus()" inputId="in-theory" formControlName="inTheory" [binary]="true"/>
+							<label for="in-theory">{{ 'directions.in_theory' | transloco }}</label>
+						}
 				</div>
 			</div>
 		}

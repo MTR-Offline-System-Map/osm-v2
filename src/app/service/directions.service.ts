@@ -108,7 +108,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 				const endPlatformName = thisDirection.endPlatformName ? thisDirection.endPlatformName : undefined;
 				const route = thisDirection.routeId ? mapDataService.routes.find(({id}) => id === thisDirection.routeId) : undefined;
 
-				if (i > 0 && previousDirection.routeId === thisDirection.routeId) {
+				if (i > 0 && previousDirection.routeId === thisDirection.routeId && this.newDirections.length > 0) {
 					const lastNewDirection = this.newDirections[this.newDirections.length - 1];
 					if (lastNewDirection.endStation) {
 						lastNewDirection.intermediateStations.push(lastNewDirection.endStation);

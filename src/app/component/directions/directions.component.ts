@@ -276,7 +276,7 @@ export class DirectionsComponent {
 			const endDepot = data.endInput?.value?.type === "depot" ? this.mapDataService.depots.find(depot => depot.id === data.endInput?.value?.key) : undefined;
 
 			if ((startStation || startClientId || startDepot) && (endStation || endClientId || endDepot)) {
-				this.directionsService.selectData(startStation, endStation, startClientId, endClientId, startDepot, endDepot, data.enableWalkingWild!, (data.maxWalkingDistance ?? this.directionsService.defaultMaxWalkingDistance).toString(), this.ignoredRoutes, this.avoidStations, data.onlyLightRail!, data.noHSR!, data.noBoats!, data.inTheory!);
+				this.directionsService.selectData(startStation, endStation, startClientId, endClientId, startDepot, endDepot, data.enableWalkingWild!, (data.maxWalkingDistance ?? this.directionsService.defaultMaxWalkingDistance).toString(), this.ignoredRoutes, this.avoidStations, data.onlyLightRail!, data.noHSR!, data.noBoats!, (data.inTheory! && this.mapDataService.getShowHiddenRoutes()));
 				this.forceRefresh = true;
 			} else {
 				this.directionsService.clear();
@@ -289,6 +289,10 @@ export class DirectionsComponent {
 	private canAutomaticallyRefresh() {
 		const data = this.formGroup.getRawValue();
 		return data.startInput && data.startInput.value.type === "client" || data.endInput && data.endInput.value.type === "client";
+	}
+
+	getShowHiddenRoutes() {
+		return this.mapDataService.getShowHiddenRoutes();
 	}
 
 	getFontStyle() {
