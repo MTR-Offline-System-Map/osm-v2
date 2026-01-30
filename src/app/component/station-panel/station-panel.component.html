@@ -1,36 +1,38 @@
 <div class="column gap wrapper {{getBetterScroll()?'scrollable':''}}">
 	<div class="column gap padding-sides">
 		<app-title [name]="getStation()?.name ?? ''" [color]="getStationColor()"/>
-		@if (getDeveloperMode()) {
+		<div class="column gap-small">
+			@if (getDeveloperMode()) {
+				<div class="row gap-small center">
+					<div class="row gap center" [pTooltip]="'app.id' | transloco" tooltipPosition="left">
+						<div class="material-icons">code</div>
+						<div>{{ getID() }}</div>
+					</div>
+					<div class="row center">
+						<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyID(id_icon)" [pTooltip]="'app.copy_id' | transloco" tooltipPosition="bottom">
+							<div class="material-icons" #id_icon>content_copy</div>
+						</button>
+					</div>
+				</div>
+			}
 			<div class="row gap-small center">
-				<div class="row gap center" [pTooltip]="'app.id' | transloco" tooltipPosition="left">
-					<div class="material-icons">code</div>
-					<div>{{ getID() }}</div>
+				<div class="row gap center" [pTooltip]="'app.location' | transloco" tooltipPosition="left">
+					<div class="material-icons">my_location</div>
+					<div>({{ getCoordinatesText() }})</div>
 				</div>
 				<div class="row center">
-					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyID(id_icon)" [pTooltip]="'app.copy_id' | transloco" tooltipPosition="bottom">
-						<div class="material-icons" #id_icon>content_copy</div>
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyLocation(icon)" [pTooltip]="'app.copy_location' | transloco" tooltipPosition="bottom">
+						<div class="material-icons" #icon>content_copy</div>
 					</button>
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" [pTooltip]="'app.focus_on_map' | transloco" tooltipPosition="bottom">
+						<div class="material-icons">filter_center_focus</div>
+					</button>
+					@if (getEnableViewOnWorldMap()) {
+						<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" [pTooltip]="'app.view_on_world_map' | transloco" tooltipPosition="bottom">
+							<div class="material-icons">map</div>
+						</button>
+					}
 				</div>
-			</div>
-		}
-		<div class="row gap-small center">
-			<div class="row gap center" [pTooltip]="'app.location' | transloco" tooltipPosition="left">
-				<div class="material-icons">my_location</div>
-				<div>({{ getCoordinatesText() }})</div>
-			</div>
-			<div class="row center">
-				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyLocation(icon)" [pTooltip]="'app.copy_location' | transloco" tooltipPosition="bottom">
-					<div class="material-icons" #icon>content_copy</div>
-				</button>
-				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" [pTooltip]="'app.focus_on_map' | transloco" tooltipPosition="bottom">
-					<div class="material-icons">filter_center_focus</div>
-				</button>
-				@if (getEnableViewOnWorldMap()) {
-					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" [pTooltip]="'app.view_on_world_map' | transloco" tooltipPosition="bottom">
-						<div class="material-icons">map</div>
-					</button>
-				}
 			</div>
 		</div>
 		<div class="row gap center">
@@ -117,11 +119,15 @@
 							<p-checkbox #showDetailsCheckbox inputId="showDetailsCheckbox" [binary]="true"/>
 							<label for="showDetailsCheckbox">{{ 'app.show_details' | transloco }}</label>
 						</div>
+						<div class="row gap-small center" [style.display]="isC324() ? 'none' : ''">
+							<p-checkbox #showPlatformsCheckbox inputId="showPlatformsCheckbox" [binary]="true"/>
+							<label for="showPlatformsCheckbox">{{ 'app.show_platforms' | transloco }}</label>
+						</div>
 						<div class="column">
 							@for (route of getRoutes(); track $index) {
 								<div class="column">
 									<p-divider class="small-divider"/>
-									<app-data-list-entry [icons]="[route.typeIcon, route.hidden ? 'visibility_off' : '']" [title]="[route.name | formatName, route.number | formatName]" [subtitles]="showDetailsCheckbox.checked ? mapRouteVariations(route.variations) : []" [color]="route.color | formatColor" [useLightColor]="false" [clickable]="true" (entryClicked)="routeClicked.emit(getRouteKey(route))"/>
+									<app-data-list-entry [icons]="[route.typeIcon, route.hidden ? 'visibility_off' : '']" [title]="[route.name | formatName, route.number | formatName]" [subtitles]="getSubtitle(showPlatformsCheckbox.checked, 'app.platform' | transloco, route.platforms, showDetailsCheckbox.checked, route.variations)" [color]="route.color | formatColor" [useLightColor]="false" [clickable]="true" (entryClicked)="routeClicked.emit(getRouteKey(route))"/>
 								</div>
 							}
 						</div>

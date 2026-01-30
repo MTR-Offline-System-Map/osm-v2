@@ -12,7 +12,7 @@ import {MapSelectionService} from "./map-selection.service";
 export class RouteVariationService extends SelectableDataServiceBase<void, Route> {
 	private readonly routeKeyService = inject(RouteKeyService);
 
-	public readonly routeStationDetails: { id: string, name: string, duration: number, durationSeconds: number, dwellTime: number, dwellTimeSeconds: number, vehicles: { deviation: number, percentage: number }[] }[] = [];
+	public readonly routeStationDetails: { id: string, name: string, platform: string, duration: number, durationSeconds: number, dwellTime: number, dwellTimeSeconds: number, vehicles: { deviation: number, percentage: number }[] }[] = [];
 	private totalDuration = 0;
 
 	constructor() {
@@ -26,8 +26,8 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 			const selectedRoute = selectedRoutes ? selectedRoutes.find(route => route.id === routeId) ?? selectedRoutes[0] : undefined;
 			if (selectedRoute) {
 				for (let i = 0; i < selectedRoute.routePlatforms.length; i++) {
-					const {station, dwellTime, duration} = selectedRoute.routePlatforms[i];
-					this.routeStationDetails.push({id: station.id, name: station.name, duration, durationSeconds: Math.round(duration / 1000), dwellTime, dwellTimeSeconds: Math.round(dwellTime / 1000), vehicles: []});
+					const {station, dwellTime, duration, name} = selectedRoute.routePlatforms[i];
+					this.routeStationDetails.push({id: station.id, name: station.name, platform: name, duration, durationSeconds: Math.round(duration / 1000), dwellTime, dwellTimeSeconds: Math.round(dwellTime / 1000), vehicles: []});
 					this.totalDuration += dwellTime;
 					if (i < selectedRoute.routePlatforms.length - 1) {
 						this.totalDuration += duration;

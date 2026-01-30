@@ -53,6 +53,7 @@ export class RoutePanelComponent {
 	private readonly routeVariationService = inject(RouteVariationService);
 	private readonly routeKeyService = inject(RouteKeyService);
 	private readonly formatTimePipe = inject(FormatTimePipe);
+	private readonly formatNamePipe = inject(FormatNamePipe);
 
 	@Output() stationClicked = new EventEmitter<string>();
 	@Output() routeClicked = new EventEmitter<string>();
@@ -119,6 +120,14 @@ export class RoutePanelComponent {
 
 	getRouteStationDetails() {
 		return this.routeVariationService.routeStationDetails;
+	}
+
+	getPlatformName(platformName?: string) {
+		return platformName ? this.translocoService.translate("app.platform") + " " + this.formatNamePipe.transform(platformName) : "";
+	}
+
+	isC324() {
+		return this.dimensionService.c324();
 	}
 
 	getTotalDurationSeconds() {

@@ -101,6 +101,10 @@ export class StationPanelComponent {
 		}
 	}
 
+	isC324() {
+		return this.dimensionService.c324();
+	}
+
 	getActiveRoutes() {
 		return this.stationService.arrivalsRoutes;
 	}
@@ -117,8 +121,8 @@ export class StationPanelComponent {
 		return SimplifyRoutesPipe.getCircularStateIcon(circularState);
 	}
 
-	mapRouteVariations(variations: string[]): [string, string][] {
-		return variations.map(variation => [variation, ""]);
+	getSubtitle(showPlatforms: boolean, platformText: string, platforms: string[], showVariations: boolean, variations: string[]): [string, string][] {
+		return ((showPlatforms ? [[platformText + " " + platforms.join(", "), ""]] : []).concat(showVariations ? variations.map(variation => [variation, ""]) : [])) as [string, string][];
 	}
 
 	updateArrivalFilter(filterArrivalShowTerminating: boolean, toggleRouteKey?: string) {
