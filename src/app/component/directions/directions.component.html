@@ -24,11 +24,11 @@
 				<div class="row gap-small center">
 					<div class="spacing">
 						<p-float-label variant="in">
-							<p-input-number inputId="max-walking-distance" formControlName="maxWalkingDistance" [min]="0" [max]="1000000000" (onInput)="updateMaxWalkingDistance()" [fluid]="true"/>
+							<p-input-number inputId="max-walking-distance" formControlName="maxWalkingDistance" [min]="0" [max]="3000" [disabled]="!walkingWildCheckbox.checked" (onInput)="updateMaxWalkingDistance()" [fluid]="true"/>
 							<label for="max-walking-distance">{{ 'directions.maximum_walking_distance' | transloco }}</label>
 						</p-float-label>					
 					</div>
-					<p-checkbox (onChange)="checkStatus()" inputId="enable-walking-wild" formControlName="enableWalkingWild" [binary]="true" pTooltip="Walking Wild" tooltipPosition="left"/>
+					<p-checkbox #walkingWildCheckbox (onChange)="checkStatus()" inputId="enable-walking-wild" formControlName="enableWalkingWild" [binary]="true" [pTooltip]="'directions.walking' | transloco" tooltipPosition="left"/>
 				</div>
 				<app-search [label]="'directions.ignored_routes' | transloco" [parentFormGroup]="formGroup" childFormControlName="ignoredRoutesInput" (routeClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="ignoredRoutes" [includeStations]="false" [includeRoutes]="true" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>
 				<app-search [label]="'directions.avoid_stations' | transloco" [parentFormGroup]="formGroup" childFormControlName="avoidStationsInput" (stationClicked)="checkStatus()" (textCleared)="checkStatus()" [selectedValues]="avoidStations" [includeStations]="true" [includeRoutes]="false" [includeDepots]="false" [includeClients]="false" [multiple]="true"/>

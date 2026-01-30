@@ -2,7 +2,6 @@ import {Pipe, PipeTransform} from "@angular/core";
 import {ROUTE_TYPES} from "../data/routeType";
 import {Route} from "../entity/route";
 import {SearchData} from "../entity/searchData";
-import {TranslocoService} from "@jsverse/transloco";
 
 @Pipe({
 	name: "simplifyRoutes",
@@ -10,7 +9,7 @@ import {TranslocoService} from "@jsverse/transloco";
 	standalone: true,
 })
 export class SimplifyRoutesPipe implements PipeTransform {
-	constructor(private translocoService: TranslocoService) {}
+	constructor() {}
 
 	transform(routes: Route[]): SearchData[] {
 		const newRoutes: Record<string, SearchData> = {};

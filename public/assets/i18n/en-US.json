@@ -50,6 +50,7 @@
     "title": "Directions",
     "swap_stations": "Swap Stations",
     "refresh_directions": "Refresh Directions",
+    "walking": "Walking",
     "maximum_walking_distance": "Maximum Walking Distance (m)",
     "ignored_routes": "Ignored Routes",
     "avoid_stations": "Avoid Stations",
