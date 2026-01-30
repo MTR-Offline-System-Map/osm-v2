@@ -35,6 +35,7 @@
     "language": "Language",
     "directions": "Find Directions",
     "show_hidden_routes": "Show Hidden Route(s)",
+    "show_empty_routes": "Show Empty Route(s)",
     "show_all_stations": "Show All Station(s)",
     "show_depots": "Show Depot(s)",
     "no_players": "There are no players online.",

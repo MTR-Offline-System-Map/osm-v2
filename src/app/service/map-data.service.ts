@@ -36,6 +36,8 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	private directionsEngine: "official" | "pathfinder" = "official";
 	private showHiddenRoutes: boolean = false;
 	private hasHiddenRoute: boolean = false;
+	private showEmptyRoutes: boolean = false;
+	private hasEmptyRoute: boolean = false;
 	private showAllStations: boolean = false;
 	private showDepots: boolean = false;
 	private developerMode: boolean = false;
@@ -57,6 +59,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			this.depots.length = 0;
 			this.hasConnection = false;
 			this.hasHiddenRoute = false;
+			this.hasEmptyRoute = false;
 			this.hasBusRoute = false;
 
 			// Write routes
@@ -64,7 +67,8 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			const stationIdToPosition: Record<string, { x: number[], y: number[], z: number[] }> = {};
 			const availableRouteTypes: string[] = [];
 			data.routes.forEach(routeDTO => {
-				if (routeDTO.stations.length > 1) {
+				if (routeDTO.stations.length <= 1) this.hasEmptyRoute = true;
+				if (routeDTO.stations.length > 1 || this.showEmptyRoutes) {
 					if (routeDTO.hidden) this.hasHiddenRoute = true;
 					if (!routeDTO.hidden || this.showHiddenRoutes) {
 						const type = !this.autoDetectBusRoutes || data.disableAutoDetectBusRoutes ? routeDTO.type : this.convertToBusType(routeDTO.name, routeDTO.type);
@@ -167,6 +171,11 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		if (environment.enableShowHiddenRoutes) {
 			const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
 			this.showHiddenRoutes = cookieShowHiddenRoutes === "true";
+		}
+
+		if (environment.enableShowEmptyRoutes) {
+			const cookieShowEmptyRoutes = getCookie("show_empty_routes");
+			this.showEmptyRoutes = cookieShowEmptyRoutes === "true";
 		}
 
 		if (environment.enableShowAllStations) {
@@ -459,6 +468,10 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		return this.showHiddenRoutes;
 	}
 
+	getShowEmptyRoutes() {
+		return this.showEmptyRoutes;
+	}
+
 	getShowAllStations() {
 		return this.showAllStations && this.dimensionService.includeMarkers();
 	}
@@ -483,6 +496,13 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		this.mapLoading = true;
 		this.showHiddenRoutes = value;
 		setCookie("show_hidden_routes", value.toString());
+		this.fetchData("");
+	}
+
+	setShowEmptyRoutes(value: boolean) {
+		this.mapLoading = true;
+		this.showEmptyRoutes = value;
+		setCookie("show_empty_routes", value.toString());
 		this.fetchData("");
 	}
 
@@ -525,6 +545,10 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 	hasHiddenRoutes() {
 		return this.hasHiddenRoute;
+	}
+
+	hasEmptyRoutes() {
+		return this.hasEmptyRoute;
 	}
 
 	hasConnections() {

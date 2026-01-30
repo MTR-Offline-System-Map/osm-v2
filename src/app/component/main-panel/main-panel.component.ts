@@ -66,6 +66,7 @@ export class MainPanelComponent {
 		directionsEngine: new FormControl<"official" | "pathfinder">(this.dataService.getDirectionsEngine()),
 		language: new FormControl(this.languageService.getLanguageName(this.languageService.getLanguage())),
 		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
+		showEmptyRoutesToggle: new FormControl(this.dataService.getShowEmptyRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
 		showDepots: new FormControl(this.dataService.getShowDepots()),
 		betterScroll: new FormControl(this.dataService.getBetterScroll()),
@@ -157,6 +158,10 @@ export class MainPanelComponent {
 		return environment.enableShowHiddenRoutes && this.dataService.hasHiddenRoutes();
 	}
 
+	getEnableShowEmptyRoutes() {
+		return environment.enableShowEmptyRoutes && this.dataService
+	}
+
 	getEnableShowAllStations() {
 		return environment.enableShowAllStations && this.dimensionService.includeMarkers();
 	}
@@ -179,6 +184,10 @@ export class MainPanelComponent {
 
 	setShowHiddenRoutes(value: boolean) {
 		this.dataService.setShowHiddenRoutes(value);
+	}
+
+	setShowEmptyRoutes(value: boolean) {
+		this.dataService.setShowEmptyRoutes(value);
 	}
 
 	setShowAllStations(value: boolean) {
