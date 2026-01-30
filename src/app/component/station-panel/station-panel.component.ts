@@ -74,7 +74,7 @@ export class StationPanelComponent {
 
 	getCoordinatesText() {
 		const station = this.stationService.getSelectedData();
-		return station === undefined ? "" : `${Math.round(station.x)}, ${Math.round(station.y)}, ${Math.round(station.z)}`;
+		return station === undefined ? "" : this.dimensionService.c324() ? `${Math.round(station.x)}, ${Math.round(station.z)}` : `${Math.round(station.x)}, ${Math.round(station.y)}, ${Math.round(station.z)}`;
 	}
 
 	getZoneText() {
@@ -151,7 +151,7 @@ export class StationPanelComponent {
 	copyLocation(icon: HTMLDivElement) {
 		icon.innerText = "check";
 		const station = this.stationService.getSelectedData();
-		navigator.clipboard.writeText(station === undefined ? "" : `${Math.round(station.x)} ${Math.round(station.y)} ${Math.round(station.z)}`).then();
+		navigator.clipboard.writeText(station === undefined ? "" : `${Math.round(station.x)} ${this.dimensionService.c324() ? "~" : Math.round(station.y)} ${Math.round(station.z)}`).then();
 		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
 

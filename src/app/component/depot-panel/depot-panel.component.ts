@@ -49,7 +49,7 @@ export class DepotPanelComponent {
 
     getCoordinatesText() {
         const depot = this.depotService.getSelectedData();
-        return depot === undefined ? "" : `${depot.x}, ${depot.z})`;
+        return depot === undefined ? "" : `${depot.x}, ${depot.z}`;
     }
 
     getRoutes() {
@@ -67,7 +67,7 @@ export class DepotPanelComponent {
     copyLocation(icon: HTMLDivElement) {
 		icon.innerText = "check";
 		const depot = this.depotService.getSelectedData();
-		navigator.clipboard.writeText(depot === undefined ? "" : `${depot.x} 0 ${depot.z}`).then();
+		navigator.clipboard.writeText(depot === undefined ? "" : `${depot.x} ~ ${depot.z}`).then();
 		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
 

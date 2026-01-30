@@ -11,6 +11,8 @@ export class StationsAndRoutesDTO {
 	public readonly depots: DepotDTO[] = [];
 
 	public readonly dimensions: string[] = [];
+
+	public readonly c324: boolean = false;
 	
 	public readonly offline: boolean = false;
 

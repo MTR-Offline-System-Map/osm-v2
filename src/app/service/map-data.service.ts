@@ -148,6 +148,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			}
 
 			this.dimensionService.setDimensions(data.dimensions);
+			this.dimensionService.c324.set(data.c324 ?? false);
 			this.dimensionService.isOffline.set(data.offline ?? false);
 			this.dimensionService.includeMarkers.set(data.includeMarkers ?? false);
 			this.updateData();
