@@ -5,6 +5,6 @@
 		}
 	</div>
 	@if (color) {
-		<div class="color-bar" [style.background-color]="color | formatColor"></div>
+		<div class="color-bar" [style.background-color]="color | formatColor" (click)="copyColor()"></div>
 	}
 </div>

@@ -3,6 +3,8 @@
 	font-weight: 600;
 	text-align: center;
 	overflow-wrap: break-word;
+	user-select: text;
+	cursor: auto;
 }
 
 .name.cjk {
@@ -12,4 +14,5 @@
 .color-bar {
 	border-radius: 0.2rem;
 	height: 0.4rem;
+	cursor: pointer;
 }

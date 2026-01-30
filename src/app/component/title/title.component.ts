@@ -14,11 +14,16 @@ import {FontStyleService} from "../../service/font-style.service";
 })
 export class TitleComponent {
 	private readonly fontStyleService = inject(FontStyleService);
+	private readonly formatColorPipe = inject(FormatColorPipe);
 
 	@Input({required: true}) name = "";
 	@Input({required: true}) color?: number;
 
 	getFontStyle() {
 		return this.fontStyleService.getFontStyle();
+	}
+
+	copyColor() {
+		navigator.clipboard.writeText(this.color === undefined ? "" : this.formatColorPipe.transform(this.color)).then();
 	}
 }

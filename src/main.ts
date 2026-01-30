@@ -14,6 +14,7 @@ import {myPreset} from "./theme-preset";
 import {provideTransloco} from "@jsverse/transloco";
 import {TranslocoHttpLoader} from "./transloco-loader";
 import {SimplifyDepotsPipe} from "./app/pipe/simplifyDepotsPipe";
+import {FormatColorPipe} from "./app/pipe/formatColorPipe";
 
 bootstrapApplication(AppComponent, {
 	providers: [
@@ -38,6 +39,7 @@ bootstrapApplication(AppComponent, {
 		SimplifyRoutesPipe,
 		SimplifyDepotsPipe,
 		SplitNamePipe,
+		FormatColorPipe,
 		FormatNamePipe,
 		FormatTimePipe,
 	],
