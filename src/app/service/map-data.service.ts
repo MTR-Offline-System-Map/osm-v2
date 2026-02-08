@@ -214,7 +214,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	public getDirectionsEngine() {
-		return environment.pathfinder(this.dimensionService.getDimensionIndex()) ? this.directionsEngine : "official";
+		return environment.pathfinder(this.dimensionService.getDimensionIndex()) ? this.directionsEngine() : "official";
 	}
 
 	public setDirectionsEngine(engine: "official" | "pathfinder") {
