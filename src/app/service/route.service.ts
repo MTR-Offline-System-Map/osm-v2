@@ -13,7 +13,6 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 	private readonly routeKeyService = inject(RouteKeyService);
 
 	public readonly routeStationDetails = signal<{ id: string, name: string, platform: string, duration: number, durationSeconds: number, dwellTime: number, dwellTimeSeconds: number }[]>([]);
-
 	public readonly routeVehicles = signal<{ deviation: number, percentage: number } [][]>([]);
 	private readonly totalDuration = signal<number>(0);
 
@@ -28,7 +27,7 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 
 			const selectedRoutes = this.routeKeyService.selectedData();
 			const selectedRoute = selectedRoutes ? selectedRoutes.find(route => route.id === routeId) ?? selectedRoutes[0] : undefined;
-			
+
 			if (selectedRoute) {
 				for (let i = 0; i < selectedRoute.routePlatforms.length; i++) {
 					const {station, dwellTime, duration, name} = selectedRoute.routePlatforms[i];
@@ -52,7 +51,7 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 			// empty
 		}, () => {
 			// empty
-		}, 0, dimensionService, false);
+		}, 0, dimensionService);
 
 		const departures: { departureFromNow: number, deviation: number }[] = [];
 		const updateDepartures = (route: Route | undefined) => {
@@ -63,7 +62,6 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 		};
 
 		this.routeKeyService.selectionChanged.subscribe(() => this.select(""));
-
 		departuresService.dataProcessed.subscribe(() => updateDepartures(this.selectedData()));
 
 		setInterval(() => {
@@ -94,7 +92,7 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 				cumulativeTime += halfDuration;
 				if (departures[departureIndex].departureFromNow <= cumulativeTime) {
 					const difference = departures[departureIndex].departureFromNow - cumulativeTime + halfDuration;
-					routeVehicles[routeStationIndex + 1].push({deviation: departures[departureIndex].deviation, percentage: Math.max(0, Math.min(1, -difference / halfDuration))});
+					routeVehicles[routeStationIndex + 1].push({deviation: departures[departureIndex].deviation, percentage: Math.max(-1, Math.min(1, -difference / halfDuration))});
 					departures[departureIndex].departureFromNow -= 100;
 					departureIndex++;
 					if (departureIndex >= departures.length) {
@@ -105,7 +103,7 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 				cumulativeTime += halfDuration;
 				if (departures[departureIndex].departureFromNow <= cumulativeTime) {
 					const difference = departures[departureIndex].departureFromNow - cumulativeTime + halfDuration;
-					routeVehicles[routeStationIndex].push({deviation: departures[departureIndex].deviation, percentage: Math.max(0, Math.min(1, 1 - difference / halfDuration))});
+					routeVehicles[routeStationIndex].push({deviation: departures[departureIndex].deviation, percentage: Math.max(-1, Math.min(1, 1 - difference / halfDuration))});
 					departures[departureIndex].departureFromNow -= 100;
 					departureIndex++;
 					if (departureIndex >= departures.length) {
@@ -113,6 +111,8 @@ export class RouteVariationService extends SelectableDataServiceBase<void, Route
 					}
 				}
 			}
+
+			this.routeVehicles.set(routeVehicles);
 		}, 100);
 	}
 
@@ -154,7 +154,7 @@ export class RouteKeyService extends SelectableDataServiceBase<void, Route[]> {
 						pushIfNotExists(mapSelectionService.selectedStations, stationId2);
 					}
 
-					if (mapDataService.showDepots() && mapDataService.depots.length > 0) {
+					if (mapDataService.showDepots() && mapDataService.depots().length > 0) {
 						route.depots.forEach(depot => {
 							pushIfNotExists(mapSelectionService.selectedDepots, depot.id);
 						});

@@ -136,6 +136,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 			this.routes.set(routes);
 			this.stations.set(stations);
+			this.depots.set(depots);
 
 			// Update route type visibility
 			const routeTypeVisibility: Record<string, "HIDDEN" | "SOLID" | "HOLLOW" | "DASHED"> = {...this.routeTypeVisibility()};

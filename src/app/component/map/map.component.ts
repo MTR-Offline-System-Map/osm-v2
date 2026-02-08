@@ -358,7 +358,7 @@ export class MapComponent implements AfterViewInit {
 			}
 		});
 
-		if (this.mapDataService.showDepots() && this.mapDataService.depots.length > 0) {
+		if (this.mapDataService.showDepots() && this.mapDataService.depots().length > 0) {
 			this.mapDataService.depots().forEach(({id, x, z}) => {
 				const depotSelected = (this.mapSelectionService.selectedStations.length === 0 && this.mapSelectionService.selectedDepots.length === 0) || this.mapSelectionService.selectedDepots.includes(id);
 				const adjustZ = depotSelected ? 20 : 0;
@@ -631,7 +631,7 @@ export class MapComponent implements AfterViewInit {
 			}
 		});
 
-		if (this.mapDataService.showDepots() && this.mapDataService.depots.length > 0) {
+		if (this.mapDataService.showDepots() && this.mapDataService.depots().length > 0) {
 			this.mapDataService.depots().forEach(({id, name, x, z, getIcons}) => {
 				const canvasX = (x - this.camera.position.x) * this.camera.zoom;
 				const canvasY = (z + this.camera.position.y) * this.camera.zoom;
