@@ -22,6 +22,7 @@ export class DataListEntryComponent {
 	@Input() color = "";
 	@Input({required: true}) useLightColor = false;
 	@Input({required: true}) clickable = true;
+	@Input() noWordBreak = false;
 	@Output() entryClicked = new EventEmitter<void>();
 
 	getFontStyle() {

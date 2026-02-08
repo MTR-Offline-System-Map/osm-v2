@@ -368,7 +368,7 @@ export class MapComponent implements AfterViewInit {
 		}
 
 		if (!this.dimensionService.isOffline()) {
-			Object.values(this.clientsService.allClients).forEach(({id, rawX, rawZ}) => this.clientPositions[id] = {x: rawX, y: -rawZ});
+			Object.values(this.clientsService.allClients()).forEach(({id, rawX, rawZ}) => this.clientPositions[id] = {x: rawX, y: -rawZ});
 			Object.entries(this.clientsService.clientGroupsForRoute()).forEach(([routeKey, {clients, x, z, route, routeStationId1, routeStationId2}]) => {
 				const points = this.pointsForLineConnection[routeKey];
 				if (points) {
