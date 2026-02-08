@@ -4,7 +4,9 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve --host 0.0.0.0",
+		"prestart": "crowdin download",
 		"build": "ng lint && ng build --base-href a",
+		"prebuild": "crowdin download",
 		"watch": "ng lint && ng build --watch --configuration development",
 		"test": "ng test",
 		"lint": "ng lint",
