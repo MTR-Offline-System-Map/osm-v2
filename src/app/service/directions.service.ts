@@ -92,7 +92,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 			this.directions.set([]);
 			mapSelectionService.reset("directions");
 			clearTimeout(this.directionsTimeoutId);
-		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(this.getUrl("directions"), JSON.stringify(directionsRequest)), ({data}) => {
+		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(this.getUrl(mapDataService.getDirectionsEngine() === "official" ? "directions" : "pathfinder"), JSON.stringify(directionsRequest)), ({data}) => {
 			const selectedData = this.selectedData();
 			const directions = data.connections;
 			const newDirections: {
@@ -178,7 +178,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 		}, REFRESH_INTERVAL, dimensionService);
 	}
 
-	public selectData(startStation: Station | undefined, endStation: Station | undefined, startClientId: string | undefined, endClientId: string | undefined, startDepot: Depot | undefined, endDepot: Depot | undefined, enableWalkingWild: boolean, ignoredLines: string[], avoidStations: string[], onlyLightRail?: boolean, noHSR?: boolean, noBoats?: boolean, inTheory?: boolean) {
+	public selectData(startStation: Station | undefined, endStation: Station | undefined, startClientId: string | undefined, endClientId: string | undefined, startDepot: Depot | undefined, endDepot: Depot | undefined, maxWalkingDistance: number, enableWalkingWild: boolean, ignoredLines: string[], avoidStations: string[], onlyLightRail?: boolean, noHSR?: boolean, noBoats?: boolean, inTheory?: boolean) {
 		const key = JSON.stringify({
 			startStationId: startStation?.id,
 			endStationId: endStation?.id,
@@ -193,7 +193,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 			startClientId,
 			endClientId,
 			enableWalkingWild,
-			maxWalkingDistance: 250, // TODO
+			maxWalkingDistance: maxWalkingDistance,
 			ignoredLines,
 			avoidStations,
 			onlyLightRail,
