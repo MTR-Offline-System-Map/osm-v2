@@ -28,7 +28,7 @@ import {TranslocoPipe} from "@jsverse/transloco";
         TranslocoPipe,
     ],
     templateUrl: "./depot-panel.component.html",
-    styleUrl: "./depot-panel.component.css",
+    styleUrl: "./depot-panel.component.scss",
 })
 export class DepotPanelComponent {
     private readonly dataService = inject(MapDataService);
@@ -39,16 +39,16 @@ export class DepotPanelComponent {
     @Output() directionsOpened = new EventEmitter<{ depotDetails: { depotId: string, isStartDepot: boolean } }>();
 
     getDepot() {
-        return this.depotService.getSelectedData();
+        return this.depotService.selectedData();
     }
 
     getDepotColor() {
-        const depot = this.depotService.getSelectedData();
+        const depot = this.depotService.selectedData();
         return depot === undefined ? undefined : depot.color;
     }
 
     getCoordinatesText() {
-        const depot = this.depotService.getSelectedData();
+        const depot = this.depotService.selectedData();
         return depot === undefined ? "" : `${depot.x}, ${depot.z}`;
     }
 
@@ -66,24 +66,24 @@ export class DepotPanelComponent {
     
     copyLocation(icon: HTMLDivElement) {
 		icon.innerText = "check";
-		const depot = this.depotService.getSelectedData();
+		const depot = this.depotService.selectedData();
 		navigator.clipboard.writeText(depot === undefined ? "" : `${depot.x} ~ ${depot.z}`).then();
 		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
 
 	focus() {
-		const depot = this.depotService.getSelectedData();
+		const depot = this.depotService.selectedData();
 		if (depot) {
 			this.dataService.animateMap.emit({x: depot.x, z: depot.z});
 		}
 	}
 
     usePathfinder() {
-        return this.dataService.getDirectionsEngine() === "pathfinder";
+        return this.dataService.directionsEngine() === "pathfinder";
     }
 
 	openDirections(isStartDepot: boolean) {
-		const depot = this.depotService.getSelectedData();
+		const depot = this.depotService.selectedData();
 		if (depot) {
 			this.directionsOpened.emit({depotDetails: {depotId: depot.id, isStartDepot}});
 		}
@@ -94,7 +94,7 @@ export class DepotPanelComponent {
     }
 
 	viewOnWorldMap() {
-		const depot = this.depotService.getSelectedData();
+		const depot = this.depotService.selectedData();
 		if (depot) {
 			location.assign(environment.worldMapLink.exec(this.dimensionService.getDimensionIndex(), Math.round(depot.x), Math.round(depot.z)));
 		}
@@ -102,9 +102,5 @@ export class DepotPanelComponent {
 
     isOffline() {
         return this.dimensionService.isOffline();
-    }
-
-    getBetterScroll() {
-        return this.dataService.getBetterScroll();
     }
 }

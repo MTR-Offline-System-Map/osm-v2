@@ -1,13 +1,13 @@
-import {Injectable, signal, WritableSignal} from "@angular/core";
+import {Injectable, signal} from "@angular/core";
 import {environment} from "../../environments/environment";
 
 @Injectable({providedIn: "root"})
 export class DimensionService {
 	private dimensions: string[] = environment.dimensions;
 	private dimensionIndex = 0;
-	public c324: WritableSignal<boolean> = signal(false);
-	public isOffline: WritableSignal<boolean> = signal(false);
-	public includeMarkers: WritableSignal<boolean> = signal(true);
+	public c324 = signal<boolean>(false);
+	public isOffline = signal<boolean>(false);
+	public includeMarkers = signal<boolean>(true);
 
 	public setDimensions(dimensions: string[]) {
 		if (environment.dimensions.length == 0) {

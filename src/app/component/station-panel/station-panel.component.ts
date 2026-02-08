@@ -44,13 +44,14 @@ import {TranslocoPipe} from "@jsverse/transloco";
 		TranslocoPipe,
 	],
 	templateUrl: "./station-panel.component.html",
-	styleUrl: "./station-panel.component.css",
+	styleUrl: "./station-panel.component.scss",
 })
 export class StationPanelComponent {
 	private readonly dataService = inject(MapDataService);
 	private readonly stationService = inject(StationService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly fontStyleService = inject(FontStyleService);
+	private readonly formatNamePipe = inject(FormatNamePipe);
 
 	protected dialogData?: Arrival;
 	@Output() stationClicked = new EventEmitter<string>();
@@ -59,40 +60,40 @@ export class StationPanelComponent {
 	@Output() depotClicked = new EventEmitter<string>();
 
 	getStation() {
-		return this.stationService.getSelectedData();
+		return this.stationService.selectedData();
 	}
 
 	getStationColor() {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		return station === undefined ? undefined : station.color;
 	}
 
 	getID() {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		return station === undefined ? undefined : station.id;
 	}
 
 	getCoordinatesText() {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		return station === undefined ? "" : this.dimensionService.c324() ? `${Math.round(station.x)}, ${Math.round(station.z)}` : `${Math.round(station.x)}, ${Math.round(station.y)}, ${Math.round(station.z)}`;
 	}
 
 	getZoneText() {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		return station === undefined ? "" : `${station.zone1}, ${station.zone2}, ${station.zone3}`;
 	}
 
 	usePathfinder() {
-		return this.dataService.getDirectionsEngine() === "pathfinder";
+		return this.dataService.directionsEngine() === "pathfinder";
 	}
 
 	getConnections(): Station[] {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		if (station === undefined) {
 			return [];
 		} else {
 			const stations: Station[] = [];
-			this.dataService.stations.forEach(otherStation => {
+			this.dataService.stations().forEach(otherStation => {
 				if (station.connections.some(connectingStation => connectingStation.id === otherStation.id)) {
 					stations.push(otherStation);
 				}
@@ -106,7 +107,7 @@ export class StationPanelComponent {
 	}
 
 	getActiveRoutes() {
-		return this.stationService.arrivalsRoutes;
+		return this.stationService.arrivalsRoutes();
 	}
 
 	getArrivals() {
@@ -114,7 +115,7 @@ export class StationPanelComponent {
 	}
 
 	getRoutes() {
-		return this.stationService.routesAtStation;
+		return this.stationService.routesAtStation();
 	}
 
 	getCircularStateIcon(circularState: "NONE" | "CLOCKWISE" | "ANTICLOCKWISE") {
@@ -122,7 +123,7 @@ export class StationPanelComponent {
 	}
 
 	getSubtitle(showPlatforms: boolean, platformText: string, platforms: string[], showVariations: boolean, variations: string[]): [string, string][] {
-		return ((showPlatforms ? [[platformText + " " + platforms.join(", "), ""]] : []).concat(showVariations ? variations.map(variation => [variation, ""]) : [])) as [string, string][];
+		return ((showPlatforms ? [[platformText + " " + platforms.map(platform => this.formatNamePipe.transform(platform)).join(", "), ""]] : []).concat(showVariations ? variations.map(variation => [variation, ""]) : [])) as [string, string][];
 	}
 
 	updateArrivalFilter(filterArrivalShowTerminating: boolean, toggleRouteKey?: string) {
@@ -138,36 +139,36 @@ export class StationPanelComponent {
 	}
 
 	getHasTerminating() {
-		return this.stationService.getHasTerminating();
+		return this.stationService.hasTerminating();
 	}
 
 	isLoading() {
-		return this.stationService.isLoading();
+		return this.stationService.loading();
 	}
 
 	copyID(icon: HTMLDivElement) {
 		icon.innerText = "check";
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		navigator.clipboard.writeText(station === undefined ? "" : station.id);
 		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
 
 	copyLocation(icon: HTMLDivElement) {
 		icon.innerText = "check";
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		navigator.clipboard.writeText(station === undefined ? "" : `${Math.round(station.x)} ${this.dimensionService.c324() ? "~" : Math.round(station.y)} ${Math.round(station.z)}`).then();
 		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
 
 	focus() {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		if (station) {
 			this.dataService.animateMap.emit({x: station.x, z: station.z});
 		}
 	}
 
 	openDirections(isStartStation: boolean) {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		if (station) {
 			this.directionsOpened.emit({stationDetails: {stationId: station.id, isStartStation}});
 		}
@@ -182,7 +183,7 @@ export class StationPanelComponent {
 	}
 
 	getSingleStation() {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		if (station) {
 			return station.single;
 		}
@@ -194,7 +195,7 @@ export class StationPanelComponent {
 	}
 
 	viewOnWorldMap() {
-		const station = this.stationService.getSelectedData();
+		const station = this.stationService.selectedData();
 		if (station) {
 			location.assign(environment.worldMapLink.exec(this.dimensionService.getDimensionIndex(), Math.round(station.x), Math.round(station.z)));
 		}
@@ -205,14 +206,10 @@ export class StationPanelComponent {
 	}
 
 	getFontStyle() {
-		return this.fontStyleService.getFontStyle();
-	}
-
-	getBetterScroll() {
-		return this.dataService.getBetterScroll();
+		return this.fontStyleService.fontStyle();
 	}
 
 	getDeveloperMode() {
-		return this.dataService.getDeveloperMode();
+		return this.dataService.developerMode();
 	}
 }

@@ -14,7 +14,7 @@ import {TranslocoPipe} from "@jsverse/transloco";
         TranslocoPipe,
     ],
     templateUrl: "./font-style-toggle.component.html",
-    styleUrl: "./font-style-toggle.component.css",
+    styleUrl: "./font-style-toggle.component.scss",
 })
 export class FontStyleToggleComponent {
     private readonly fontStyleService = inject(FontStyleService);
@@ -33,7 +33,7 @@ export class FontStyleToggleComponent {
     ];
 
     getFontStyle() {
-        return this.fontStyleService.getFontStyle();
+        return this.fontStyleService.fontStyle();
     }
 
     setFontStyle(event: SelectButtonChangeEvent) {

@@ -45,7 +45,7 @@ import {LanguageService} from "../../service/language.service";
 	TranslocoPipe,
 ],
 	templateUrl: "./main-panel.component.html",
-	styleUrl: "./main-panel.component.css",
+	styleUrl: "./main-panel.component.scss",
 })
 export class MainPanelComponent {
 	private readonly dataService = inject(MapDataService);
@@ -63,15 +63,14 @@ export class MainPanelComponent {
 		search: new FormControl(""),
 		dimension: new FormControl(""),
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
-		directionsEngine: new FormControl<"official" | "pathfinder">(this.dataService.getDirectionsEngine()),
+		directionsEngine: new FormControl<"official" | "pathfinder">(this.dataService.directionsEngine()),
 		language: new FormControl(this.languageService.getLanguageName(this.languageService.getLanguage())),
-		showHiddenRoutesToggle: new FormControl(this.dataService.getShowHiddenRoutes()),
-		showEmptyRoutesToggle: new FormControl(this.dataService.getShowEmptyRoutes()),
-		showAllStationsToggle: new FormControl(this.dataService.getShowAllStations()),
-		showDepots: new FormControl(this.dataService.getShowDepots()),
-		betterScroll: new FormControl(this.dataService.getBetterScroll()),
-		autoDetectBusRoutes: new FormControl(this.dataService.getAutoDetectBusRoutes()),
-		developerMode: new FormControl(this.dataService.getDeveloperMode()),
+		showHiddenRoutesToggle: new FormControl(this.dataService.showHiddenRoutes()),
+		showEmptyRoutesToggle: new FormControl(this.dataService.showEmptyRoutes()),
+		showAllStationsToggle: new FormControl(this.dataService.showAllStations()),
+		showDepots: new FormControl(this.dataService.showDepots()),
+		autoDetectBusRoutes: new FormControl(this.dataService.autoDetectBusRoutes()),
+		developerMode: new FormControl(this.dataService.developerMode()),
 	});
 	protected readonly routeTypes: [string, RouteType][] = [];
 
@@ -82,7 +81,7 @@ export class MainPanelComponent {
 			}
 			this.routeTypes.length = 0;
 			Object.entries(ROUTE_TYPES).forEach(([routeTypeKey, routeType]) => {
-				if (routeTypeKey in this.dataService.routeTypeVisibility) {
+				if (routeTypeKey in this.dataService.routeTypeVisibility()) {
 					this.routeTypes.push([routeTypeKey, routeType]);
 				}
 			});
@@ -131,7 +130,7 @@ export class MainPanelComponent {
 	}
 
 	getAllClients() {
-		return this.clientsService.allClients;
+		return this.clientsService.allClients();
 	}
 
 	clickStation(id: string) {
@@ -196,14 +195,6 @@ export class MainPanelComponent {
 
 	setShowDepots(value: boolean) {
 		this.dataService.setShowDepots(value);
-	}
-
-	getBetterScroll() {
-		return this.dataService.getBetterScroll();
-	}
-
-	setBetterScroll(value: boolean) {
-		this.dataService.setBetterScroll(value);
 	}
 
 	setAutoDetectBusRoutes(value: boolean) {

@@ -1,6 +1,6 @@
-<div class="column gap wrapper {{getBetterScroll()?'scrollable':''}}" [formGroup]="formGroup">
+<div class="column gap wrapper" [formGroup]="formGroup">
 	<div class="column gap-small padding-sides">
-		<app-search [label]="'main.search' | transloco" [parentFormGroup]="formGroup" childFormControlName="search" [includeStations]="true" [includeRoutes]="true" [includeDepots]="true" [includeClients]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)" (depotClicked)="clickDepot($event)"/>
+		<app-search [label]="'main.search' | transloco" [parentFormGroup]="formGroup" childFormControlName="search" [multiple]="false" [includeStations]="true" [includeRoutes]="true" [includeDepots]="true" [includeClients]="true" (stationClicked)="clickStation($event)" (routeClicked)="clickRoute($event)" (clientClicked)="clickClient($event)" (depotClicked)="clickDepot($event)"/>
 		<p-float-label variant="in">
 			<p-select inputId="dropdown" formControlName="dimension" [options]="getDimensions()" (onChange)="setDimension()" [fluid]="true"/>
 			<label for="dropdown">{{ (getHistoricalMap() ? 'main.time_or_data_source' : 'main.dimension') | transloco }}</label>
@@ -101,36 +101,32 @@
 					<app-font-style-toggle/>
 				</div>
 			</div>
-			<p-divider/>
-			<p-accordion [value]="1" [multiple]="true" class="bottom">
-				<p-accordion-panel>
-					<p-accordion-header>{{ 'main.advanced_settings' | transloco }}</p-accordion-header>
-					<p-accordion-content>
-						<div class="column gap-small">
-							<div class="row gap center toggle">
-								<div class="material-icons mobile">screenshot</div>
-								<div class="material-icons pc">screenshot_monitor</div>
-								<div class="shrink spacing">{{ 'main.better_scroll' | transloco }}</div>
-								<p-toggle-switch inputId="betterScroll" formControlName="betterScroll" (onChange)="setBetterScroll($event.checked)"/>
+			@if (getEnableAutoDetectBusRoutes() || getEnableDeveloperMode()) {
+				<p-divider/>
+				<p-accordion [value]="0" [multiple]="true">
+					<p-accordion-panel>
+						<p-accordion-header>{{ 'main.advanced_settings' | transloco }}</p-accordion-header>
+						<p-accordion-content>
+							<div class="column gap-small">
+								@if (getEnableAutoDetectBusRoutes()) {
+									<div class="row gap center toggle">
+										<div class="material-icons">directions_bus</div>
+										<div class="shrink spacing">{{ 'main.auto_detect_bus_routes' | transloco}}</div>
+										<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
+									</div>
+								}
+								@if (getEnableDeveloperMode()) {
+									<div class="row gap center toggle">
+										<div class="material-icons">code</div>
+										<div class="shrink spacing">{{ 'main.developer_mode' | transloco}}</div>
+										<p-toggle-switch inputId="developerMode" formControlName="developerMode" (onChange)="setDeveloperMode($event.checked)"/>
+									</div>
+								}
 							</div>
-							@if (getEnableAutoDetectBusRoutes()) {
-								<div class="row gap center toggle">
-									<div class="material-icons">directions_bus</div>
-									<div class="shrink spacing">{{ 'main.auto_detect_bus_routes' | transloco}}</div>
-									<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
-								</div>
-							}
-							@if (getEnableDeveloperMode()) {
-								<div class="row gap center toggle">
-									<div class="material-icons">code</div>
-									<div class="shrink spacing">{{ 'main.developer_mode' | transloco}}</div>
-									<p-toggle-switch inputId="developerMode" formControlName="developerMode" (onChange)="setDeveloperMode($event.checked)"/>
-								</div>
-							}
-						</div>
-					</p-accordion-content>
-				</p-accordion-panel>
-			</p-accordion>
+						</p-accordion-content>
+					</p-accordion-panel>
+				</p-accordion>
+			}
 		</div>
 		<div class="spacing"></div>
 	</div>

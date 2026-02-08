@@ -33,7 +33,7 @@ const maxResults = 50;
 		ReactiveFormsModule,
 	],
 	templateUrl: "./search.component.html",
-	styleUrl: "./search.component.css",
+	styleUrl: "./search.component.scss",
 })
 export class SearchComponent {
 	private readonly translocoService = inject(TranslocoService);
@@ -83,10 +83,10 @@ export class SearchComponent {
 				return result.slice(0, maxResults);
 			};
 
-			const searchedStations = filter(this.includeStations ? this.simplifyStationsPipe.transform(this.dataService.stations) : []);
-			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes) : []);
-			const searchedClients = filter(this.includeClients && !this.dimensionService.isOffline() ? this.clientsService.allClients.map(client => ({key: client.id, icons: [`https://mc-heads.net/avatar/${client.id}`], name: client.name, number: "", type: "client"})) : []);
-			const searchedDepots = filter(this.includeDepots ? this.simplifyDepotsPipe.transform(this.dataService.depots) : []);
+			const searchedStations = filter(this.includeStations ? this.simplifyStationsPipe.transform(this.dataService.stations()) : []);
+			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes()) : []);
+			const searchedClients = filter(this.includeClients && !this.dimensionService.isOffline() ? this.clientsService.allClients().map(client => ({key: client.id, icons: [`https://mc-heads.net/avatar/${client.id}`], name: client.name, number: "", type: "client"})) : []);
+			const searchedDepots = filter(this.includeDepots ? this.simplifyDepotsPipe.transform(this.dataService.depots()) : []);
 
 			if (searchedStations.length > 0) {
 				this.data.push({
@@ -153,9 +153,10 @@ export class SearchComponent {
 		this.textCleared.emit();
 	}
 
-	getName(entry: { value?: { name?: string } }) {
+	getName(entry: { value?: { name?: string, number?: string } }) {
 		const name = entry?.value?.name;
-		return name ? name.replaceAll("|", " ") : "";
+		const number = entry?.value?.number;
+		return name ? (number ? `${name.replaceAll("|", " ")} ${number.replaceAll("|", " ")}` : name.replaceAll("|", " ")) : "";
 	}
 
 	getText() {

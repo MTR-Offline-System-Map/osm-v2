@@ -15,7 +15,7 @@ import {TranslocoPipe} from "@jsverse/transloco";
 		TranslocoPipe,
 	],
 	templateUrl: "./interchange-style-toggle.component.html",
-	styleUrl: "./interchange-style-toggle.component.css",
+	styleUrl: "./interchange-style-toggle.component.scss",
 })
 export class InterchangeStyleToggleComponent {
 	private readonly mapDataService = inject(MapDataService);
@@ -39,11 +39,11 @@ export class InterchangeStyleToggleComponent {
 	];
 
 	getInterchangeStyle() {
-		return this.mapDataService.interchangeStyle;
+		return this.mapDataService.interchangeStyle();
 	}
 
 	setInterchangeStyle(event: SelectButtonChangeEvent) {
-		this.mapDataService.interchangeStyle = event.value;
+		this.mapDataService.interchangeStyle.set(event.value);
 		this.mapDataService.updateData();
 		setCookie("interchange_style", event.value);
 	}

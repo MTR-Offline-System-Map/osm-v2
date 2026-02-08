@@ -11,7 +11,7 @@ import {FontStyleService} from "../../service/font-style.service";
 		NgOptimizedImage,
 	],
 	templateUrl: "./data-list-entry.component.html",
-	styleUrl: "./data-list-entry.component.css",
+	styleUrl: "./data-list-entry.component.scss",
 })
 export class DataListEntryComponent {
 	private readonly fontStyleService = inject(FontStyleService);
@@ -25,6 +25,6 @@ export class DataListEntryComponent {
 	@Output() entryClicked = new EventEmitter<void>();
 
 	getFontStyle() {
-		return this.fontStyleService.getFontStyle();
+		return this.fontStyleService.fontStyle();
 	}
 }

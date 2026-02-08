@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {AfterViewInit, Component, ElementRef, EventEmitter, inject, Output, ViewChild} from "@angular/core";
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Output, ViewChild} from "@angular/core";
 import SETTINGS from "../../utility/settings";
 import {MapDataService} from "../../service/map-data.service";
 import {connectStations, connectWith45} from "../../utility/drawing";
@@ -44,9 +44,10 @@ const animationDuration = 2000;
 		NgOptimizedImage,
 	],
 	templateUrl: "./map.component.html",
-	styleUrls: ["./map.component.css"],
+	styleUrls: ["./map.component.scss"],
 })
 export class MapComponent implements AfterViewInit {
+	private readonly changeDetectorRef = inject(ChangeDetectorRef);
 	private readonly mapDataService = inject(MapDataService);
 	private readonly mapSelectionService = inject(MapSelectionService);
 	private readonly clientsService = inject(ClientsService);
@@ -201,6 +202,7 @@ export class MapComponent implements AfterViewInit {
 			this.oneWayArrowGeometry = new THREE.BufferGeometry();
 			this.createStationConnections();
 			this.createLines(() => {
+				// empty
 			});
 
 			const lineStationConnectionThin = new Line2(this.lineGeometryStationConnectionThin, lineMaterialStationConnectionThin);
@@ -233,7 +235,7 @@ export class MapComponent implements AfterViewInit {
 		});
 
 		this.mapSelectionService.updateSelection.subscribe(() => {
-			if (!this.mapDataService.getMapLoading()) {
+			if (!this.mapDataService.mapLoading()) {
 				draw(true);
 			}
 		});
@@ -259,7 +261,7 @@ export class MapComponent implements AfterViewInit {
 
 		if (!this.dimensionService.isOffline()) {
 			this.clientsService.dataProcessed.subscribe(() => {
-				if (!this.mapDataService.getMapLoading()) {
+				if (!this.mapDataService.mapLoading()) {
 					draw(true);
 				}
 			});
@@ -267,7 +269,7 @@ export class MapComponent implements AfterViewInit {
 	}
 
 	getLoading() {
-		return this.mapDataService.getMapLoading();
+		return this.mapDataService.mapLoading();
 	}
 
 	private createStationBlobs() {
@@ -336,7 +338,7 @@ export class MapComponent implements AfterViewInit {
 			}
 		};
 
-		this.mapDataService.stationsForMap.forEach(({station, rotate, width, height}) => {
+		this.mapDataService.stationsForMap().forEach(({station, rotate, width, height}) => {
 			const {id, x, z} = station;
 			const stationSelected = (this.mapSelectionService.selectedStations.length === 0 && this.mapSelectionService.selectedDepots.length === 0) || this.mapSelectionService.selectedStations.includes(id);
 			const adjustZ = stationSelected ? 20 : 0;
@@ -346,7 +348,7 @@ export class MapComponent implements AfterViewInit {
 			processShape(x, -z, 5, newWidth, newHeight, rotate, adjustZ, this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, stationSelected));
 
 			if (!this.dimensionService.isOffline()) {
-				const clientGroups = this.clientsService.getClientGroupsForStation()[id];
+				const clientGroups = this.clientsService.clientGroupsForStation()[id];
 				if (clientGroups) {
 					const clientCount = clientGroups.clients.length;
 					const newClientImageWidth = newClientImageSize * clientCount + newClientImagePadding * (clientCount - 1);
@@ -356,8 +358,8 @@ export class MapComponent implements AfterViewInit {
 			}
 		});
 
-		if (this.mapDataService.getShowDepots() && this.mapDataService.depots.length > 0) {
-			this.mapDataService.depots.forEach(({id, x, z}) => {
+		if (this.mapDataService.showDepots() && this.mapDataService.depots.length > 0) {
+			this.mapDataService.depots().forEach(({id, x, z}) => {
 				const depotSelected = (this.mapSelectionService.selectedStations.length === 0 && this.mapSelectionService.selectedDepots.length === 0) || this.mapSelectionService.selectedDepots.includes(id);
 				const adjustZ = depotSelected ? 20 : 0;
 				processShape(x, -z, 7, 0, 0, false, adjustZ - 1, this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, depotSelected), false);
@@ -367,7 +369,7 @@ export class MapComponent implements AfterViewInit {
 
 		if (!this.dimensionService.isOffline()) {
 			Object.values(this.clientsService.allClients).forEach(({id, rawX, rawZ}) => this.clientPositions[id] = {x: rawX, y: -rawZ});
-			Object.entries(this.clientsService.getClientGroupsForRoute()).forEach(([routeKey, {clients, x, z, route, routeStationId1, routeStationId2}]) => {
+			Object.entries(this.clientsService.clientGroupsForRoute()).forEach(([routeKey, {clients, x, z, route, routeStationId1, routeStationId2}]) => {
 				const points = this.pointsForLineConnection[routeKey];
 				if (points) {
 					let closestX = 0;
@@ -403,7 +405,7 @@ export class MapComponent implements AfterViewInit {
 	}
 
 	private createStationConnections() {
-		lineMaterialStationConnectionThin.dashed = this.mapDataService.interchangeStyle === "DOTTED";
+		lineMaterialStationConnectionThin.dashed = this.mapDataService.interchangeStyle() === "DOTTED";
 		lineMaterialStationConnectionThin.dashSize = 8 * SETTINGS.scale / this.camera.zoom;
 		lineMaterialStationConnectionThin.gapSize = 4 * SETTINGS.scale / this.camera.zoom;
 
@@ -413,7 +415,7 @@ export class MapComponent implements AfterViewInit {
 		const colorsThick = [0, 0, 0, 0, 0, 0];
 		const backgroundColor = this.getBackgroundColor();
 
-		this.mapDataService.stationConnections.forEach(({x1, z1, x2, z2, stationId1, stationId2, start45}) => {
+		this.mapDataService.stationConnections().forEach(({x1, z1, x2, z2, stationId1, stationId2, start45}) => {
 			const selected = this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(stationId1) && this.mapSelectionService.selectedStations.includes(stationId2);
 			const adjustZ = selected ? 20 : 0;
 
@@ -430,8 +432,8 @@ export class MapComponent implements AfterViewInit {
 				MapComponent.setColor(color, colors);
 			};
 
-			write(this.mapDataService.interchangeStyle === "DOTTED" ? 1 : 0, positionsThin, colorsThin, this.mapDataService.interchangeStyle === "DOTTED" ? this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, selected) : this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, selected));
-			write(this.mapDataService.interchangeStyle === "DOTTED" ? 2 : 1, positionsThick, colorsThick, this.mapDataService.interchangeStyle === "DOTTED" ? backgroundColor : this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, selected));
+			write(this.mapDataService.interchangeStyle() === "DOTTED" ? 1 : 0, positionsThin, colorsThin, this.mapDataService.interchangeStyle() === "DOTTED" ? this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, selected) : this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, selected));
+			write(this.mapDataService.interchangeStyle() === "DOTTED" ? 2 : 1, positionsThick, colorsThick, this.mapDataService.interchangeStyle() === "DOTTED" ? backgroundColor : this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, selected));
 		});
 
 		if (this.lineGeometryStationConnectionThin) {
@@ -480,7 +482,7 @@ export class MapComponent implements AfterViewInit {
 			MapComponent.setColor(color, colorsArrow, 9);
 		};
 
-		this.mapDataService.lineConnections.forEach(({lineConnectionParts, direction1, direction2, x1, z1, x2, z2, stationId1, stationId2, length, relativeLength}) => {
+		this.mapDataService.lineConnections().forEach(({lineConnectionParts, direction1, direction2, x1, z1, x2, z2, stationId1, stationId2, length, relativeLength}) => {
 			const hidden = length * this.camera.zoom < 10;
 			for (let i = 0; i < lineConnectionParts.length; i++) {
 				const {color, offset1, offset2, oneWay} = lineConnectionParts[i];
@@ -489,7 +491,7 @@ export class MapComponent implements AfterViewInit {
 				const newColorInt = this.getColor(colorInt, colorInt, grayColorLight, grayColorDark, lineSelected);
 				const noService = false; // TODO
 				const colorOffset = (i - lineConnectionParts.length / 2 + 0.5) * 6 * SETTINGS.scale;
-				const routeTypeVisibility = this.mapDataService.routeTypeVisibility[color.split("|")[1]];
+				const routeTypeVisibility = this.mapDataService.routeTypeVisibility()[color.split("|")[1]];
 				const dashed = routeTypeVisibility === "DASHED";
 				const hollow = routeTypeVisibility === "HOLLOW" || dashed;
 				const adjustZ = lineSelected ? 20 : 0;
@@ -597,11 +599,11 @@ export class MapComponent implements AfterViewInit {
 		this.textLabels.length = 0;
 		let renderedTextCount = 0;
 
-		this.mapDataService.stationsForMap.forEach(({station, rotate, width, height}) => {
+		this.mapDataService.stationsForMap().forEach(({station, rotate, width, height}) => {
 			const {id, name, getIcons, x, z} = station;
 			const canvasX = (x - this.camera.position.x) * this.camera.zoom;
 			const canvasY = (z + this.camera.position.y) * this.camera.zoom;
-			const clientGroup = this.clientsService.getClientGroupsForStation()[id];
+			const clientGroup = this.clientsService.clientGroupsForStation()[id];
 
 			if (Math.abs(canvasX) <= halfCanvasWidth && Math.abs(canvasY) <= halfCanvasHeight && (clientGroup || renderedTextCount < SETTINGS.maxText * 2) && (this.mapSelectionService.selectedStations.length === 0 || this.mapSelectionService.selectedStations.includes(id))) {
 				const newWidth = width * 3 * SETTINGS.scale;
@@ -610,7 +612,7 @@ export class MapComponent implements AfterViewInit {
 				const clientsWidth = clientGroup ? clientsHeight * clientGroup.clients.length + clientImagePadding * SETTINGS.scale * (clientGroup.clients.length - 1) / 2 : 0;
 				const rotatedSize = (newHeight + newWidth) * Math.SQRT1_2;
 				const textOffset = Math.max(rotate ? rotatedSize : newHeight, clientsHeight) + 9 * SETTINGS.scale;
-				const icons = getIcons(type => this.mapDataService.routeTypeVisibility[type] === "HIDDEN");
+				const icons = getIcons(type => this.mapDataService.routeTypeVisibility()[type] === "HIDDEN");
 				this.textLabels.push({
 					hoverOverride: false,
 					id,
@@ -629,13 +631,13 @@ export class MapComponent implements AfterViewInit {
 			}
 		});
 
-		if (this.mapDataService.getShowDepots() && this.mapDataService.depots.length > 0) {
-			this.mapDataService.depots.forEach(({id, name, x, z, getIcons}) => {
+		if (this.mapDataService.showDepots() && this.mapDataService.depots.length > 0) {
+			this.mapDataService.depots().forEach(({id, name, x, z, getIcons}) => {
 				const canvasX = (x - this.camera.position.x) * this.camera.zoom;
 				const canvasY = (z + this.camera.position.y) * this.camera.zoom;
 				if (Math.abs(canvasX) <= halfCanvasWidth && Math.abs(canvasY) <= halfCanvasHeight && (renderedTextCount < SETTINGS.maxText * 2) && ((this.mapSelectionService.selectedStations.length === 0 && this.mapSelectionService.selectedDepots.length === 0) || this.mapSelectionService.selectedDepots.includes(id))) {
 					const textOffset = 9 * SETTINGS.scale;
-					const icons = getIcons(type => this.mapDataService.routeTypeVisibility[type] === "HIDDEN");
+					const icons = getIcons(type => this.mapDataService.routeTypeVisibility()[type] === "HIDDEN");
 					this.textLabels.push({
 						hoverOverride: false,
 						id,
@@ -668,7 +670,7 @@ export class MapComponent implements AfterViewInit {
 		});
 
 		if (!this.dimensionService.isOffline()) {
-			this.clientsService.allClientsNotInStationOrRoute.forEach(({id, name, rawX, rawZ}) => {
+			this.clientsService.allClientsNotInStationOrRoute().forEach(({id, name, rawX, rawZ}) => {
 				const canvasX = (rawX - this.camera.position.x) * this.camera.zoom;
 				const canvasY = (rawZ + this.camera.position.y) * this.camera.zoom;
 				this.clientGroupsOnRoute.push({
@@ -679,10 +681,12 @@ export class MapComponent implements AfterViewInit {
 				});
 			});
 		}
+
+		this.changeDetectorRef.detectChanges();
 	}
 
 	private centerMap() {
-		this.moveMap(-this.mapDataService.getCenterX(), this.mapDataService.getCenterY());
+		this.moveMap(-this.mapDataService.centerX(), this.mapDataService.centerY());
 	}
 
 	private moveMap(x: number, y: number) {
@@ -744,7 +748,7 @@ export class MapComponent implements AfterViewInit {
 	}
 
 	getFontStyle() {
-		return this.fontStyleService.getFontStyle();
+		return this.fontStyleService.fontStyle();
 	}
 }
 

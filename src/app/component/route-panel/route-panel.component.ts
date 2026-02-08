@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Output} from "@angular/core";
+import {Component, EventEmitter, inject, Output, signal} from "@angular/core";
 import {RouteKeyService, RouteVariationService} from "../../service/route.service";
 import {FormatNamePipe} from "../../pipe/formatNamePipe";
 import {RouteDisplayComponent} from "../route-display/route-display.component";
@@ -44,7 +44,7 @@ import {TranslocoPipe, TranslocoService} from "@jsverse/transloco";
 	TranslocoPipe,
 ],
 	templateUrl: "./route-panel.component.html",
-	styleUrl: "./route-panel.component.css",
+	styleUrl: "./route-panel.component.scss",
 })
 export class RoutePanelComponent {
 	private readonly translocoService = inject(TranslocoService);
@@ -59,29 +59,29 @@ export class RoutePanelComponent {
 	@Output() routeClicked = new EventEmitter<string>();
 	@Output() directionsOpened = new EventEmitter<void>();
 	@Output() depotClicked = new EventEmitter<string>();
-	protected dropdownValue?: { name: string; id: string; };
+	protected dropdownValue = signal<{ name: string; id: string; } | undefined>(undefined);
 
 	constructor() {
 		this.routeKeyService.selectionChanged.subscribe(() => {
-			this.dropdownValue = {name: Math.random().toString(), id: Math.random().toString()};
+			this.dropdownValue.set({name: Math.random().toString(), id: Math.random().toString()});
 			setTimeout(() => {
 				const dropdownRoutes = this.getDropdownRoutes();
-				this.dropdownValue = dropdownRoutes ? dropdownRoutes[0] : undefined;
+				this.dropdownValue.set(dropdownRoutes ? dropdownRoutes[0] : undefined);
 			}, 0);
 		});
 		this.routeVariationService.selectionChanged.subscribe(() => {
 			setTimeout(() => {
 				const dropdownRoutes = this.getDropdownRoutes();
-				const route = this.routeVariationService.getSelectedData();
+				const route = this.routeVariationService.selectedData();
 				if (dropdownRoutes && route) {
-					this.dropdownValue = dropdownRoutes.find(routeDropdown => routeDropdown.id === route.id);
+					this.dropdownValue.set(dropdownRoutes.find(routeDropdown => routeDropdown.id === route.id));
 				}
 			}, 0);
 		})
 	}
 
 	getDropdownRoutes() {
-		return this.routeKeyService.getSelectedData()?.map(route => ({name: route.name.split("||")[1] ?? this.translocoService.translate("app.untitled"), id: route.id}));
+		return this.routeKeyService.selectedData()?.map(route => ({name: route.name.split("||")[1] ?? this.translocoService.translate("app.untitled"), id: route.id}));
 	}
 
 	selectRoute(id: string) {
@@ -89,37 +89,45 @@ export class RoutePanelComponent {
 	}
 
 	getRouteName() {
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		return route ? route.name.split("||")[0] : "";
 	}
 
 	getRouteColor() {
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		return route ? route.color : undefined;
 	}
 
 	getRouteID() {
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		return route ? route.id : undefined;
 	}
 
 	getRouteIcon() {
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		return route ? ROUTE_TYPES[route.type].icon : undefined;
 	}
 
 	getRouteDepots() {
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		return route ? [...new Set(route.depots)].sort() : [];
 	}
 
-	getVehicleIcons(vehicles: { deviation: number, percentage: number }[], displayHeight: number) {
+	getVehicleIcons(index: number, displayHeight: number) {
 		const icon = this.getRouteIcon() ?? "";
-		return vehicles.map(vehicle => ({icon, offset: vehicle.percentage * displayHeight / 2, tooltip: `${this.formatTimePipe.transform(Math.abs(Math.round(vehicle.deviation / 1000)), "")} ${this.translocoService.translate(SimplifyRoutesPipe.getDeviationString(true, vehicle.deviation))}`}));
+		const maxIndex = this.routeVariationService.routeStationDetails().length - 1;
+		return this.routeVariationService.routeVehicles()[index].map(vehicle => {
+			const offset = vehicle.percentage * displayHeight / 2;
+			return {
+				icon,
+				offset: index === 0 ? Math.max(0, offset) : index === maxIndex ? Math.min(offset, 0) : offset,
+				tooltip: `${this.formatTimePipe.transform(Math.abs(Math.round(vehicle.deviation / 1000)), "")} ${this.translocoService.translate(SimplifyRoutesPipe.getDeviationString(true, vehicle.deviation))}`,
+			};
+		});
 	}
 
 	getRouteStationDetails() {
-		return this.routeVariationService.routeStationDetails;
+		return this.routeVariationService.routeStationDetails();
 	}
 
 	getPlatformName(platformName?: string) {
@@ -135,11 +143,11 @@ export class RoutePanelComponent {
 	}
 
 	hasDurations() {
-		return this.routeVariationService.routeStationDetails[0]?.durationSeconds;
+		return this.routeVariationService.routeStationDetails()[0]?.durationSeconds;
 	}
 
 	hasDwellTimes() {
-		return this.routeVariationService.routeStationDetails[0]?.dwellTimeSeconds;
+		return this.routeVariationService.routeStationDetails()[0]?.dwellTimeSeconds;
 	}
 
 	isOnline() {
@@ -147,32 +155,28 @@ export class RoutePanelComponent {
 	}
 
 	getRouteHidden() {
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		return route ? route.hidden : false;
 	}
 
 	getEnableRouteDepotsDetails() {
-		return this.dataService.getShowDepots() && this.dataService.depots.length > 0;
-	}
-
-	getBetterScroll() {
-		return this.dataService.getBetterScroll();
+		return this.dataService.showDepots() && this.dataService.depots().length > 0;
 	}
 
 	getDeveloperMode() {
-		return this.dataService.getDeveloperMode();
+		return this.dataService.developerMode();
 	}
 
 	copyRouteID(icon: HTMLDivElement) {
 		icon.innerText = "check";
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		navigator.clipboard.writeText(route ? route.id : "");
 		setTimeout(() => icon.innerText = "content_copy", 1000);
 	}
 
 	copyRouteKey(icon: HTMLDivElement) {
 		icon.innerText = "check";
-		const route = this.routeVariationService.getSelectedData();
+		const route = this.routeVariationService.selectedData();
 		navigator.clipboard.writeText(route ? SimplifyRoutesPipe.getRouteKey(route) : "");
 		setTimeout(() => icon.innerText = "copy_all", 1000);
 	}

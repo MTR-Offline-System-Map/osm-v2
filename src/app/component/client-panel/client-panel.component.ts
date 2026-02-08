@@ -36,7 +36,7 @@ import {TranslocoPipe} from "@jsverse/transloco";
 		TranslocoPipe,
 	],
 	templateUrl: "./client-panel.component.html",
-	styleUrl: "./client-panel.component.css",
+	styleUrl: "./client-panel.component.scss",
 })
 export class ClientPanelComponent {
 	private readonly clientService = inject(ClientService);
@@ -48,21 +48,21 @@ export class ClientPanelComponent {
 	@Output() depotClicked = new EventEmitter<string>();
 
 	getName() {
-		return this.clientService.getClient()?.name ?? "";
+		return this.clientService.client()?.name ?? "";
 	}
 
 	getImageSrc() {
-		const clientId = this.clientService.getSelectedData();
+		const clientId = this.clientService.selectedData();
 		return clientId ? `https://mc-heads.net/avatar/${clientId}` : undefined;
 	}
 
 	getStation() {
-		const client = this.clientService.getClient();
+		const client = this.clientService.client();
 		return client ? client.station : undefined;
 	}
 
 	getRouteDetails() {
-		const client = this.clientService.getClient();
+		const client = this.clientService.client();
 		const route = client ? client.route : undefined;
 		const routeStation1 = client ? client.routeStation1 : undefined;
 		const routeStation2 = client ? client.routeStation2 : undefined;
@@ -74,23 +74,23 @@ export class ClientPanelComponent {
 	}
 
 	getCoordinatesText() {
-		const client = this.clientService.getClient();
+		const client = this.clientService.client();
 		return client ? `${Math.round(client.rawX)}, ${Math.round(client.rawZ)}` : "";
 	}
 
 	usePathfinder() {
-		return this.mapDataService.getDirectionsEngine() === "pathfinder";
+		return this.mapDataService.directionsEngine() === "pathfinder";
 	}
 
 	focus() {
-		const clientId = this.clientService.getSelectedData();
+		const clientId = this.clientService.selectedData();
 		if (clientId) {
 			this.mapDataService.animateClient.emit(clientId);
 		}
 	}
 
 	openDirections(isStartClient: boolean) {
-		const clientId = this.clientService.getSelectedData();
+		const clientId = this.clientService.selectedData();
 		if (clientId) {
 			this.directionsOpened.emit({clientDetails: {clientId, isStartClient}});
 		}

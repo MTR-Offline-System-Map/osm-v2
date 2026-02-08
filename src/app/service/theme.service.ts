@@ -1,4 +1,4 @@
-import {inject, Injectable} from "@angular/core";
+import {inject, Injectable, signal} from "@angular/core";
 import {getCookie, setCookie} from "../data/utilities";
 import {MapDataService} from "./map-data.service";
 
@@ -6,22 +6,18 @@ import {MapDataService} from "./map-data.service";
 export class ThemeService {
 	private readonly mapDataService = inject(MapDataService);
 
-	private theme: "LIGHT" | "SYSTEM" | "DARK" = "SYSTEM";
+	public readonly theme = signal<"LIGHT" | "SYSTEM" | "DARK">("SYSTEM");
 
 	constructor() {
 		const theme = getCookie("theme");
 		if (theme === "LIGHT" || theme === "SYSTEM" || theme === "DARK") {
-			this.theme = theme;
+			this.theme.set(theme);
 		}
 		this.setElementTag();
 	}
 
-	public getTheme() {
-		return this.theme;
-	}
-
 	public setTheme(theme: "LIGHT" | "SYSTEM" | "DARK") {
-		this.theme = theme;
+		this.theme.set(theme);
 		this.setElementTag();
 		setTimeout(() => this.mapDataService.drawMap.emit(), 0);
 	}
@@ -31,11 +27,11 @@ export class ThemeService {
 	}
 
 	public isDarkTheme() {
-		return this.theme === "DARK" || (this.theme === "SYSTEM" && this.getSystemTheme() === "DARK");
+		return this.theme() === "DARK" || (this.theme() === "SYSTEM" && this.getSystemTheme() === "DARK");
 	}
 
 	private setElementTag() {
-		setCookie("theme", this.theme);
+		setCookie("theme", this.theme());
 
 		const element = document.querySelector("html");
 		if (element) {

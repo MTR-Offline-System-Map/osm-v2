@@ -11,6 +11,7 @@ export const environment = {
   },
   pathfinder: (dimensionIndex: number) => false,
   enableShowHiddenRoutes: false,
+  enableShowEmptyRoutes: true,
   enableShowAllStations: false,
   enableShowDepots: false,
   enableAutoDetectBusRoutes: false,

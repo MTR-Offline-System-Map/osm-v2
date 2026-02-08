@@ -25,7 +25,7 @@ export class DepotService extends SelectableDataServiceBase<void, Depot> {
 			mapSelectionService.selectedDepots.length = 0;
             const selectedDepots: Depot[] = [];
 
-            mapDataService.depots.forEach(depot => {
+            mapDataService.depots().forEach(depot => {
                 if (depot.id === depotId) {
                     selectedDepots.push(depot);
                 }
@@ -36,7 +36,7 @@ export class DepotService extends SelectableDataServiceBase<void, Depot> {
             const selectedDepot = selectedDepots ? selectedDepots.find(depot => depot.id === depotId) ?? selectedDepots[0] : undefined;
             if (selectedDepot) {
                 const newRoutes: Record<string, { name: string, variations: string[], number: string, color: number, typeIcon: string, hidden: boolean }> = {};
-                this.dataService.routes.forEach(({name, number, color, type, depots, hidden}) => {
+                this.dataService.routes().forEach(({name, number, color, type, depots, hidden}) => {
                     if (depots.some(depot => depot.id === selectedDepot.id)) {
                         const key = SimplifyRoutesPipe.getRouteKey({name, number, color});
                         const variation = name.split("||")[1];
@@ -62,10 +62,10 @@ export class DepotService extends SelectableDataServiceBase<void, Depot> {
 
     setDepot(depotId: string, zoomToDepot: boolean) {
         this.select(depotId);
-        const selectedDepot = this.getSelectedData();
+        const selectedDepot = this.selectedData();
 		if (selectedDepot) {
-			if (selectedDepot.routes.every(({type}) => this.dataService.routeTypeVisibility[type] === "HIDDEN")) {
-				selectedDepot.routes.forEach(({type}) => this.dataService.routeTypeVisibility[type] = "SOLID");
+			if (selectedDepot.routes.every(({type}) => this.dataService.routeTypeVisibility()[type] === "HIDDEN")) {
+				selectedDepot.routes.forEach(({type}) => this.dataService.routeTypeVisibility()[type] = "SOLID");
 				this.dataService.updateData();
 			}
 			if (zoomToDepot) {

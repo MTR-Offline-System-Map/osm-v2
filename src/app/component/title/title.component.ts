@@ -10,7 +10,7 @@ import {FontStyleService} from "../../service/font-style.service";
 		FormatColorPipe,
 	],
 	templateUrl: "./title.component.html",
-	styleUrl: "./title.component.css",
+	styleUrl: "./title.component.scss",
 })
 export class TitleComponent {
 	private readonly fontStyleService = inject(FontStyleService);
@@ -20,7 +20,7 @@ export class TitleComponent {
 	@Input({required: true}) color?: number;
 
 	getFontStyle() {
-		return this.fontStyleService.getFontStyle();
+		return this.fontStyleService.fontStyle();
 	}
 
 	copyColor() {

@@ -5,15 +5,15 @@ import {environment} from "../../environments/environment";
 
 export abstract class DataServiceBase<T> {
 	public readonly dataProcessed = new EventEmitter<void>();
-	private loading = false;
+	public readonly loading = signal(false);
 	private id = "";
 	private timeoutId = 0;
 
 	public readonly isLoading = () => this.loading;
 	protected readonly getUrl = (endpoint: string) => environment.dataUrl(endpoint, this.dimensionService.getDimensionIndex());
 	protected readonly fetchData = (id: string) => {
-		if ((!this.dimensionService.isOffline() || !this.mustOnline) && (!this.dimensionService.includeMarkers || !this.needMarkers)) {
-			this.loading = true;
+		if ((!this.dimensionService.isOffline() || !this.mustOnline) && (!this.dimensionService.includeMarkers() || !this.needMarkers)) {
+			this.loading.set(true);
 			this.id = id;
 			clearTimeout(this.timeoutId);
 			this.getDataInternal();
@@ -30,7 +30,7 @@ export abstract class DataServiceBase<T> {
 			observable.subscribe({
 				next: data => {
 					if (currentId == this.formatId()) {
-						this.loading = false;
+						this.loading.set(false);
 						this.processData(data);
 						this.dataProcessed.emit();
 						this.scheduleData();

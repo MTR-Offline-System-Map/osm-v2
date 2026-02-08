@@ -14,7 +14,7 @@ import {TranslocoPipe} from "@jsverse/transloco";
         TranslocoPipe,
     ],
     templateUrl: "./theme-toggle.component.html",
-    styleUrl: "./theme-toggle.component.css",
+    styleUrl: "./theme-toggle.component.scss",
 })
 export class ThemeToggleComponent {
     private readonly themeService = inject(ThemeService);
@@ -38,7 +38,7 @@ export class ThemeToggleComponent {
     ];
 
     getTheme() {
-        return this.themeService.getTheme();
+        return this.themeService.theme();
     }
 
     setTheme(event: SelectButtonChangeEvent) {
