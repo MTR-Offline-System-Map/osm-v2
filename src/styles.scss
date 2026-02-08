@@ -26,6 +26,10 @@ html, body {
 	height: 100%;
 }
 
+small {
+	padding: 10px 0;
+}
+
 .column {
 	display: flex;
 	flex-flow: column nowrap;

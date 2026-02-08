@@ -68,61 +68,67 @@
 				<div class="spacing"></div>
 			</div>
 		} @else {
-			<div class="column padding-sides content">
-				@for (direction of getDirections(); track $index) {
-					<app-route-display [colorAbove]="$index === 0 ? undefined : getRouteColor($index - 1)" [colorBelow]="getRouteColor($index)" [isStation]="true" [icons]="[]">
-						<div class="row center">
-							<app-data-list-entry class="spacing" [icons]="[]" [title]="[getStationName(direction.startStation), '']" [subtitles]="[[getPlatformName(direction.startPlatformName), '']]" [useLightColor]="false" [clickable]="false"/>
-							<div class="gray no-wrap">{{ direction.startTime | formatDate }}</div>
-						</div>
-					</app-route-display>
-					<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="getRouteColor($index)" [isStation]="false" [icons]="[{icon: direction.route ? direction.icon : sameStation(direction) ? 'transfer_within_a_station' : 'directions_walk', offset: 0}, {icon: direction.route ? (direction.route.hidden ? 'visibility_off' : '') : '', offset: 30}]">
-						@if (direction.route) {
+			@if (getDirections().length > 0) {
+				<div class="column padding-sides content">
+					@for (direction of getDirections(); track $index) {
+						<app-route-display [colorAbove]="$index === 0 ? undefined : getRouteColor($index - 1)" [colorBelow]="getRouteColor($index)" [isStation]="true" [icons]="[]">
 							<div class="row center">
-								<app-data-list-entry class="spacing" [icons]="[getCircularIcon(direction.route)]" [title]="[getRouteName(direction.route), '']" [subtitles]="[[getRouteDestination(direction.route), '']]" [useLightColor]="true" [clickable]="false"/>
-								<div class="row center gray">
-									<div class="material-icons">schedule</div>
-									<div>&nbsp;{{ getDuration(direction) }}</div>
-								</div>
+								<app-data-list-entry class="spacing" [icons]="[]" [title]="[getStationName(direction.startStation), '']" [subtitles]="[[getPlatformName(direction.startPlatformName), '']]" [useLightColor]="false" [clickable]="false"/>
+								<div class="gray no-wrap">{{ direction.startTime | formatDate }}</div>
 							</div>
-						} @else {
-							<div class="row center">
-								<app-data-list-entry class="spacing" [icons]="[]" [title]="[getDistanceLabel(direction), '']" [subtitles]="[]" [useLightColor]="true" [clickable]="false"/>
-								<div class="row center gray">
-									<div class="material-icons">schedule</div>
-									<div>&nbsp;{{ getDuration(direction) }}</div>
+						</app-route-display>
+						<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="getRouteColor($index)" [isStation]="false" [icons]="[{icon: direction.route ? direction.icon : sameStation(direction) ? 'transfer_within_a_station' : 'directions_walk', offset: 0}, {icon: direction.route ? (direction.route.hidden ? 'visibility_off' : '') : '', offset: 30}]">
+							@if (direction.route) {
+								<div class="row center">
+									<app-data-list-entry class="spacing" [icons]="[getCircularIcon(direction.route)]" [title]="[getRouteName(direction.route), '']" [subtitles]="[[getRouteDestination(direction.route), '']]" [useLightColor]="true" [clickable]="false"/>
+									<div class="row center gray">
+										<div class="material-icons">schedule</div>
+										<div>&nbsp;{{ getDuration(direction) }}</div>
+									</div>
 								</div>
-							</div>
+							} @else {
+								<div class="row center">
+									<app-data-list-entry class="spacing" [icons]="[]" [title]="[getDistanceLabel(direction), '']" [subtitles]="[]" [useLightColor]="true" [clickable]="false"/>
+									<div class="row center gray">
+										<div class="material-icons">schedule</div>
+										<div>&nbsp;{{ getDuration(direction) }}</div>
+									</div>
+								</div>
+							}
+						</app-route-display>
+						@if (direction.intermediateStations.length > 0) {
+							<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="getRouteColor($index)" [isStation]="false" [icons]="[]">
+								<div class="intermediate-stations">
+									<p-accordion [multiple]="true" value="0">
+										<p-accordion-panel>
+											<p-accordion-header>{{ direction.intermediateStations.length }} {{ 'directions.intermediate_station' | transloco }}</p-accordion-header>
+											<p-accordion-content>
+												<div class="column gap-small">
+													@for (intermediateStation of direction.intermediateStations; track $index) {
+														<div [className]="getFontStyle()==='SERIF'?'font-serif':''">{{ intermediateStation.name | formatName }}</div>
+													}
+												</div>
+											</p-accordion-content>
+										</p-accordion-panel>
+									</p-accordion>
+								</div>
+							</app-route-display>
 						}
-					</app-route-display>
-					@if (direction.intermediateStations.length > 0) {
-						<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="getRouteColor($index)" [isStation]="false" [icons]="[]">
-							<div class="intermediate-stations">
-								<p-accordion [multiple]="true" value="0">
-									<p-accordion-panel>
-										<p-accordion-header>{{ direction.intermediateStations.length }} {{ 'directions.intermediate_station' | transloco }}</p-accordion-header>
-										<p-accordion-content>
-											<div class="column gap-small">
-												@for (intermediateStation of direction.intermediateStations; track $index) {
-													<div [className]="getFontStyle()==='SERIF'?'font-serif':''">{{ intermediateStation.name | formatName }}</div>
-												}
-											</div>
-										</p-accordion-content>
-									</p-accordion-panel>
-								</p-accordion>
-							</div>
-						</app-route-display>
+						@if ($index === $count - 1) {
+							<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="undefined" [isStation]="true" [icons]="[]">
+								<div class="row center">
+									<app-data-list-entry class="spacing" [icons]="[]" [title]="[getStationName(direction.endStation), '']" [subtitles]="[[getPlatformName(direction.endPlatformName), '']]" [useLightColor]="false" [clickable]="false"/>
+									<div class="gray no-wrap">{{ direction.endTime | formatDate }}</div>
+								</div>
+							</app-route-display>
+						}
 					}
-					@if ($index === $count - 1) {
-						<app-route-display [colorAbove]="getRouteColor($index)" [colorBelow]="undefined" [isStation]="true" [icons]="[]">
-							<div class="row center">
-								<app-data-list-entry class="spacing" [icons]="[]" [title]="[getStationName(direction.endStation), '']" [subtitles]="[[getPlatformName(direction.endPlatformName), '']]" [useLightColor]="false" [clickable]="false"/>
-								<div class="gray no-wrap">{{ direction.endTime | formatDate }}</div>
-							</div>
-						</app-route-display>
-					}
+
+				@if (usePathfinder()) {
+					<small>{{ 'copyright.pathfinder' | transloco }}</small>
 				}
-			</div>
+				</div>
+			}
 		}
 	}
 </div>
