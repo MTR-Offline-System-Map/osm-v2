@@ -10,7 +10,7 @@
 		"lint": "ng lint",
 		"update-all": "npx npm-check-updates -u && npm install --force",
 		"prod": "ng build --configuration=production",
-		"preprod": "crowdin download",
+		"upload-translations": "crowdin upload source",
 		"download-translations": "crowdin download"
 	},
 	"private": true,

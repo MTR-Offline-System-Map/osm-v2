@@ -1,0 +1,131 @@
+{
+  "app": {
+    "title": "交通线路图",
+    "offline": "请以实际情况为准。",
+    "details": {
+      "station": "车站详情",
+      "player": "玩家",
+      "route": "路线详情",
+      "depot": "车厂详情"
+    },
+    "menu": "菜单",
+    "id": "ID",
+    "copy_id": "复制 ID",
+    "location": "位置",
+    "copy_location": "复制位置",
+    "focus_on_map": "在图上聚焦",
+    "view_on_world_map": "在地图上查看",
+    "start": "起点",
+    "end": "终点",
+    "stations": "车站",
+    "routes": "路线",
+    "players": "玩家",
+    "clients": "玩家",
+    "depots": "车厂",
+    "show_details": "显示详情",
+    "show_platforms": "显示站台",
+    "untitled": "(未命名)",
+    "none": "(无)",
+    "platform": "站台"
+  },
+  "main": {
+    "search": "搜索",
+    "dimension": "维度",
+    "time_or_data_source": "时间或数据源",
+    "directions_engine": "导航引擎",
+    "language": "语言",
+    "directions": "导航",
+    "show_hidden_routes": "显示隐藏路线",
+    "show_empty_routes": "显示空路线",
+    "show_all_stations": "显示全部车站",
+    "show_depots": "显示车厂",
+    "no_players": "无玩家在线。",
+    "interchange_style": "出站换乘样式",
+    "font_style": "字体样式",
+    "advanced_settings": "高级设置",
+    "auto_detect_bus_routes": "自动探测巴士线路",
+    "developer_mode": "开发者模式"
+  },
+  "directions": {
+    "title": "导航",
+    "swap_stations": "互换",
+    "refresh_directions": "刷新",
+    "walking": "越野",
+    "maximum_walking_distance": "最大步行距离 (m)",
+    "ignored_routes": "忽略路线",
+    "avoid_stations": "避开车站",
+    "only_lrt": "仅限轻轨",
+    "no_hsr": "不乘高铁",
+    "no_boats": "不乘船",
+    "in_theory": "理论",
+    "no_directions_found": "未找到路线。",
+    "intermediate_station": " 个中间站"
+  },
+  "station": {
+    "fare_zones": "付费区",
+    "connections": "出站换乘",
+    "arrivals": {
+      "title": "实时",
+      "show_terminating": "显示终到列车",
+      "every_8_seconds": "每 8 秒",
+      "arrived": "已到达",
+      "dialog": {
+        "title": "列车详情",
+        "departure_index": "车次号",
+        "car_vehicle": " 车厢列车",
+        "close": "关闭"
+      }
+    }
+  },
+  "route": {
+    "copy_route_key": "复制路线标签",
+    "hidden_route": "隐藏路线",
+    "hidden_info": "请确认此路线已开通。",
+    "variation": "路线方向",
+    "total_duration": "总时长",
+    "depots_for_route": "路线车厂",
+    "show_travel_times": "显示行驶时间",
+    "show_dwell_times": "显示停靠时间",
+    "dwell_time": "停靠时间",
+    "travel_time": "行驶时间"
+  },
+  "deviation": {
+    "delay": "晚点",
+    "early": "早点",
+    "scheduled": "正点"
+  },
+  "route_type": {
+    "train_normal": "重轨",
+    "train_light_rail": "轻轨",
+    "train_high_speed": "高速铁路",
+    "boat_normal": "轮渡",
+    "boat_light_rail": "邮轮",
+    "boat_high_speed": "快船",
+    "cable_car_normal": "缆车",
+    "bus_normal": "巴士",
+    "bus_light_rail": "迷你巴士",
+    "bus_high_speed": "快速巴士",
+    "airplane_normal": "飞机"
+  },
+  "line_style": {
+    "hidden": "隐藏",
+    "solid": "实线",
+    "dotted": "虚线",
+    "hollow": "空心线",
+    "dashed": "虚线"
+  },
+  "font_style": {
+    "sans_serif": "无衬线",
+    "serif": "衬线"
+  },
+  "theme": {
+    "title": "主题",
+    "light": "浅色",
+    "system": "跟随系统",
+    "dark": "深色"
+  },
+  "copyright": {
+    "pathfinder": "由 CokeStudios 开发的 MTR Pathfinder 生成。",
+    "osm": "由 GTEH 基于 Transport-Simulation-Core 中的交通线路图制作。"
+  }
+}

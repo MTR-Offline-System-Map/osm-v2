@@ -6,7 +6,7 @@
 
 "files": [
   {
-    "source": "/public/i18n/en-US.json",
-    "translation": "/public/i18n/%locale%.json"
+    "source": "/public/assets/i18n/en-US.json",
+    "translation": "/public/assets/i18n/%locale%.json"
   },
 ]
