@@ -62,7 +62,7 @@ export class StationService extends SelectableDataServiceBase<{ currentTime: num
 			SimplifyRoutesPipe.sortRoutes(newRoutes);
 			let arrivalsRoutes: { key: string, name: string, number: string, color: number, textLineCount: number, typeIcon: string }[] = this.arrivalsRoutes();
 
-			if (JSON.stringify(newRoutes) !== JSON.stringify(this.arrivalsRoutes)) {
+			if (JSON.stringify(newRoutes) !== JSON.stringify(this.arrivalsRoutes())) {
 				arrivalsRoutes = [];
 				newRoutes.forEach(route => arrivalsRoutes.push(route));
 			}

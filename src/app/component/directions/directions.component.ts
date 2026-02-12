@@ -22,7 +22,6 @@ import {TooltipModule} from "primeng/tooltip";
 import {DividerModule} from "primeng/divider";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {InputNumberModule} from "primeng/inputnumber";
-import {SearchData} from "../../entity/searchData";
 import {Station} from "../../entity/station";
 import {ClientsService} from "../../service/clients.service";
 import {FontStyleService} from "../../service/font-style.service";

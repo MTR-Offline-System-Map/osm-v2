@@ -9,7 +9,6 @@ export abstract class DataServiceBase<T> {
 	private id = "";
 	private timeoutId = 0;
 
-	public readonly isLoading = () => this.loading;
 	protected readonly getUrl = (endpoint: string) => environment.dataUrl(endpoint, this.dimensionService.getDimensionIndex());
 	protected readonly fetchData = (id: string) => {
 		if ((!this.dimensionService.isOffline() || !this.mustOnline) && (!this.dimensionService.includeMarkers() || !this.needMarkers)) {

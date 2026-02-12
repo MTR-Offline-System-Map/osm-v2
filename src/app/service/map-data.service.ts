@@ -453,7 +453,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	private convertToBusType(name: string, type: string) {
-		if (environment.enableAutoDetectBusRoutes && name.toLowerCase().includes("bus")) {
+		if (environment.enableAutoDetectBusRoutes && (name.toLowerCase().includes("bus") || name.includes("公交") || name.includes("巴士"))) {
 			this.hasBusRoutes.set(true);
 			if (this.autoDetectBusRoutes()) {
 				return "bus_normal";
