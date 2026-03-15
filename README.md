@@ -24,4 +24,4 @@ Languages: English, 简体中文 (Simplified Chinese)
 
 ## Localization
 
-You can provide more language support for this project through [Crowdin](//crowdin. com/project/osm-v2).
+You can provide more language support for this project through [Crowdin](//crowdin.com/project/osm-v2).
