@@ -27,35 +27,35 @@
 			<div class="column gap-small">
 				@for (routeType of routeTypes; track $index) {
 					<div class="row gap center">
-						<div class="material-icons">{{ routeType[1].icon }}</div>
+						<div class="material-icons" translate="no">{{ routeType[1].icon }}</div>
 						<div class="shrink spacing">{{ routeType[1].text | transloco }}</div>
 						<app-visibility-toggle [routeType]="routeType[0]"/>
 					</div>
 				}
 				@if (getEnableShowHiddenRoutes()) {
 					<div class="row gap center toggle">
-						<div class="material-icons">visibility_off</div>
+						<div class="material-icons" translate="no">visibility_off</div>
 						<div class="shrink spacing">{{ 'main.show_hidden_routes' | transloco }}</div>
 						<p-toggle-switch inputId="showHiddenRoutesToggle" formControlName="showHiddenRoutesToggle" (onChange)="setShowHiddenRoutes($event.checked)"/>
 					</div>
 				}
 				@if (getEnableShowEmptyRoutes()) {
 					<div class="row gap center toggle">
-						<div class="material-icons">insert_drive_file</div>
+						<div class="material-icons" translate="no">insert_drive_file</div>
 						<div class="shrink spacing">{{ 'main.show_empty_routes' | transloco }}</div>
 						<p-toggle-switch inputId="showEmptyRoutesToggle" formControlName="showEmptyRoutesToggle" (onChange)="setShowEmptyRoutes($event.checked)"/>
 					</div>
 				}
 				@if (getEnableShowAllStations()) {
 					<div class="row gap center toggle">
-						<div class="material-icons">visibility_off</div>
+						<div class="material-icons" translate="no">visibility_off</div>
 						<div class="shrink spacing">{{ 'main.show_all_stations' | transloco }}</div>
 						<p-toggle-switch inputId="showAllStationsToggle" formControlName="showAllStationsToggle" (onChange)="setShowAllStations($event.checked)"/>
 					</div>
 				}
 				@if (getEnableShowDepots()) {
 					<div class="row gap center toggle">
-						<div class="material-icons">home</div>
+						<div class="material-icons" translate="no">home</div>
 						<div class="shrink spacing">{{ 'main.show_depots' | transloco}}</div>
 						<p-toggle-switch inputId="showDepots" formControlName="showDepots" (onChange)="setShowDepots($event.checked)"/>
 					</div>
@@ -91,12 +91,12 @@
 			<p-divider/>
 			<div class="column gap-small">
 				<div class="row gap center">
-					<div class="material-icons">palette</div>
+					<div class="material-icons" translate="no">palette</div>
 					<div class="shrink spacing">{{ 'theme.title' | transloco }}</div>
 					<app-theme-toggle/>
 				</div>
 				<div class="row gap center">
-					<div class="material-icons">text_format</div>
+					<div class="material-icons" translate="no">text_format</div>
 					<div class="shrink spacing">{{ 'main.font_style' | transloco }}</div>
 					<app-font-style-toggle/>
 				</div>

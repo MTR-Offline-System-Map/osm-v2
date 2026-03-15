@@ -6,7 +6,7 @@
 					<app-search [label]="'app.start' | transloco" [parentFormGroup]="formGroup" childFormControlName="startInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, true)" (clientClicked)="onClickClient($event, true)" (textCleared)="onClearInput(true)"/>
 				</div>
 				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="swapStations()" [disabled]="cannotSwap()" [pTooltip]="'directions.swap_stations' | transloco">
-					<div class="material-icons">swap_vert</div>
+					<div class="material-icons" translate="no">swap_vert</div>
 				</button>
 			</div>
 			<div class="row gap-small center">
@@ -14,7 +14,7 @@
 					<app-search [label]="'app.end' | transloco" [parentFormGroup]="formGroup" childFormControlName="endInput" [includeStations]="true" [includeRoutes]="false" [includeDepots]="!usePathfinder()" [includeClients]="true" (stationClicked)="onClickStation($event, false)" (clientClicked)="onClickClient($event, false)" (textCleared)="onClearInput(false)"/>
 				</div>
 				<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="refreshDirections()" [disabled]="cannotManuallyRefresh()" [pTooltip]="'directions.refresh_directions' | transloco">
-					<div class="material-icons">refresh</div>
+					<div class="material-icons" translate="no">refresh</div>
 				</button>
 			</div>
 		</div>
@@ -82,7 +82,7 @@
 								<div class="row center">
 									<app-data-list-entry class="spacing" [icons]="[getCircularIcon(direction.route)]" [title]="[getRouteName(direction.route), '']" [subtitles]="[[getRouteDestination(direction.route), '']]" [useLightColor]="true" [clickable]="false"/>
 									<div class="row center gray">
-										<div class="material-icons">schedule</div>
+										<div class="material-icons" translate="no">schedule</div>
 										<div>&nbsp;{{ getDuration(direction) }}</div>
 									</div>
 								</div>
@@ -90,7 +90,7 @@
 								<div class="row center">
 									<app-data-list-entry class="spacing" [icons]="[]" [title]="[getDistanceLabel(direction), '']" [subtitles]="[]" [useLightColor]="true" [clickable]="false"/>
 									<div class="row center gray">
-										<div class="material-icons">schedule</div>
+										<div class="material-icons" translate="no">schedule</div>
 										<div>&nbsp;{{ getDuration(direction) }}</div>
 									</div>
 								</div>

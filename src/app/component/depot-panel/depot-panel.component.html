@@ -8,14 +8,14 @@
             </div>
             <div class="row center">
                 <button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyLocation(icon)" [pTooltip]="'app.copy_location' | transloco" tooltipPosition="bottom">
-                    <div class="material-icons" #icon>content_copy</div>
+                    <div class="material-icons" translate="no" #icon>content_copy</div>
                 </button>
                 <button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" [pTooltip]="'app.focus_on_map' | transloco" tooltipPosition="bottom">
-                    <div class="material-icons">filter_center_focus</div>
+                    <div class="material-icons" translate="no">filter_center_focus</div>
                 </button>
                 @if (getEnableViewOnWorldMap()) {
                     <button pButton class="icon-button" [rounded]="true" [text]="true" (click)="viewOnWorldMap()" [pTooltip]="'app.view_on_world_map' | transloco" tooltipPosition="bottom">
-                        <div class="material-icons">map</div>
+                        <div class="material-icons" translate="no">map</div>
                     </button>
                 }
             </div>

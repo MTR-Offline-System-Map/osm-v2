@@ -1,5 +1,5 @@
 <p-select-button [ngModel]="getVisibility()" [options]="visibilityOptions" (onChange)="setVisibility($event)" [allowEmpty]="false">
 	<ng-template #item let-item>
-		<div class="material-icons" [pTooltip]="item.tooltip | transloco" tooltipPosition="bottom">{{ item.icon }}</div>
+		<div class="material-icons" translate="no" [pTooltip]="item.tooltip | transloco" tooltipPosition="bottom">{{ item.icon }}</div>
 	</ng-template>
 </p-select-button>

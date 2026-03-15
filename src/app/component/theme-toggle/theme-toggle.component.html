@@ -1,5 +1,5 @@
 <p-select-button [options]="themeOptions" [ngModel]="getTheme()" (onChange)="setTheme($event)" [allowEmpty]="false">
     <ng-template #item let-item>
-        <div class="material-icons" [pTooltip]="item.tooltip | transloco" tooltipPosition="top">{{ item.icon }}</div>
+        <div class="material-icons" translate="no" [pTooltip]="item.tooltip | transloco" tooltipPosition="top">{{ item.icon }}</div>
     </ng-template>
 </p-select-button>

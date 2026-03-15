@@ -4,15 +4,15 @@
 		@if (getDeveloperMode()) {
 			<div class="row gap-small center">
 				<div class="row gap center" [pTooltip]="'app.id' | transloco" tooltipPosition="left">
-					<div class="material-icons">code</div>
+					<div class="material-icons" translate="no">code</div>
 					<div>{{ getRouteID() }}</div>
 				</div>
 				<div class="row center">
 					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyRouteID(id_icon)" [pTooltip]="'app.copy_id' | transloco" tooltipPosition="bottom">
-						<div class="material-icons" #id_icon>content_copy</div>
+						<div class="material-icons" translate="no" #id_icon>content_copy</div>
 					</button>
 					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="copyRouteKey(key_icon)" [pTooltip]="'route.copy_route_key' | transloco" tooltipPosition="bottom">
-						<div class="material-icons" #key_icon>copy_all</div>
+						<div class="material-icons" translate="no" #key_icon>copy_all</div>
 					</button>
 				</div>
 			</div>
@@ -20,7 +20,7 @@
 		@if (getRouteHidden()) {
 			<div class="row gap center">
 				<div class="row gap center" [pTooltip]="'route.hidden_route' | transloco" tooltipPosition="left">
-					<div class="material-icons">visibility_off</div>
+					<div class="material-icons" translate="no">visibility_off</div>
 					<div>{{ 'route.hidden_info' | transloco }}</div>
 				</div>
 			</div>
@@ -34,7 +34,7 @@
 		@if (getTotalDurationSeconds(); as totalDurationSeconds) {
 			<div class="row gap center">
 				<div class="row gap center" [pTooltip]="'route.total_duration' | transloco" tooltipPosition="left">
-					<div class="material-icons">schedule</div>
+					<div class="material-icons" translate="no">schedule</div>
 					<div>{{ totalDurationSeconds | formatTime : "" }}</div>
 				</div>
 			</div>
@@ -42,7 +42,7 @@
 		@if (!getEnableRouteDepotsDetails()) {
 			<div class="row gap center">
 				<div class="row gap center" [pTooltip]="'route.depots_for_route' | transloco" tooltipPosition="left">
-					<div class="material-icons">home</div>
+					<div class="material-icons" translate="no">home</div>
 					@if (getRouteDepots().length === 0) {
 						<div>{{ 'app.none' | transloco }}</div>
 					} @else {
@@ -90,7 +90,7 @@
 										<app-data-list-entry class="spacing" [icons]="[]" [title]="[stationDetails.name | formatName, '']" [subtitles]="showPlatformsCheckbox.checked ? [[getPlatformName(stationDetails.platform), '']] : []" [useLightColor]="false" [clickable]="true" (entryClicked)="stationClicked.emit(stationDetails.id)"/>
 										@if (showDwellTimesCheckbox.checked && stationDetails.dwellTimeSeconds && isOnline()) {
 											<div class="row center duration" [pTooltip]="'route.dwell_time' | transloco">
-												<div class="material-icons">hourglass_empty</div>
+												<div class="material-icons" translate="no">hourglass_empty</div>
 												<div>&nbsp;{{ stationDetails.dwellTimeSeconds | formatTime :"" }}</div>
 											</div>
 										}
@@ -101,7 +101,7 @@
 										<div class="row">
 											<div class="spacing"></div>
 											<div class="row center duration" [pTooltip]="'route.travel_time' | transloco">
-												<div class="material-icons">{{ getRouteIcon() }}</div>
+												<div class="material-icons" translate="no">{{ getRouteIcon() }}</div>
 												<div>&nbsp;{{ stationDetails.durationSeconds | formatTime :"" }}</div>
 											</div>
 										</div>

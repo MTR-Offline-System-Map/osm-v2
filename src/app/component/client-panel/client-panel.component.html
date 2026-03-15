@@ -8,11 +8,11 @@
 		</div>
 		<div class="row gap-small center">
 			<div class="row gap center" [pTooltip]="'app.location' | transloco" tooltipPosition="left">
-				<div class="material-icons">my_location</div>
+				<div class="material-icons" translate="no">my_location</div>
 				<div>({{ getCoordinatesText() }})</div>
 			</div>
 			<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="focus()" [pTooltip]="'app.focus_on_map' | transloco" tooltipPosition="bottom">
-				<div class="material-icons">filter_center_focus</div>
+				<div class="material-icons" translate="no">filter_center_focus</div>
 			</button>
 		</div>
 		<div class="row center" [style.display]="usePathfinder() ? 'none' : ''">
