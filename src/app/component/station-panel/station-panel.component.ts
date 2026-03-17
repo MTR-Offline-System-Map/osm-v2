@@ -21,6 +21,7 @@ import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {DimensionService} from "../../service/dimension.service";
 import {FontStyleService} from "../../service/font-style.service";
 import {TranslocoPipe} from "@jsverse/transloco";
+import {VehiclesService} from "../../service/vehicles.service";
 import {ConfigService} from "../../service/config.service";
 
 @Component({
@@ -86,7 +87,7 @@ export class StationPanelComponent {
 	}
 
 	usePathfinder() {
-		return this.dataService.directionsEngine() === "pathfinder";
+		return this.dataService.getDirectionsEngine() === "pathfinder";
 	}
 
 	getConnections(): Station[] {
@@ -213,5 +214,10 @@ export class StationPanelComponent {
 
 	getDeveloperMode() {
 		return this.dataService.developerMode();
+	}
+
+	getVehicle(car: string) {
+		const vehicle = this.vehiclesService.getVehicle(car);
+		return vehicle ? {...vehicle, subtitle: car, icon: this.vehiclesService.getVehicleIcon(vehicle.transportMode)} : {name: car, color: undefined, subtitle: "", icon: ""};
 	}
 }
