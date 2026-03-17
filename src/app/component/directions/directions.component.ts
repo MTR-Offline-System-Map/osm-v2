@@ -63,6 +63,7 @@ export class DirectionsComponent {
 	private readonly fontStyleService = inject(FontStyleService);
 	protected ignoredRoutes: string[] = [];
 	protected avoidStations: string[] = [];
+	protected mode: "DEFAULT" | "IN_THEORY" | "REALTIME" = "DEFAULT";
 
 	protected readonly formGroup = new FormGroup({
 		startInput: new FormControl<{ key: string, value: {icons: string[], color?: number, name: string, number: string, type: "station" | "route" | "client" | "depot"} } | undefined>(undefined),
@@ -74,7 +75,7 @@ export class DirectionsComponent {
 		onlyLightRail: new FormControl<boolean>(false),
 		noHSR: new FormControl<boolean>(false),
 		noBoats: new FormControl<boolean>(false),
-		inTheory: new FormControl<boolean>(false),
+		includeHiddenRoutes: new FormControl<boolean>(false),
 	});
 	private directionsCache = signal<{
 		startStation?: Station,
@@ -114,7 +115,7 @@ export class DirectionsComponent {
 	}
 
 	usePathfinder() {
-		return this.mapDataService.directionsEngine() === "pathfinder";
+		return this.mapDataService.getDirectionsEngine() === "pathfinder";
 	}
 
 	onClickStation(stationId: string | undefined, isStartStation: boolean) {
@@ -212,6 +213,19 @@ export class DirectionsComponent {
 		return this.isLoading() || this.canAutomaticallyRefresh() || !this.isValid();
 	}
 
+	pathfinderModeChange(button: boolean, value: boolean) {
+		if (value) {
+			if (button) {
+				this.mode = "IN_THEORY";
+			} else {
+				this.mode = "REALTIME";
+			}
+		} else {
+			this.mode = "DEFAULT"
+		}
+		this.checkStatus();
+	}
+
 	getStationName(station?: Station) {
 		return station ? this.formatNamePipe.transform(station.name) : this.translocoService.translate("app.untitled");
 	}
@@ -289,7 +303,7 @@ export class DirectionsComponent {
 			const endDepot = data.endInput?.value?.type === "depot" ? this.mapDataService.depots().find(depot => depot.id === data.endInput?.key) : undefined;
 
 			if ((startStation || startClientId || startDepot) && (endStation || endClientId || endDepot)) {
-				this.directionsService.selectData(startStation, endStation, startClientId, endClientId, startDepot, endDepot, data.maxWalkingDistance!, data.enableWalking!, this.ignoredRoutes, this.avoidStations, data.onlyLightRail!, data.noHSR!, data.noBoats!, (data.inTheory! && this.mapDataService.showHiddenRoutes()));
+				this.directionsService.selectData(startStation, endStation, startClientId, endClientId, startDepot, endDepot, data.maxWalkingDistance!, data.enableWalking!, this.ignoredRoutes, this.avoidStations, data.onlyLightRail!, data.noHSR!, data.noBoats!, this.mode!, (data.includeHiddenRoutes! && this.mapDataService.showHiddenRoutes()));
 				this.forceRefresh = true;
 			} else {
 				this.formGroup.patchValue({startInput: undefined, endInput: undefined});

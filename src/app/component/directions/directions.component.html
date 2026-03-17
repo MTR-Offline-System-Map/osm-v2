@@ -36,18 +36,24 @@
 			<p-divider/>
 			<div class="column gap-small spacing">
 				<div class="row gap-small center">
-						<p-check-box (onChange)="checkStatus()" inputId="only-lrt" formControlName="onlyLightRail" [binary]="true"/>
-						<label for="only-lrt">{{ 'directions.only_lrt' | transloco }}</label>
-						<p-check-box (onChange)="checkStatus()" inputId="no-hsr" formControlName="noHSR" [binary]="true"/>
-						<label for="no-hsr">{{ 'directions.no_hsr' | transloco }}</label>
+					<p-check-box (onChange)="checkStatus()" inputId="only-lrt" formControlName="onlyLightRail" [binary]="true"/>
+					<label for="only-lrt">{{ 'directions.only_lrt' | transloco }}</label>
+					@if (getShowHiddenRoutes()) {
+						<p-check-box (onChange)="checkStatus()" inputId="include-hidden-routes" formControlName="includeHiddenRoutes" [binary]="true"/>
+						<label for="include-hidden-routes">{{ 'directions.include_hidden_routes' | transloco }}</label>
+					}
 				</div>
 				<div class="row gap-small center">
-						<p-check-box (onChange)="checkStatus()" inputId="no-boats" formControlName="noBoats" [binary]="true"/>
-						<label for="no-boats">{{ 'directions.no_boats' | transloco }}</label>
-						@if (getShowHiddenRoutes()) {
-							<p-check-box (onChange)="checkStatus()" inputId="in-theory" formControlName="inTheory" [binary]="true"/>
-							<label for="in-theory">{{ 'directions.in_theory' | transloco }}</label>
-						}
+					<p-check-box (onChange)="checkStatus()" inputId="no-hsr" formControlName="noHSR" [binary]="true"/>
+					<label for="no-hsr">{{ 'directions.no_hsr' | transloco }}</label>
+					<p-check-box (onChange)="checkStatus()" inputId="no-boats" formControlName="noBoats" [binary]="true"/>
+					<label for="no-boats">{{ 'directions.no_boats' | transloco }}</label>
+				</div>
+				<div class="row gap-small center">
+					<p-check-box (onChange)="pathfinderModeChange(true, $event.checked)" inputId="in-theory" [binary]="true" [disabled]="mode === 'REALTIME'"/>
+					<label for="in-theory">{{ 'directions.in_theory' | transloco }}</label>
+					<p-check-box (onChange)="pathfinderModeChange(false, $event.checked)" inputId="realtime" [binary]="true" [disabled]="mode === 'IN_THEORY'"/>
+					<label for="realtime">{{ 'directions.realtime' | transloco }}</label>
 				</div>
 			</div>
 		}

@@ -61,10 +61,11 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 				onlyLightRail,
 				noHSR,
 				noBoats,
-				inTheory,
+				mode,
+				includeHiddenRoutes,
 			} = JSON.parse(selectedData);
 			return (startStationId || startClientId || startDepotId) && (endStationId || endClientId || endDepotId) ? {
-				directionsRequest: mapDataService.directionsEngine() === "pathfinder" ? {
+				directionsRequest: mapDataService.getDirectionsEngine() === "pathfinder" ? {
 					startStationId,
 					endStationId,
 					ignoredLines,
@@ -74,7 +75,8 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 					onlyLightRail,
 					noHSR,
 					noBoats,
-					inTheory,
+					mode,
+					includeHiddenRoutes,
 					startTime: 0,
 				} : {
 					startPositionX: startClientId ? undefined : startPositionX,
@@ -180,7 +182,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 		}, REFRESH_INTERVAL, dimensionService);
 	}
 
-	public selectData(startStation: Station | undefined, endStation: Station | undefined, startClientId: string | undefined, endClientId: string | undefined, startDepot: Depot | undefined, endDepot: Depot | undefined, maxWalkingDistance: number, enableWalkingWild: boolean, ignoredLines: string[], avoidStations: string[], onlyLightRail?: boolean, noHSR?: boolean, noBoats?: boolean, inTheory?: boolean) {
+	public selectData(startStation: Station | undefined, endStation: Station | undefined, startClientId: string | undefined, endClientId: string | undefined, startDepot: Depot | undefined, endDepot: Depot | undefined, maxWalkingDistance: number, enableWalkingWild: boolean, ignoredLines: string[], avoidStations: string[], onlyLightRail?: boolean, noHSR?: boolean, noBoats?: boolean, mode?: "DEFAULT" | "IN_THEORY" | "REALTIME", includeHiddenRoutes?: boolean) {
 		const key = JSON.stringify({
 			startStationId: startStation?.id,
 			endStationId: endStation?.id,
@@ -201,7 +203,8 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 			onlyLightRail,
 			noHSR,
 			noBoats,
-			inTheory,
+			mode,
+			includeHiddenRoutes,
 		});
 		this.select(key);
 		this.fetchData(key);
