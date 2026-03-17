@@ -70,10 +70,11 @@ export class SearchComponent {
 		if (event.query === "") {
 			this.textCleared.emit();
 		} else {
-			const filter = (list: SearchData[]): { value: { key: string, icons: string[], color?: number, name: string, number: string, type: "station" | "route" | "client" | "depot" } }[] => {
+			const filter = (list: SearchData[], searchKey: boolean): { value: { key: string, icons: string[], color?: number, name: string, number: string, type: "station" | "route" | "client" | "depot" } }[] => {
 				const matches: { value: SearchData, index: number }[] = [];
-				list.forEach(({key, icons, color, name, number, type}) => {
-					const index = name.toLowerCase().indexOf(event.query.toLowerCase());
+				list.forEach(({id, key, icons, color, name, number, type}) => {
+					const query = event.query.toLowerCase();
+					const index = Math.max(name.toLowerCase().indexOf(query), number.toLowerCase().indexOf(query), searchKey ? key.toLowerCase().indexOf(query) : -1, (!searchKey && id) ? id.toString().toLowerCase().indexOf(query) : -1);
 					if (index >= 0) {
 						matches.push({value: {key, icons, color, name, number, type}, index});
 					}
@@ -85,10 +86,10 @@ export class SearchComponent {
 				return result.slice(0, maxResults);
 			};
 
-			const searchedStations = filter(this.includeStations ? this.simplifyStationsPipe.transform(this.dataService.stations()) : []);
-			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes()) : []);
+			const searchedStations = filter(this.includeStations ? this.simplifyStationsPipe.transform(this.dataService.stations()) : [], true);
+			const searchedRoutes = filter(this.includeRoutes ? this.simplifyRoutesPipe.transform(this.dataService.routes()) : [], false);
 			const searchedClients = filter(this.includeClients && !this.dimensionService.isOffline() ? this.clientsService.allClients().map(client => ({key: client.id, icons: [this.configService.getAvatarUrl(client.name, client.id)], name: client.name, number: "", type: "client"})) : [], true);
-			const searchedDepots = filter(this.includeDepots ? this.simplifyDepotsPipe.transform(this.dataService.depots()) : []);
+			const searchedDepots = filter(this.includeDepots ? this.simplifyDepotsPipe.transform(this.dataService.depots()) : [], true);
 
 			if (searchedStations.length > 0) {
 				this.data.push({

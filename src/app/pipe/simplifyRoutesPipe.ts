@@ -2,6 +2,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 import {ROUTE_TYPES} from "../data/routeType";
 import {Route} from "../entity/route";
 import {SearchData} from "../entity/searchData";
+import {setIfUndefined} from "../data/utilities";
 
 @Pipe({
 	name: "simplifyRoutes",
@@ -15,9 +16,14 @@ export class SimplifyRoutesPipe implements PipeTransform {
 		const newRoutes: Record<string, SearchData> = {};
 		routes.forEach(route => {
 			const key = SimplifyRoutesPipe.getRouteKey(route);
-			newRoutes[key] = {key, icons: [ROUTE_TYPES[route.type].icon, route.hidden ? "visibility_off" : ""], color: route.color, name: route.name.split("||")[0], number: route.number, type: "route"};
+			setIfUndefined(newRoutes, key, () => SimplifyRoutesPipe.getSearchData(route, key));
+			newRoutes[key].id!.push(route.id);
 		});
 		return Object.values(newRoutes);
+	}
+
+	public static getSearchData(route: Route, key: string): SearchData {
+		return {id: [], key, icons: [ROUTE_TYPES[route.type].icon, route.hidden ? "visibility_off" : ""], color: route.color, name: route.name.split("||")[0], number: route.number, type: "route"};
 	}
 
 	public static getRouteKey(route: { color: number, name: string, number: string }) {

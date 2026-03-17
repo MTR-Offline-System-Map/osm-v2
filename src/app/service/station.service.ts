@@ -66,7 +66,11 @@ export class StationService extends SelectableDataServiceBase<{ currentTime: num
 
 			if (JSON.stringify(newRoutes) !== JSON.stringify(this.arrivalsRoutes())) {
 				arrivalsRoutes = [];
-				newRoutes.forEach(route => arrivalsRoutes.push(route));
+				newRoutes.forEach(route => {
+					if (this.dataService.showHiddenRoutes() || (this.dataService.routes().some(route2 => route2.name.startsWith(route.name) && !route2.hidden))) {
+						arrivalsRoutes.push(route);
+					}
+				});
 			}
 
 			this.arrivalsRoutes.set(arrivalsRoutes);
@@ -119,9 +123,10 @@ export class StationService extends SelectableDataServiceBase<{ currentTime: num
 	}
 
 	public getArrivals() {
+		const arrivalRouteIds = this.arrivalsRoutes().map(route => route.key);
 		const newArrivals: Arrival[] = [];
 		this.arrivals().forEach(arrival => {
-			if (newArrivals.length < 10 && (arrival.isContinuous || arrival.departureTime() >= 0) && (this.filterArrivalRoutes.length === 0 || this.filterArrivalRoutes.includes(arrival.key)) && (this.filterArrivalShowTerminating || !arrival.isTerminating)) {
+			if (arrivalRouteIds.includes(arrival.key) && newArrivals.length < 10 && (arrival.isContinuous || arrival.departureTime() >= 0) && (this.filterArrivalRoutes.length === 0 || this.filterArrivalRoutes.includes(arrival.key)) && (this.filterArrivalShowTerminating || !arrival.isTerminating)) {
 				newArrivals.push(arrival);
 			}
 		});
