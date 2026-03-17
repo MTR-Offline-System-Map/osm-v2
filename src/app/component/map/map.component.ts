@@ -64,7 +64,7 @@ export class MapComponent implements AfterViewInit {
 	@ViewChild("canvas") private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
 	@ViewChild("stats") private readonly statsRef!: ElementRef<HTMLDivElement>;
 	readonly clientGroupsOnRoute: {
-		clients: { id: string, name: string }[],
+		clients: { id: string, name: string, afk: boolean }[],
 		clientImagePadding: number,
 		x: number,
 		y: number,
@@ -76,7 +76,7 @@ export class MapComponent implements AfterViewInit {
 	private clientPositions: Record<string, { x: number, y: number }> = {};
 
 	private readonly clientGroupsOnRouteRaw: {
-		clients: { id: string, name: string }[],
+		clients: { id: string, name: string, afk: boolean }[],
 		x: number,
 		y: number,
 	}[] = [];
@@ -299,7 +299,7 @@ export class MapComponent implements AfterViewInit {
 			return shape;
 		};
 
-		const processShape = (x: number, y: number, radius: number, newWidth: number, newHeight: number, newRotate: boolean, offset: number, color: number, solidLine: boolean=true) => {
+		const processShape = (x: number, y: number, radius: number, newWidth: number, newHeight: number, newRotate: boolean, offset: number, color: number, solidLine=true) => {
 			const shapePoints = createShape(radius, newWidth, newHeight).getPoints(2);
 			if (solidLine) {
 				for (let i = 1; i < shapePoints.length; i++) {
@@ -678,7 +678,7 @@ export class MapComponent implements AfterViewInit {
 				const canvasX = (rawX - this.camera.position.x) * this.camera.zoom;
 				const canvasY = (rawZ + this.camera.position.y) * this.camera.zoom;
 				this.clientGroupsOnRoute.push({
-					clients: [{id, name}],
+					clients: [{id, name, afk}],
 					clientImagePadding: clientImagePadding * SETTINGS.scale,
 					x: canvasX + halfCanvasWidth,
 					y: canvasY + halfCanvasHeight - clientImageSize * SETTINGS.scale / 2,
@@ -766,7 +766,7 @@ class TextLabel {
 	public readonly text: string = "";
 	public readonly icons: string[] = [];
 	public readonly shouldRenderText: boolean = false;
-	public readonly clients?: { id: string, name: string }[];
+	public readonly clients?: { id: string, name: string, afk: boolean }[];
 	public readonly clientImagePadding: number = 0;
 	public readonly x: number = 0;
 	public readonly y: number = 0;

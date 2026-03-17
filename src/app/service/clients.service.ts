@@ -13,12 +13,13 @@ const REFRESH_INTERVAL = 3000;
 
 @Injectable({providedIn: "root"})
 export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
-	public readonly allClients = signal<{ id: string, name: string, rawX: number, rawZ: number }[]>([]);
-	public readonly allClientsNotInStationOrRoute = signal<{ id: string, name: string, rawX: number, rawZ: number }[]>([]);
+	public readonly allClients = signal<{ id: string, name: string, afk: boolean, rawX: number, rawZ: number }[]>([]);
+	public readonly allClientsNotInStationOrRoute = signal<{ id: string, name: string, afk: boolean, rawX: number, rawZ: number }[]>([]);
 	public readonly clientGroupsForStation = signal<Record<string, {
 		clients: {
 			id: string,
 			name: string,
+			afk: boolean,
 		}[],
 		x: number,
 		z: number,
@@ -31,6 +32,7 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 		clients: {
 			id: string,
 			name: string,
+			afk: boolean
 		}[],
 		x: number,
 		z: number,
@@ -57,11 +59,12 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 
 		super(() => httpClient.get<{ data: ClientsDTO }>(configService.getDataUrl(dimensionService.getDimensionIndex(), dimensionService.getDimensionsLength(), "clients", {})), ({data}) => {
 			const allClients: { id: string, name: string, afk: boolean, rawX: number, rawZ: number }[] = [];
-			const allClientsNotInStationOrRoute: { id: string, name: string, rawX: number, rawZ: number }[] = [];
+			const allClientsNotInStationOrRoute: { id: string, name: string, afk: boolean, rawX: number, rawZ: number }[] = [];
 			const clientGroupsForStation: Record<string, {
 				clients: {
 					id: string,
 					name: string,
+					afk: boolean,
 				}[],
 				x: number,
 				z: number,
@@ -74,6 +77,7 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 				clients: {
 					id: string,
 					name: string,
+					afk: boolean,
 				}[],
 				x: number,
 				z: number,
@@ -93,7 +97,7 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 			}> = {};
 
 			data.clients.forEach(clientDTO => {
-				const client = {id: clientDTO.id, name: clientDTO.name, rawX: clientDTO.x, rawZ: clientDTO.z};
+				const client = {id: clientDTO.id, name: (clientDTO.afk ? "[AFK] " : "") + clientDTO.name, afk: clientDTO.afk, rawX: clientDTO.x, rawZ: clientDTO.z};
 				allClients.push(client);
 
 				const route = clientDTO.routeId ? mapDataService.routes().find(route => route.id === clientDTO.routeId) : undefined;
@@ -129,7 +133,7 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 				}
 
 				clientCache[clientDTO.id] = {
-					name: clientDTO.name,
+					name: (clientDTO.afk ? "[AFK] " : "") + clientDTO.name,
 					rawX: clientDTO.x,
 					rawZ: clientDTO.z,
 					station,
