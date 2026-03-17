@@ -1,3 +1,23 @@
-<p-drawer [header]="title" [modal]="false" [(visible)]="drawerVisible" (onHide)="closed.emit()" [position]="drawerPosition" [style]="drawerStyle" [className]="drawerClass">
-	<ng-content/>
+<p-drawer [modal]="false" [(visible)]="drawerVisible" (onHide)="closed.emit()" [position]="drawerPosition" [style]="drawerMinimized ? drawerStyleMinimized : drawerStyle" [styleClass]="drawerMinimized ? 'minimized-drawer' : ''">
+	<ng-template pTemplate="header">
+		<div class="drawer-header-container">
+			@if (!drawerMinimized) {
+				<span class="p-drawer-title">{{ title }}</span>
+			}
+			<div class="drawer-actions">
+				@if (drawerMinimized) {
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="drawerMinimized = false" [pTooltip]="''" tooltipPosition="bottom">
+						<div class="material-icons" translate="no">open_in_full</div>
+					</button>
+				} @else {
+					<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="drawerMinimized = true" [pTooltip]="''" tooltipPosition="bottom">
+						<div class="material-icons" translate="no">close_fullscreen</div>
+					</button>
+				}
+			</div>
+		</div>
+	</ng-template>
+	@if (!drawerMinimized) {
+		<ng-content/>
+	}
 </p-drawer>

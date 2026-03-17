@@ -1,3 +1,25 @@
+.drawer-header-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	gap: 0.5rem;
+
+	.drawer-actions {
+		display: flex;
+		gap: 0.25rem;
+	}
+}
+
+.minimized-drawer {
+	.p-drawer-header {
+		padding: 0.5rem;
+	}
+	.p-drawer-content {
+		display: none;
+	}
+}
+
 .p-drawer-content {
 	overflow: hidden;
 }
