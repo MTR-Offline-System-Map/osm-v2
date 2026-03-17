@@ -1,10 +1,9 @@
 import * as THREE from "three";
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Output, ViewChild} from "@angular/core";
-import SETTINGS from "../../utility/settings";
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Output, signal, ViewChild} from "@angular/core";
+import {SETTINGS, CONNECTIONS} from "../../utility/settings";
 import {MapDataService} from "../../service/map-data.service";
 import {connectStations, connectWith45} from "../../utility/drawing";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
-import {LineMaterial} from "three/examples/jsm/lines/LineMaterial.js";
 import {LineGeometry} from "three/examples/jsm/lines/LineGeometry.js";
 import {Line2} from "three/examples/jsm/lines/Line2.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
@@ -28,12 +27,6 @@ const arrowSpacing = 80;
 const clientImageSize = 32;
 const clientImagePadding = 5;
 const materialWithVertexColors = new THREE.MeshBasicMaterial({vertexColors: true});
-const lineMaterialStationConnectionThin = new LineMaterial({color: 0xFFFFFF, linewidth: 4 * SETTINGS.scale * devicePixelRatio, vertexColors: true});
-const lineMaterialStationConnectionThick = new LineMaterial({color: 0xFFFFFF, linewidth: 8 * SETTINGS.scale * devicePixelRatio, vertexColors: true});
-const lineMaterialNormal = new LineMaterial({color: 0xFFFFFF, linewidth: 6 * SETTINGS.scale * devicePixelRatio, vertexColors: true});
-const lineMaterialNormalDashed = new LineMaterial({color: 0xFFFFFF, linewidth: 6 * SETTINGS.scale * devicePixelRatio, vertexColors: true, dashed: true});
-const lineMaterialThin = new LineMaterial({color: 0xFFFFFF, linewidth: 3 * SETTINGS.scale * devicePixelRatio, vertexColors: true});
-const lineMaterialThinDashed = new LineMaterial({color: 0xFFFFFF, linewidth: 3 * SETTINGS.scale * devicePixelRatio, vertexColors: true, dashed: true});
 const animationDuration = 2000;
 
 @Component({
@@ -71,6 +64,7 @@ export class MapComponent implements AfterViewInit {
 	}[] = [];
 	readonly textLabels: TextLabel[] = [];
 	readonly clientImageSize = clientImageSize;
+	readonly scale = signal(SETTINGS.scale);
 
 	private timeoutId = 0;
 	private clientPositions: Record<string, { x: number, y: number }> = {};
@@ -124,7 +118,7 @@ export class MapComponent implements AfterViewInit {
 				clearTimeout(this.timeoutId);
 				this.timeoutId = setTimeout(() => {
 					hasUpdate = true;
-					this.createStationBlobs();
+					this.createStationAndDepotsBlobs();
 					this.createStationConnections();
 					this.createLines(() => {
 						lineNormalDashed?.computeLineDistances();
@@ -145,20 +139,20 @@ export class MapComponent implements AfterViewInit {
 			}
 
 			if (hasUpdate) {
-				const {clientWidth, clientHeight} = this.canvas();
-				if (clientWidth !== renderer.domElement.width || clientHeight !== renderer.domElement.height) {
-					renderer.setSize(clientWidth * devicePixelRatio, clientHeight * devicePixelRatio, false);
-					this.camera.left = -clientWidth / 2;
-					this.camera.right = clientWidth / 2;
-					this.camera.top = clientHeight / 2;
-					this.camera.bottom = -clientHeight / 2;
-					(this.camera as unknown as { aspect: number }).aspect = clientWidth / clientHeight;
-					lineMaterialStationConnectionThin.resolution.set(clientWidth, clientHeight);
-					lineMaterialStationConnectionThick.resolution.set(clientWidth, clientHeight);
-					lineMaterialNormal.resolution.set(clientWidth, clientHeight);
-					lineMaterialNormalDashed.resolution.set(clientWidth, clientHeight);
-					lineMaterialThin.resolution.set(clientWidth, clientHeight);
-					lineMaterialThinDashed.resolution.set(clientWidth, clientHeight);
+				const {width, height} = this.canvas().getBoundingClientRect();
+				if (width !== renderer.domElement.width || height !== renderer.domElement.height) {
+					renderer.setSize(width * devicePixelRatio, height * devicePixelRatio, false);
+					this.camera.left = -width / 2;
+					this.camera.right = width / 2;
+					this.camera.top = height / 2;
+					this.camera.bottom = -height / 2;
+					(this.camera as unknown as { aspect: number }).aspect = width / height;
+					CONNECTIONS.lineMaterialStationConnectionThin.resolution.set(width, height);
+					CONNECTIONS.lineMaterialStationConnectionThick.resolution.set(width, height);
+					CONNECTIONS.lineMaterialNormal.resolution.set(width, height);
+					CONNECTIONS.lineMaterialNormalDashed.resolution.set(width, height);
+					CONNECTIONS.lineMaterialThin.resolution.set(width, height);
+					CONNECTIONS.lineMaterialThinDashed.resolution.set(width, height);
 					this.camera.updateProjectionMatrix();
 				}
 
@@ -182,9 +176,16 @@ export class MapComponent implements AfterViewInit {
 		this.controls.addEventListener("change", () => draw(true));
 		window.addEventListener("resize", () => draw(true));
 
+		this.mapDataService.zoom.subscribe(value => {
+			this.camera.zoom = value ? this.camera.zoom * 1.3 : this.camera.zoom / 1.3;
+			this.camera.updateProjectionMatrix();
+			draw(true);
+		});
+
 		this.mapDataService.drawMap.subscribe(() => {
 			this.scene.background = new THREE.Color(this.getBackgroundColor()).convertLinearToSRGB();
 			this.scene.clear();
+			this.scale.set(SETTINGS.scale);
 
 			if (needsCenter) {
 				this.centerMap();
@@ -192,7 +193,7 @@ export class MapComponent implements AfterViewInit {
 			}
 
 			this.stationGeometry = new THREE.BufferGeometry();
-			this.createStationBlobs();
+			this.createStationAndDepotsBlobs();
 			this.scene.add(new THREE.Mesh(this.stationGeometry, materialWithVertexColors));
 
 			this.lineGeometryStationConnectionThin = new LineGeometry();
@@ -207,27 +208,27 @@ export class MapComponent implements AfterViewInit {
 				// empty
 			});
 
-			const lineStationConnectionThin = new Line2(this.lineGeometryStationConnectionThin, lineMaterialStationConnectionThin);
+			const lineStationConnectionThin = new Line2(this.lineGeometryStationConnectionThin, CONNECTIONS.lineMaterialStationConnectionThin);
 			lineStationConnectionThin.computeLineDistances();
 			this.scene.add(lineStationConnectionThin);
 
-			const lineStationConnectionThick = new Line2(this.lineGeometryStationConnectionThick, lineMaterialStationConnectionThick);
+			const lineStationConnectionThick = new Line2(this.lineGeometryStationConnectionThick, CONNECTIONS.lineMaterialStationConnectionThick);
 			lineStationConnectionThick.computeLineDistances();
 			this.scene.add(lineStationConnectionThick);
 
-			const lineNormal = new Line2(this.lineGeometryNormal, lineMaterialNormal);
+			const lineNormal = new Line2(this.lineGeometryNormal, CONNECTIONS.lineMaterialNormal);
 			lineNormal.computeLineDistances();
 			this.scene.add(lineNormal);
 
-			lineNormalDashed = new Line2(this.lineGeometryNormalDashed, lineMaterialNormalDashed);
+			lineNormalDashed = new Line2(this.lineGeometryNormalDashed, CONNECTIONS.lineMaterialNormalDashed);
 			lineNormalDashed.computeLineDistances();
 			this.scene.add(lineNormalDashed);
 
-			const lineThin = new Line2(this.lineGeometryThin, lineMaterialThin);
+			const lineThin = new Line2(this.lineGeometryThin, CONNECTIONS.lineMaterialThin);
 			lineThin.computeLineDistances();
 			this.scene.add(lineThin);
 
-			lineThinDashed = new Line2(this.lineGeometryThinDashed, lineMaterialThinDashed);
+			lineThinDashed = new Line2(this.lineGeometryThinDashed, CONNECTIONS.lineMaterialThinDashed);
 			lineThinDashed.computeLineDistances();
 			this.scene.add(lineThinDashed);
 
@@ -274,7 +275,7 @@ export class MapComponent implements AfterViewInit {
 		return this.mapDataService.mapLoading();
 	}
 
-	private createStationBlobs() {
+	private createStationAndDepotsBlobs() {
 		const positions: number[] = [];
 		const colors: number[] = [];
 		const backgroundColor = this.getBackgroundColor();
@@ -407,9 +408,9 @@ export class MapComponent implements AfterViewInit {
 	}
 
 	private createStationConnections() {
-		lineMaterialStationConnectionThin.dashed = this.mapDataService.interchangeStyle() === "DOTTED";
-		lineMaterialStationConnectionThin.dashSize = 8 * SETTINGS.scale / this.camera.zoom;
-		lineMaterialStationConnectionThin.gapSize = 4 * SETTINGS.scale / this.camera.zoom;
+		CONNECTIONS.lineMaterialStationConnectionThin.dashed = this.mapDataService.interchangeStyle() === "DOTTED";
+		CONNECTIONS.lineMaterialStationConnectionThin.dashSize = 8 * SETTINGS.scale / this.camera.zoom;
+		CONNECTIONS.lineMaterialStationConnectionThin.gapSize = 4 * SETTINGS.scale / this.camera.zoom;
 
 		const positionsThin = [0, 0, -10000, 0, 0, -10000];
 		const positionsThick = [0, 0, -10000, 0, 0, -10000];
@@ -452,10 +453,10 @@ export class MapComponent implements AfterViewInit {
 	private createLines(refreshDashedLines: () => void) {
 		this.pointsForLineConnection = {};
 
-		lineMaterialNormalDashed.dashSize = 8 * SETTINGS.scale / this.camera.zoom;
-		lineMaterialNormalDashed.gapSize = 4 * SETTINGS.scale / this.camera.zoom;
-		lineMaterialThinDashed.dashSize = 16 * SETTINGS.scale / this.camera.zoom;
-		lineMaterialThinDashed.gapSize = 16 * SETTINGS.scale / this.camera.zoom;
+		CONNECTIONS.lineMaterialNormalDashed.dashSize = 8 * SETTINGS.scale / this.camera.zoom;
+		CONNECTIONS.lineMaterialNormalDashed.gapSize = 4 * SETTINGS.scale / this.camera.zoom;
+		CONNECTIONS.lineMaterialThinDashed.dashSize = 16 * SETTINGS.scale / this.camera.zoom;
+		CONNECTIONS.lineMaterialThinDashed.gapSize = 16 * SETTINGS.scale / this.camera.zoom;
 
 		const positionsNormal = [0, 0, -10000, 0, 0, -10000];
 		const positionsNormalDashed = [0, 0, -10000, 0, 0, -10000];
@@ -519,8 +520,8 @@ export class MapComponent implements AfterViewInit {
 					offset1 * 6 * SETTINGS.scale / this.camera.zoom,
 					offset2 * 6 * SETTINGS.scale / this.camera.zoom,
 					colorOffset / this.camera.zoom,
-					this.canvas().clientWidth,
-					this.canvas().clientHeight,
+					this.canvas().getBoundingClientRect().width,
+					this.canvas().getBoundingClientRect().height,
 					oneWay,
 				);
 
@@ -596,8 +597,8 @@ export class MapComponent implements AfterViewInit {
 	}
 
 	private updateLabels() {
-		const halfCanvasWidth = this.canvas().clientWidth / 2;
-		const halfCanvasHeight = this.canvas().clientHeight / 2;
+		const halfCanvasWidth = this.canvas().getBoundingClientRect().width / 2;
+		const halfCanvasHeight = this.canvas().getBoundingClientRect().height / 2;
 		this.textLabels.length = 0;
 		let renderedTextCount = 0;
 

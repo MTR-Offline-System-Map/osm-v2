@@ -52,6 +52,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly drawMap = new EventEmitter<void>();
 	public readonly animateMap = new EventEmitter<{ x: number, z: number }>();
 	public readonly animateClient = new EventEmitter<string>();
+	public readonly zoom = new EventEmitter<boolean>();
 
 	constructor() {
 		const dimensionService = inject(DimensionService);

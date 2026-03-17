@@ -44,6 +44,11 @@
     "no_players": "无玩家在线。",
     "interchange_style": "出站换乘样式",
     "font_style": "字体样式",
+    "scale": "缩放",
+    "zoom_in": "放大",
+    "zoom_out": "缩小",
+    "text_zoom_in": "放大文字",
+    "text_zoom_out": "缩小文字",
     "advanced_settings": "高级设置",
     "auto_detect_bus_routes": "自动探测巴士线路",
     "developer_mode": "开发者模式"

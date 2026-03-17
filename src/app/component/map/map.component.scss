@@ -7,6 +7,11 @@ canvas {
 	height: 100%;
 }
 
+img {
+	width: calc(var(--client-image-size) * var(--scale));
+	height: calc(var(--client-image-size) * var(--scale));
+}
+
 .label {
 	cursor: pointer;
 	position: absolute;
@@ -19,7 +24,7 @@ canvas {
 }
 
 .station-name {
-	font-size: 0.6rem;
+	font-size: calc(0.6rem * var(--scale));
 	line-height: 1.2em; /* Intentionally em rather than rem to scale line height based on font size */
 	white-space: nowrap;
 	text-shadow: -2px -2px 0 var(--background-color),
@@ -33,7 +38,7 @@ canvas {
 }
 
 .station-name.cjk {
-	font-size: 1.2rem;
+	font-size: calc(1.2rem * var(--scale));
 }
 
 .station-name.text {
@@ -41,7 +46,7 @@ canvas {
 }
 
 .station-name.icon {
-	font-size: 1.2rem;
+	font-size: calc(1.2rem * var(--scale));
 	width: unset;
 }
 

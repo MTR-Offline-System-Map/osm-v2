@@ -44,6 +44,11 @@
     "no_players": "There are no players online.",
     "interchange_style": "Interchange Style",
     "font_style": "Font Style",
+    "scale": "Scale",
+    "zoom_in": "Zoom In",
+    "zoom_out": "Zoom Out",
+    "text_zoom_in": "Larger Font",
+    "text_zoom_out": "Smaller Font",
     "advanced_settings": "Advanced Settings",
     "auto_detect_bus_routes": "Auto Detect Bus Route(s)",
     "developer_mode": "Developer Mode"
@@ -60,6 +65,8 @@
     "no_hsr": "No HSR",
     "no_boats": "No Boats",
     "in_theory": "In Theory",
+    "realtime": "Realtime",
+    "include_hidden_routes": "Include Hidden Routes",
     "no_directions_found": "No directions found.",
     "intermediate_station": "intermediate station(s)"
   },

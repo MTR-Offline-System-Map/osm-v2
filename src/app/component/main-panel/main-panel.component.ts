@@ -20,6 +20,7 @@ import {ThemeToggleComponent} from "../theme-toggle/theme-toggle.component";
 import {FontStyleToggleComponent} from "../font-style-toggle/font-style-toggle.component";
 import {TranslocoPipe} from "@jsverse/transloco";
 import {LanguageService} from "../../service/language.service";
+import {SETTINGS, refreshMapScale} from "../../utility/settings";
 import {ConfigService} from "../../service/config.service";
 
 @Component({
@@ -218,8 +219,13 @@ export class MainPanelComponent {
 	setDeveloperMode(value: boolean) {
 		this.dataService.setDeveloperMode(value);
 	}
-	
-	isMobile() {
-		return window.innerWidth < window.innerHeight;
+
+	zoom(value: boolean) {
+		this.dataService.zoom.emit(value);
+	}
+
+	textZoom(value: boolean) {
+		refreshMapScale(value ? Math.min(8, SETTINGS.scale * 1.1) : Math.max(0.2, SETTINGS.scale / 1.1));
+		this.dataService.drawMap.emit();
 	}
 }
