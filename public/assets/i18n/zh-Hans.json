@@ -58,6 +58,8 @@
     "no_hsr": "不乘高铁",
     "no_boats": "不乘船",
     "in_theory": "理论",
+    "realtime": "实时",
+    "include_hidden_routes": "包括隐藏路线",
     "no_directions_found": "未找到路线。",
     "intermediate_station": " 个中间站"
   },
