@@ -22,6 +22,7 @@
     "players": "Players",
     "clients": "Clients",
     "depots": "Depots",
+    "timetable": "Timetable",
     "show_details": "Show Details",
     "show_platforms": "Show Platforms",
     "untitled": "(Untitled)",
@@ -97,6 +98,10 @@
     "show_dwell_times": "Show Dwell Times",
     "dwell_time": "Dwell Time",
     "travel_time": "Travel Time"
+  },
+  "timetable": {
+    "clockwise": "Clockwise",
+    "anticlockwise": "Anticlockwise"
   },
   "deviation": {
     "delay": "delay",

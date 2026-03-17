@@ -208,6 +208,10 @@ export class StationPanelComponent {
 		return this.dimensionService.isOffline();
 	}
 
+	getEnableTimetable() {
+		return this.configService.getEnableTimetable(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength());
+	}
+
 	getFontStyle() {
 		return this.fontStyleService.fontStyle();
 	}

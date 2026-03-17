@@ -22,6 +22,7 @@
     "players": "玩家",
     "clients": "玩家",
     "depots": "车厂",
+    "timetable": "时刻表",
     "show_details": "显示详情",
     "show_platforms": "显示站台",
     "untitled": "(未命名)",
@@ -97,6 +98,10 @@
     "show_dwell_times": "显示停靠时间",
     "dwell_time": "停靠时间",
     "travel_time": "行驶时间"
+  },
+  "timetable": {
+    "clockwise": "顺时针",
+    "anticlockwise": "逆时针"
   },
   "deviation": {
     "delay": "晚点",
