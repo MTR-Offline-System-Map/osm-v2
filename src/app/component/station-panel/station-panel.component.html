@@ -41,21 +41,28 @@
 				<div>({{ getZoneText() }})</div>
 			</div>
 		</div>
-		<div class="row center" [style.display]="isOffline() && !usePathfinder() ? 'none' : ''">
-			<div class="material-icons" [pTooltip]="'directions.title' | transloco" tooltipPosition="left">directions</div>
-			<p-button [label]="'app.start' | transloco" variant="text" (onClick)="openDirections(true)"/>
-			<p-button [label]="'app.end' | transloco" variant="text" (onClick)="openDirections(false)"/>
-		</div>
+		@if (!isOffline() || usePathfinder()) {
+			<div class="row center">
+				<div class="material-icons" translate="no" [pTooltip]="'directions.title' | transloco" tooltipPosition="left">directions</div>
+				<p-button [label]="'app.start' | transloco" variant="text" (onClick)="openDirections(true)"/>
+				<p-button [label]="'app.end' | transloco" variant="text" (onClick)="openDirections(false)"/>
+			</div>
+		}
 	</div>
 
 	<p-tabs class="wrapper" (valueChange)="resetArrivalFilter()" value="1">
 		<p-tablist>
 			@if (!getSingleStation()) {
-				<p-tab value="0" [hidden]="isOffline()">{{ 'station.arrivals.title' | transloco }}</p-tab>
+				@if (!isOffline()) {
+					<p-tab value="0">{{ 'station.arrivals.title' | transloco }}</p-tab>
+				}
 				<p-tab value="1">{{ 'app.routes' | transloco }}</p-tab>
+				@if (getEnableTimetable()) {
+					<p-tab value="2">{{ 'app.timetable' | transloco }}</p-tab>
+				}
 			}
 			@if (getConnections().length > 0) {
-				<p-tab value="2">{{ 'station.connections' | transloco }}</p-tab>
+				<p-tab value="3">{{ 'station.connections' | transloco }}</p-tab>
 			}
 		</p-tablist>
 
@@ -135,8 +142,24 @@
 				</p-tabpanel>
 			}
 
-			@if (getConnections().length > 0) {
+			<!--@if (getEnableTimetable()) {
+				 TEMPLATE FROM NAVITIME
 				<p-tabpanel value="2">
+					<div class="padding-top-bottom padding-sides content">
+						<div class="timetable">
+							@if (getRouteVariations(); as route) {
+								@for (variation of getTimetableRouteVariation(); track $index) {
+									<div [style.border-color]="variation.color" class="line-border">
+									</div>
+								}
+							}
+						</div>
+					</div>
+				</p-tabpanel>
+			} -->
+
+			@if (getConnections().length > 0) {
+				<p-tabpanel value="3">
 					<div class="column padding-top-bottom padding-sides content">
 						@for (connection of getConnections(); track $index) {
 							<div class="column">
@@ -162,7 +185,9 @@
 		<div class="column">
 			<div class="title">{{ dialogData?.cars?.length }}{{ 'station.arrivals.dialog.car_vehicle' | transloco}}</div>
 			@for (car of dialogData?.cars; track $index) {
-				<div>{{ car }}</div>
+				@if (getVehicle(car); as vehicle) {
+					<app-data-list-entry [icons]="[vehicle.icon, '']" [title]="[vehicle.name, '']" [subtitles]="[[vehicle.subtitle, '']]" [color]="vehicle.color !== undefined ? (vehicle.color | formatColor) : ''" [useLightColor]="false" [clickable]="false"/>
+				}
 			}
 		</div>
 	</div>

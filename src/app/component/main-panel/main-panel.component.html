@@ -15,12 +15,14 @@
 			<p-select inputId="dropdownLanguage" formControlName="language" [options]="getSupportedLanguages()" (onChange)="setLanguage()" [fluid]="true"/>
 			<label for="dropdownLanguage">{{ 'main.language' | transloco }}{{ usingEnglish() ? "" : " / Language"}}</label>
 		</p-float-label>
-		<button pButton class="icon-button" severity="secondary" (click)="directionsOpened.emit()" [fluid]="true" [style.display]="isOffline() ? 'none' : ''">
-			<div class="row gap-small">
-				<div class="material-icons">directions</div>
-				<div>{{ 'main.directions' | transloco}}</div>
-			</div>
-		</button>
+		@if (!isOffline()) {
+			<button pButton class="icon-button" severity="secondary" (click)="directionsOpened.emit()" [fluid]="true">
+				<div class="row gap-small">
+					<div class="material-icons" translate="no">directions</div>
+					<div>{{ 'main.directions' | transloco}}</div>
+				</div>
+			</button>
+		}
 	</div>
 	<div class="column content">
 		<div class="column padding-sides">
@@ -61,33 +63,49 @@
 					</div>
 				}
 			</div>
-			@if (hasInterchanges()) {
-				<p-divider/>
-				<div class="row gap center">
-					<div class="material-icons">polyline</div>
-					<div class="shrink spacing">{{ 'main.interchange_style' | transloco}}</div>
-					<app-interchange-style-toggle/>
+			<p-divider/>
+			<div class="column gap-small">
+				@if (hasInterchanges()) {
+					<div class="row gap center">
+						<div class="material-icons" translate="no">polyline</div>
+						<div class="shrink spacing">{{ 'main.interchange_style' | transloco}}</div>
+						<app-interchange-style-toggle/>
+					</div>
+				}
+				@if (!isOffline()) {
+					<div class="row gap center toggle">
+						<div class="material-icons" translate="no">crop_square</div>
+						<div class="shrink spacing">{{ 'main.show_players' | transloco }}</div>
+						<p-toggle-switch inputId="showClients" formControlName="showClients" (onChange)="setShowClients($event.checked)"/>
+					</div>
+				}
+				<div class="row gap center toggle">
+					<div class="material-icons" translate="no">font_download</div>
+					<div class="shrink spacing">{{ 'main.show_labels' | transloco}}</div>
+					<p-toggle-switch inputId="showLabels" formControlName="showLabels" (onChange)="setShowLabels($event.checked)"/>
+				</div>
+			</div>
+			@if (!isOffline()) {
+				<div class="player-accordion">
+					<p-divider/>
+					<p-accordion [multiple]="true">
+						<p-accordion-panel>
+							<p-accordion-header>{{ 'app.players' | transloco }} ({{ getAllClients().length }})</p-accordion-header>
+							<p-accordion-content>
+								@if (getAllClients().length === 0) {
+									<div>{{ 'main.no_players' | transloco}}</div>
+								} @else {
+									<div class="column gap-small">
+										@for (client of getAllClients(); track $index) {
+											<app-data-list-entry [icons]="[getAvatarUrl(client.name, client.id)]" [title]="[client.name, '']" [subtitles]="[]" [useLightColor]="false" [clickable]="true" (entryClicked)="clientClicked.emit(client.id)"/>
+										}
+									</div>
+								}
+							</p-accordion-content>
+						</p-accordion-panel>
+					</p-accordion>
 				</div>
 			}
-			<div [hidden]="isOffline()" class="player-accordion">
-				<p-divider/>
-				<p-accordion [multiple]="true">
-					<p-accordion-panel>
-						<p-accordion-header>{{ 'app.players' | transloco }} ({{ getAllClients().length }})</p-accordion-header>
-						<p-accordion-content>
-							@if (getAllClients().length === 0) {
-								<div>{{ 'main.no_players' | transloco}}</div>
-							} @else {
-								<div class="column gap-small">
-									@for (client of getAllClients(); track $index) {
-										<app-data-list-entry [icons]="['https://mc-heads.net/avatar/' + client.id]" [title]="[client.name, '']" [subtitles]="[]" [useLightColor]="false" [clickable]="true" (entryClicked)="clientClicked.emit(client.id)"/>
-									}
-								</div>
-							}
-						</p-accordion-content>
-					</p-accordion-panel>
-				</p-accordion>
-			</div>
 			<p-divider/>
 			<div class="column gap-small">
 				<div class="row gap center">
@@ -100,33 +118,47 @@
 					<div class="shrink spacing">{{ 'main.font_style' | transloco }}</div>
 					<app-font-style-toggle/>
 				</div>
+				<div class="row gap center">
+					<div class="material-icons" translate="no">format_size</div>
+					<div class="shrink spacing">{{ 'main.scale' | transloco }}</div>
+					<div class="row center">
+						<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="zoom(true)" [pTooltip]="'main.zoom_in' | transloco" tooltipPosition="bottom">
+							<div class="material-icons" translate="no">zoom_in</div>
+						</button>
+						<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="zoom(false)" [pTooltip]="'main.zoom_out' | transloco" tooltipPosition="bottom">
+							<div class="material-icons" translate="no">zoom_out</div>
+						</button>
+						<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="textZoom(true)" [pTooltip]="'main.text_zoom_in' | transloco" tooltipPosition="bottom">
+							<div class="material-icons" translate="no">text_increase</div>
+						</button>
+						<button pButton class="icon-button" [rounded]="true" [text]="true" (click)="textZoom(false)" [pTooltip]="'main.text_zoom_out' | transloco" tooltipPosition="bottom">
+							<div class="material-icons" translate="no">text_decrease</div>
+						</button>
+					</div>
+				</div>
 			</div>
-			@if (getEnableAutoDetectBusRoutes() || getEnableDeveloperMode()) {
-				<p-divider/>
-				<p-accordion [value]="0" [multiple]="true">
-					<p-accordion-panel>
-						<p-accordion-header>{{ 'main.advanced_settings' | transloco }}</p-accordion-header>
-						<p-accordion-content>
-							<div class="column gap-small">
-								@if (getEnableAutoDetectBusRoutes()) {
-									<div class="row gap center toggle">
-										<div class="material-icons">directions_bus</div>
-										<div class="shrink spacing">{{ 'main.auto_detect_bus_routes' | transloco}}</div>
-										<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
-									</div>
-								}
-								@if (getEnableDeveloperMode()) {
-									<div class="row gap center toggle">
-										<div class="material-icons">code</div>
-										<div class="shrink spacing">{{ 'main.developer_mode' | transloco}}</div>
-										<p-toggle-switch inputId="developerMode" formControlName="developerMode" (onChange)="setDeveloperMode($event.checked)"/>
-									</div>
-								}
+			<p-divider/>
+			<p-accordion [value]="0" [multiple]="true">
+				<p-accordion-panel>
+					<p-accordion-header>{{ 'main.advanced_settings' | transloco }}</p-accordion-header>
+					<p-accordion-content>
+						<div class="column gap-small">
+							@if (getEnableAutoDetectBusRoutes()) {
+								<div class="row gap center toggle">
+									<div class="material-icons" translate="no">directions_bus</div>
+									<div class="shrink spacing">{{ 'main.auto_detect_bus_routes' | transloco}}</div>
+									<p-toggle-switch inputId="autoDetectBusRoutes" formControlName="autoDetectBusRoutes" (onChange)="setAutoDetectBusRoutes($event.checked)"/>
+								</div>
+							}
+							<div class="row gap center toggle">
+								<div class="material-icons" translate="no">code</div>
+								<div class="shrink spacing">{{ 'main.developer_mode' | transloco}}</div>
+								<p-toggle-switch inputId="developerMode" formControlName="developerMode" (onChange)="setDeveloperMode($event.checked)"/>
 							</div>
-						</p-accordion-content>
-					</p-accordion-panel>
-				</p-accordion>
-			}
+						</div>
+					</p-accordion-content>
+				</p-accordion-panel>
+			</p-accordion>
 			<small>{{ 'copyright.osm' | transloco }}</small>
 		</div>
 		<div class="spacing"></div>

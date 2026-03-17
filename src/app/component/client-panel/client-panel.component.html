@@ -15,11 +15,13 @@
 				<div class="material-icons" translate="no">filter_center_focus</div>
 			</button>
 		</div>
-		<div class="row center" [style.display]="usePathfinder() ? 'none' : ''">
-			<div class="material-icons" [pTooltip]="'directions.title' | transloco" tooltipPosition="left">directions</div>
-			<p-button [label]="'app.start' | transloco" variant="text" (onClick)="openDirections(true)"/>
-			<p-button [label]="'app.end' | transloco" variant="text" (onClick)="openDirections(false)"/>
-		</div>
+		@if (!usePathfinder()) {
+			<div class="row center">
+				<div class="material-icons" translate="no" [pTooltip]="'directions.title' | transloco" tooltipPosition="left">directions</div>
+				<p-button [label]="'app.start' | transloco" variant="text" (onClick)="openDirections(true)"/>
+				<p-button [label]="'app.end' | transloco" variant="text" (onClick)="openDirections(false)"/>
+			</div>
+		}
 	</div>
 
 	<div class="padding-sides">

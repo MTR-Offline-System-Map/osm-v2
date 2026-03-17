@@ -34,7 +34,6 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly centerX = signal<number>(0);
 	public readonly centerY = signal<number>(0);
 	public readonly mapLoading = signal<boolean>(true);
-	public readonly directionsEngine = signal<"official" | "pathfinder">("official");
 	public readonly showHiddenRoutes = signal<boolean>(false);
 	public readonly hasHiddenRoutes = signal<boolean>(false);
 	public readonly showEmptyRoutes = signal<boolean>(false);
@@ -45,6 +44,8 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly autoDetectBusRoutes = signal<boolean>(false);
 	public readonly hasBusRoutes = signal<boolean>(false);
 	public readonly developerMode = signal<boolean>(false);
+	
+	private directionsEngine: "official" | "pathfinder" = "official";
 
 	public readonly drawMap = new EventEmitter<void>();
 	public readonly animateMap = new EventEmitter<{ x: number, z: number }>();
@@ -170,7 +171,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		this.autoDetectBusRoutes.set(cookieAutoDetectBusRoutes !== "false");
 
 		const cookieDirectionsEngine = getCookie("directions_engine");
-		this.directionsEngine.set(cookieDirectionsEngine === "official" || cookieDirectionsEngine === "pathfinder" ? cookieDirectionsEngine : "official");
+		this.directionsEngine = cookieDirectionsEngine === "official" || cookieDirectionsEngine === "pathfinder" ? cookieDirectionsEngine : "official";
 
 		const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
 		this.showHiddenRoutes.set(cookieShowHiddenRoutes === "true");
@@ -221,7 +222,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	public setDirectionsEngine(engine: "official" | "pathfinder") {
-		this.directionsEngine.set(engine);
+		this.directionsEngine = engine;
 		setCookie("directions_engine", engine);
 	}
 

@@ -63,7 +63,7 @@ export class MainPanelComponent {
 		search: new FormControl(""),
 		dimension: new FormControl(""),
 		dimension1: new FormControl<"HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">("HIDDEN"),
-		directionsEngine: new FormControl<"official" | "pathfinder">(this.dataService.directionsEngine()),
+		directionsEngine: new FormControl<"official" | "pathfinder">(this.dataService.getDirectionsEngine()),
 		language: new FormControl(this.languageService.getLanguageName(this.languageService.getLanguage())),
 		showHiddenRoutesToggle: new FormControl(this.dataService.showHiddenRoutes()),
 		showEmptyRoutesToggle: new FormControl(this.dataService.showEmptyRoutes()),

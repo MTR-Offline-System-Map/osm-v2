@@ -9,7 +9,6 @@ import {FormatNamePipe} from "../../pipe/formatNamePipe";
 import {FormatColorPipe} from "../../pipe/formatColorPipe";
 import {DataListEntryComponent} from "../data-list-entry/data-list-entry.component";
 import {ButtonModule} from "primeng/button";
-import {environment} from "../../../environments/environment";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 import {TooltipModule} from "primeng/tooltip";
 import {TranslocoPipe} from "@jsverse/transloco";
@@ -81,7 +80,7 @@ export class DepotPanelComponent {
 	}
 
     usePathfinder() {
-        return this.dataService.directionsEngine() === "pathfinder";
+        return this.dataService.getDirectionsEngine() === "pathfinder";
     }
 
 	openDirections(isStartDepot: boolean) {

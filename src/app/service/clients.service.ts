@@ -7,6 +7,7 @@ import {ClientsDTO} from "../entity/generated/clients";
 import {Station} from "../entity/station";
 import {Route} from "../entity/route";
 import {setIfUndefined} from "../data/utilities";
+import {ConfigService} from "./config.service";
 
 const REFRESH_INTERVAL = 3000;
 
@@ -52,9 +53,10 @@ export class ClientsService extends DataServiceBase<{ data: ClientsDTO }> {
 		const httpClient = inject(HttpClient);
 		const mapDataService = inject(MapDataService);
 		const dimensionService = inject(DimensionService);
+		const configService = inject(ConfigService);
 
-		super(() => httpClient.get<{ data: ClientsDTO }>(this.getUrl("clients")), ({data}) => {
-			const allClients: { id: string, name: string, rawX: number, rawZ: number }[] = [];
+		super(() => httpClient.get<{ data: ClientsDTO }>(configService.getDataUrl(dimensionService.getDimensionIndex(), dimensionService.getDimensionsLength(), "clients", {})), ({data}) => {
+			const allClients: { id: string, name: string, afk: boolean, rawX: number, rawZ: number }[] = [];
 			const allClientsNotInStationOrRoute: { id: string, name: string, rawX: number, rawZ: number }[] = [];
 			const clientGroupsForStation: Record<string, {
 				clients: {

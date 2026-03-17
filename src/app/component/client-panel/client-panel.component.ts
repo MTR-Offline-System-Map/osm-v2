@@ -81,7 +81,7 @@ export class ClientPanelComponent {
 	}
 
 	usePathfinder() {
-		return this.mapDataService.directionsEngine() === "pathfinder";
+		return this.mapDataService.getDirectionsEngine() === "pathfinder";
 	}
 
 	focus() {
