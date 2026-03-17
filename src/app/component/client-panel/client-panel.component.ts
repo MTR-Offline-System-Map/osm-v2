@@ -16,6 +16,7 @@ import {FormatNamePipe} from "../../pipe/formatNamePipe";
 import {ROUTE_TYPES} from "../../data/routeType";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 import {TranslocoPipe} from "@jsverse/transloco";
+import {ConfigService} from "../../service/config.service";
 
 @Component({
 	selector: "app-client-panel",
@@ -40,6 +41,7 @@ import {TranslocoPipe} from "@jsverse/transloco";
 })
 export class ClientPanelComponent {
 	private readonly clientService = inject(ClientService);
+	private readonly configService = inject(ConfigService);
 	private readonly mapDataService = inject(MapDataService);
 
 	@Output() stationClicked = new EventEmitter<string>();
@@ -53,7 +55,7 @@ export class ClientPanelComponent {
 
 	getImageSrc() {
 		const clientId = this.clientService.selectedData();
-		return clientId ? `https://mc-heads.net/avatar/${clientId}` : undefined;
+		return clientId ? this.configService.getAvatarUrl(this.getName(), clientId) : undefined;
 	}
 
 	getStation() {

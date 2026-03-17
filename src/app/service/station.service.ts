@@ -9,6 +9,7 @@ import {SelectableDataServiceBase} from "./selectable-data-service-base";
 import {Station} from "../entity/station";
 import {arrRemove} from "rxjs/internal/util/arrRemove";
 import {pushIfNotExists} from "../data/utilities";
+import {ConfigService} from "./config.service";
 
 const REFRESH_INTERVAL = 3000;
 const MAX_ARRIVALS = 5;
@@ -28,12 +29,13 @@ export class StationService extends SelectableDataServiceBase<{ currentTime: num
 
 	constructor() {
 		const dimensionService = inject(DimensionService);
+		const configService = inject(ConfigService);
 
 		super(stationId => this.dataService.stations().find(station => station.id === stationId), () => {
 			this.arrivals.set([]);
 			this.arrivalsRoutes.set([]);
 			this.routesAtStation.set([]);
-		}, selectedStation => this.httpClient.post<{ currentTime: number, data: { arrivals: DataResponse[] } }>(this.getUrl("arrivals"), JSON.stringify({
+		}, selectedStation => this.httpClient.post<{ currentTime: number, data: { arrivals: DataResponse[] } }>(configService.getDataUrl(dimensionService.getDimensionIndex(), dimensionService.getDimensionsLength(), "arrivals", {}), JSON.stringify({
 					stationIdsHex: [selectedStation.id],
 					maxCountPerPlatform: MAX_ARRIVALS,
 			})), (data: { currentTime: number, data: { arrivals: DataResponse[] } }) => {

@@ -13,7 +13,7 @@
 		}
 		<p-float-label variant="in">
 			<p-select inputId="dropdownLanguage" formControlName="language" [options]="getSupportedLanguages()" (onChange)="setLanguage()" [fluid]="true"/>
-			<label for="dropdownLanguage">{{ 'main.language' | transloco }}</label>
+			<label for="dropdownLanguage">{{ 'main.language' | transloco }}{{ usingEnglish() ? "" : " / Language"}}</label>
 		</p-float-label>
 		<button pButton class="icon-button" severity="secondary" (click)="directionsOpened.emit()" [fluid]="true" [style.display]="isOffline() ? 'none' : ''">
 			<div class="row gap-small">

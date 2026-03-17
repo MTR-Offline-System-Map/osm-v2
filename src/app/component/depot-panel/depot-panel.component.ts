@@ -13,6 +13,7 @@ import {environment} from "../../../environments/environment";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 import {TooltipModule} from "primeng/tooltip";
 import {TranslocoPipe} from "@jsverse/transloco";
+import {ConfigService} from "../../service/config.service";
 
 @Component({
     selector: "app-depot-panel",
@@ -31,6 +32,7 @@ import {TranslocoPipe} from "@jsverse/transloco";
     styleUrl: "./depot-panel.component.scss",
 })
 export class DepotPanelComponent {
+    private readonly configService = inject(ConfigService);
     private readonly dataService = inject(MapDataService);
     private readonly depotService = inject(DepotService);
     private readonly dimensionService = inject(DimensionService);
@@ -90,13 +92,13 @@ export class DepotPanelComponent {
 	}
 
     getEnableViewOnWorldMap() {
-        return environment.worldMapLink.enable(this.dimensionService.getDimensionIndex());
+        return this.configService.getEnableWorldMap(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength());
     }
 
 	viewOnWorldMap() {
 		const depot = this.depotService.selectedData();
 		if (depot) {
-			location.assign(environment.worldMapLink.exec(this.dimensionService.getDimensionIndex(), Math.round(depot.x), Math.round(depot.z)));
+			location.assign(this.configService.getWorldMapLink(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength(), Math.round(depot.x), Math.round(depot.z)));
 		}
 	}
 

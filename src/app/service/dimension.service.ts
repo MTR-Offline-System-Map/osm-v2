@@ -1,18 +1,16 @@
 import {Injectable, signal} from "@angular/core";
-import {environment} from "../../environments/environment";
 
 @Injectable({providedIn: "root"})
 export class DimensionService {
-	private dimensions: string[] = environment.dimensions;
+	private dimensions: string[] = [];
 	private dimensionIndex = 0;
 	public c324 = signal<boolean>(false);
 	public isOffline = signal<boolean>(false);
-	public includeMarkers = signal<boolean>(true);
+	public includeMarkers = signal<boolean>(false);
+	public disableAutoDetectBusRoutes = signal<boolean>(true);
 
 	public setDimensions(dimensions: string[]) {
-		if (environment.dimensions.length == 0) {
-			this.dimensions = dimensions;
-		}
+		this.dimensions = dimensions;
 		this.clampDimensionIndex();
 	}
 
@@ -25,8 +23,12 @@ export class DimensionService {
 		return this.dimensions;
 	}
 
+	public getDimensionsLength() {
+		return this.dimensions.length;
+	}
+
 	public getDimensionIndex() {
-		return environment.historicalMap.enable ? (this.dimensionIndex < environment.historicalMap.onlineDimensions ? this.dimensionIndex : this.dimensions.length - this.dimensionIndex + environment.historicalMap.onlineDimensions - 1) : this.dimensionIndex;
+		return this.dimensionIndex;
 	}
 
 	private clampDimensionIndex() {

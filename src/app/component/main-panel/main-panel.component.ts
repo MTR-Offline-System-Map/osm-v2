@@ -16,12 +16,11 @@ import {SearchComponent} from "../search/search.component";
 import {AccordionModule} from "primeng/accordion";
 import {ClientsService} from "../../service/clients.service";
 import {DataListEntryComponent} from "../data-list-entry/data-list-entry.component";
-import {environment} from "../../../environments/environment";
-import {setCookie} from "../../data/utilities";
 import {ThemeToggleComponent} from "../theme-toggle/theme-toggle.component";
 import {FontStyleToggleComponent} from "../font-style-toggle/font-style-toggle.component";
 import {TranslocoPipe} from "@jsverse/transloco";
 import {LanguageService} from "../../service/language.service";
+import {ConfigService} from "../../service/config.service";
 
 @Component({
 	selector: "app-main-panel",
@@ -51,6 +50,7 @@ export class MainPanelComponent {
 	private readonly dataService = inject(MapDataService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly clientsService = inject(ClientsService);
+	private readonly configService = inject(ConfigService);
 	private readonly languageService = inject(LanguageService);
 
 	@Output() stationClicked = new EventEmitter<string>();
@@ -97,7 +97,7 @@ export class MainPanelComponent {
 	}
 
 	getEnablePathfinder() {
-		return environment.pathfinder(this.dimensionService.getDimensionIndex());
+		return this.configService.getEnablePathfinder(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength());
 	}
 
 	getDimensions() {
@@ -133,6 +133,10 @@ export class MainPanelComponent {
 		return this.clientsService.allClients();
 	}
 
+	getAvatarUrl(name: string, uuid: string) {
+		return this.configService.getAvatarUrl(name, uuid);
+	}
+
 	clickStation(id: string) {
 		this.stationClicked.emit(id);
 		this.formGroup.patchValue({search: undefined});
@@ -153,32 +157,32 @@ export class MainPanelComponent {
 		this.formGroup.patchValue({search: undefined});
 	}
 
+	usingEnglish() {
+		return this.languageService.getLanguage() === "en-US";
+	}
+
 	getEnableShowHiddenRoutes() {
-		return environment.enableShowHiddenRoutes && this.dataService.hasHiddenRoutes();
+		return this.configService.getEnableShowHiddenRoutes(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength()) && this.dataService.hasHiddenRoutes();
 	}
 
 	getEnableShowEmptyRoutes() {
-		return environment.enableShowEmptyRoutes && this.dataService
+		return this.configService.getEnableShowEmptyRoutes(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength()) && this.dataService.hasEmptyRoutes();
 	}
 
 	getEnableShowAllStations() {
-		return environment.enableShowAllStations && this.dimensionService.includeMarkers();
+		return this.configService.getEnableShowAllStations(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength()) && this.dimensionService.includeMarkers();
 	}
 
 	getEnableShowDepots() {
-		return environment.enableShowDepots && this.dimensionService.includeMarkers();
+		return this.configService.getEnableShowDepots(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength()) && this.dimensionService.includeMarkers();
 	}
 
 	getEnableAutoDetectBusRoutes() {
-		return environment.enableAutoDetectBusRoutes && this.dataService.hasBusRoutes();
-	}
-
-	getEnableDeveloperMode() {
-		return environment.enableDeveloperMode;
+		return this.dataService.hasBusRoutes() && !this.dimensionService.disableAutoDetectBusRoutes();
 	}
 
 	getHistoricalMap() {
-		return environment.historicalMap.enable;
+		return this.configService.getEnableHistoricalMap();
 	}
 
 	setShowHiddenRoutes(value: boolean) {
@@ -198,8 +202,7 @@ export class MainPanelComponent {
 	}
 
 	setAutoDetectBusRoutes(value: boolean) {
-		setCookie("auto_detect_bus_routes", value.toString());
-		window.location.reload();
+		this.dataService.setAutoDetectBusRoutes(value);
 	}
 
 	setDeveloperMode(value: boolean) {

@@ -19,9 +19,9 @@ import {FormatTimePipe} from "../../pipe/formatTimePipe";
 import {FormatDatePipe} from "../../pipe/formatDatePipe";
 import {SplitNamePipe} from "../../pipe/splitNamePipe";
 import {DimensionService} from "../../service/dimension.service";
-import {environment} from "../../../environments/environment";
 import {FontStyleService} from "../../service/font-style.service";
 import {TranslocoPipe} from "@jsverse/transloco";
+import {ConfigService} from "../../service/config.service";
 
 @Component({
 	selector: "app-station-panel",
@@ -51,6 +51,8 @@ export class StationPanelComponent {
 	private readonly stationService = inject(StationService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly fontStyleService = inject(FontStyleService);
+	private readonly configService = inject(ConfigService);
+	private readonly vehiclesService = inject(VehiclesService);
 	private readonly formatNamePipe = inject(FormatNamePipe);
 
 	protected dialogData?: Arrival;
@@ -191,13 +193,13 @@ export class StationPanelComponent {
 	}
 
 	getEnableViewOnWorldMap() {
-		return environment.worldMapLink.enable(this.dimensionService.getDimensionIndex());
+		return this.configService.getEnableWorldMap(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength());
 	}
 
 	viewOnWorldMap() {
 		const station = this.stationService.selectedData();
 		if (station) {
-			location.assign(environment.worldMapLink.exec(this.dimensionService.getDimensionIndex(), Math.round(station.x), Math.round(station.z)));
+			location.assign(this.configService.getWorldMapLink(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength(), Math.round(station.x), Math.round(station.z)));
 		}
 	}
 

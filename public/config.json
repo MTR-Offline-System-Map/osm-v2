@@ -1,0 +1,26 @@
+{
+  "dataUrl": {
+    "0": {"*": "/proxy/${endpoint}?dimension=0"},
+    "1": {"*": "https://letsplay.minecrafttransitrailway.com/system-map/mtr/api/map/${endpoint}?dimension=0"},
+    "*": {"*": "/datas/${dimensionIndex}"}
+  },
+  "worldMapLink": {
+    "dimensions": ["!3", "!6", "!7", "*"],
+    "link": {
+      "1": "https://letsplay.minecrafttransitrailway.com/world-map/?world=minecraft_overworld&zoom=3&x=${x}&z=${z}",
+      "*": "/world-map/?world=minecraft_overworld&zoom=3&x=${x}&z=${z}"
+    }
+  },
+  "dimensions": ["proxy/realtime", "official/realtime", "6/aug/2024/teufort", "4/may/2024/kdbr", "1/mar/2026", "1/feb/2026", "1/jan/2026", "1/dec/2025", "2/aug/2025", "4/jun/2025", "28/mar/2025", "3/feb/2024", "12/jan/2024", "15/nov/2023", "3/jun/2023", "centown/overworld", "centown/the_end"],
+  "historicalMap": {
+    "enable": true,
+    "onlineDimensions": 4
+  },
+  "avatarApi": "https://minotar.net/helm/${uuid}",
+  "pathfinder": ["0"],
+  "timetable": [],
+  "enableShowHiddenRoutes": ["*"],
+  "enableShowEmptyRoutes": ["*"],
+  "enableShowAllStations": ["*"],
+  "enableShowDepots": ["*"]
+}

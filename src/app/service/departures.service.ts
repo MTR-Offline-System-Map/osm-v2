@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {DimensionService} from "./dimension.service";
 import {setIfUndefined} from "../data/utilities";
 import {DataServiceBase} from "./data-service-base";
+import {ConfigService} from "./config.service";
 
 const REFRESH_INTERVAL = 3000;
 
@@ -14,13 +15,14 @@ export class DeparturesService extends DataServiceBase<{ departures: Record<stri
 	constructor() {
 		const httpClient = inject(HttpClient);
 		const dimensionService = inject(DimensionService);
+		const configService = inject(ConfigService);
 
 		super(() => {
 			const cacheCompleted = new EventEmitter<{
 				departures: Record<string, { departureFromNow: number, deviation: number }[]>,
 				lastUpdated: number,
 			}>();
-			httpClient.get<{ currentTime: number, data: { cachedResponseTime: number, departures: DataResponse[] } }>(this.getUrl("departures")).subscribe(data => {
+			httpClient.get<{ currentTime: number, data: { cachedResponseTime: number, departures: DataResponse[] } }>(configService.getDataUrl(dimensionService.getDimensionIndex(), dimensionService.getDimensionsLength(), "departures", {})).subscribe(data => {
 				const createCache = (
 					index: number,
 					iterations: number,
@@ -61,7 +63,7 @@ export class DeparturesService extends DataServiceBase<{ departures: Record<stri
 			this.departures.set(data.departures);
 			this.lastUpdated.set(data.lastUpdated);
 		}, REFRESH_INTERVAL, dimensionService);
-		this.fetchData("");
+		configService.refreshConfig.subscribe(() => this.fetchData(""));
 	}
 
 	public getDepartures(routeId: string, predicate: (departure: { departureFromNow: number, deviation: number }) => boolean) {

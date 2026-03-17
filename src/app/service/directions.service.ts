@@ -11,6 +11,7 @@ import {MapDataService} from "./map-data.service";
 import {Station} from "../entity/station";
 import {ClientsService} from "./clients.service";
 import {Depot} from "../entity/depot";
+import {ConfigService} from "./config.service";
 
 const REFRESH_INTERVAL = 3000;
 
@@ -37,6 +38,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 		const mapSelectionService = inject(MapSelectionService);
 		const clientsService = inject(ClientsService);
 		const dimensionService = inject(DimensionService);
+		const configService = inject(ConfigService);
 
 		super(selectedData => {
 			const {
@@ -92,7 +94,7 @@ export class DirectionsService extends SelectableDataServiceBase<{ currentTime: 
 			this.directions.set([]);
 			mapSelectionService.reset("directions");
 			clearTimeout(this.directionsTimeoutId);
-		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(this.getUrl(mapDataService.getDirectionsEngine() === "official" ? "directions" : "pathfinder"), JSON.stringify(directionsRequest)), ({data}) => {
+		}, ({directionsRequest}) => httpClient.post<{ currentTime: number, data: DirectionsResponseDTO }>(configService.getDataUrl(dimensionService.getDimensionIndex(), dimensionService.getDimensionsLength(), mapDataService.getDirectionsEngine() === "official" ? "directions" : "pathfinder", {}), JSON.stringify(directionsRequest)), ({data}) => {
 			const selectedData = this.selectedData();
 			const directions = data.connections;
 			const newDirections: {

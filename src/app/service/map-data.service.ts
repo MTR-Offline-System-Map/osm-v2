@@ -12,15 +12,16 @@ import {StationDTO} from "../entity/generated/station";
 import {Station} from "../entity/station";
 import {RouteDTO} from "../entity/generated/route";
 import {StationForMap} from "../entity/stationForMap";
-import {environment} from "../../environments/environment";
 import {Depot} from "../entity/depot";
 import {DepotDTO} from "../entity/generated/depot";
+import {ConfigService} from "./config.service";
 
-const REFRESH_INTERVAL = 30000;
+const REFRESH_INTERVAL = 1800000;
 
 @Injectable({providedIn: "root"})
 export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO }> {
 	private readonly httpClient = inject(HttpClient);
+	private readonly configService = inject(ConfigService);
 
 	public readonly routes = signal<Route[]>([]);
 	public readonly stations = signal<Station[]>([]);
@@ -52,7 +53,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	constructor() {
 		const dimensionService = inject(DimensionService);
 
-		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(this.getUrl("stations-and-routes")), ({data}) => {
+		super(() => this.httpClient.get<{ data: StationsAndRoutesDTO }>(this.configService.getDataUrl(dimensionService.getDimensionIndex(), dimensionService.getDimensionsLength(), "stations-and-routes", {})), ({data}) => {
 			const routes: Route[] = [];
 			const stations: Station[] = [];
 			const depots: Depot[] = [];
@@ -156,47 +157,35 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 			}
 
 			this.routeTypeVisibility.set(routeTypeVisibility);
-			this.dimensionService.setDimensions(data.dimensions);
+			const configDimensions = this.configService.getConfigDimensions();
+			this.dimensionService.setDimensions(configDimensions.length === 0 ? data.dimensions : configDimensions);
 			this.dimensionService.c324.set(data.c324 ?? false);
 			this.dimensionService.isOffline.set(data.offline ?? false);
 			this.dimensionService.includeMarkers.set(data.includeMarkers ?? false);
+			this.dimensionService.disableAutoDetectBusRoutes.set(data.disableAutoDetectBusRoutes ?? false);
 			this.updateData();
 		}, REFRESH_INTERVAL, dimensionService, false);
 
-		if (environment.enableAutoDetectBusRoutes) {
-			const cookieAutoDetectBusRoutes = getCookie("auto_detect_bus_routes");
-			this.autoDetectBusRoutes.set(cookieAutoDetectBusRoutes !== "false");
-		}
-
-		this.fetchData("");
+		const cookieAutoDetectBusRoutes = getCookie("auto_detect_bus_routes");
+		this.autoDetectBusRoutes.set(cookieAutoDetectBusRoutes !== "false");
 
 		const cookieDirectionsEngine = getCookie("directions_engine");
 		this.directionsEngine.set(cookieDirectionsEngine === "official" || cookieDirectionsEngine === "pathfinder" ? cookieDirectionsEngine : "official");
 
-		if (environment.enableShowHiddenRoutes) {
-			const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
-			this.showHiddenRoutes.set(cookieShowHiddenRoutes === "true");
-		}
+		const cookieShowHiddenRoutes = getCookie("show_hidden_routes");
+		this.showHiddenRoutes.set(cookieShowHiddenRoutes === "true");
 
-		if (environment.enableShowEmptyRoutes) {
-			const cookieShowEmptyRoutes = getCookie("show_empty_routes");
-			this.showEmptyRoutes.set(cookieShowEmptyRoutes === "true");
-		}
+		const cookieShowEmptyRoutes = getCookie("show_empty_routes");
+		this.showEmptyRoutes.set(cookieShowEmptyRoutes === "true");
 
-		if (environment.enableShowAllStations) {
-			const cookieShowAllStations = getCookie("show_all_stations");
-			this.showAllStations.set(cookieShowAllStations === "true");
-		}
+		const cookieShowAllStations = getCookie("show_all_stations");
+		this.showAllStations.set(cookieShowAllStations === "true");
 
-		if (environment.enableShowDepots) {
-			const cookieShowDepots = getCookie("show_depots");
-			this.showDepots.set(cookieShowDepots === "true");
-		}
+		const cookieShowDepots = getCookie("show_depots");
+		this.showDepots.set(cookieShowDepots === "true");
 
-		if (environment.enableDeveloperMode) {
-			const cookieDeveloperMode = getCookie("developer_mode");
-			this.developerMode.set(cookieDeveloperMode === "true");
-		}
+		const cookieDeveloperMode = getCookie("developer_mode");
+		this.developerMode.set(cookieDeveloperMode === "true");
 
 		const cookieInterchangeStyle = getCookie("interchange_style");
 		this.interchangeStyle = signal<"HIDDEN" | "DOTTED" | "HOLLOW">(cookieInterchangeStyle === "HIDDEN" || cookieInterchangeStyle === "DOTTED" || cookieInterchangeStyle === "HOLLOW" ? cookieInterchangeStyle : "DOTTED");
@@ -210,11 +199,25 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		});
 		this.routeTypeVisibility = signal<Record<string, "HIDDEN" | "SOLID" | "HOLLOW" | "DASHED">>(routeTypeVisibility);
 
-		this.fetchData("");
+		this.configService.refreshConfig.subscribe(() => {
+			if (!this.configService.getEnableShowHiddenRoutes(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength())) {
+				this.showHiddenRoutes.set(false);
+			}
+			if (!this.configService.getEnableShowEmptyRoutes(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength())) {
+				this.showEmptyRoutes.set(false);
+			}
+			if (!this.configService.getEnableShowAllStations(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength())) {
+				this.showAllStations.set(false);
+			}
+			if (!this.configService.getEnableShowDepots(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength())) {
+				this.showDepots.set(false);
+			}
+			this.fetchData("");
+		});
 	}
 
 	public getDirectionsEngine() {
-		return environment.pathfinder(this.dimensionService.getDimensionIndex()) ? this.directionsEngine() : "official";
+		return this.configService.getEnablePathfinder(this.dimensionService.getDimensionIndex(), this.dimensionService.getDimensionsLength()) ? this.directionsEngine : "official";
 	}
 
 	public setDirectionsEngine(engine: "official" | "pathfinder") {
@@ -453,7 +456,7 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	}
 
 	private convertToBusType(name: string, type: string) {
-		if (environment.enableAutoDetectBusRoutes && (name.toLowerCase().includes("bus") || name.includes("公交") || name.includes("巴士"))) {
+		if (name.toLowerCase().includes("bus") || name.includes("公交") || name.includes("巴士")) {
 			this.hasBusRoutes.set(true);
 			if (this.autoDetectBusRoutes()) {
 				return "bus_normal";
@@ -487,6 +490,12 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		this.showDepots.set(value);
 		setCookie("show_depots", value.toString());
 		this.updateData();
+	}
+	setAutoDetectBusRoutes(value: boolean) {
+		this.mapLoading.set(true);
+		this.autoDetectBusRoutes.set(value);
+		setCookie("auto_detect_bus_routes", value.toString());
+		this.fetchData("");
 	}
 
 	setDeveloperMode(value: boolean) {

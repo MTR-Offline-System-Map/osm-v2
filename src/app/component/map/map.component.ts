@@ -18,6 +18,7 @@ import {TooltipModule} from "primeng/tooltip";
 import {NgOptimizedImage} from "@angular/common";
 import {DimensionService} from "../../service/dimension.service";
 import {FontStyleService} from "../../service/font-style.service";
+import {ConfigService} from "../../service/config.service";
 
 const blackColor = 0x000000;
 const whiteColor = 0xFFFFFF;
@@ -51,6 +52,7 @@ export class MapComponent implements AfterViewInit {
 	private readonly mapDataService = inject(MapDataService);
 	private readonly mapSelectionService = inject(MapSelectionService);
 	private readonly clientsService = inject(ClientsService);
+	private readonly configService = inject(ConfigService);
 	private readonly themeService = inject(ThemeService);
 	private readonly dimensionService = inject(DimensionService);
 	private readonly fontStyleService = inject(FontStyleService);
@@ -749,6 +751,10 @@ export class MapComponent implements AfterViewInit {
 
 	getFontStyle() {
 		return this.fontStyleService.fontStyle();
+	}
+
+	getAvatarUrl(name: string, uuid: string) {
+		return this.configService.getAvatarUrl(name, uuid);
 	}
 }
 
