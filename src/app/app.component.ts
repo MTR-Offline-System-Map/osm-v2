@@ -68,7 +68,7 @@ export class AppComponent {
 		sideDepot.close();
 		this.onCloseClient();
 		this.onCloseDirections();
-		this.onCloseRoute();
+		//this.onCloseRoute();
 		this.onCloseDepot();
 	}
 
@@ -83,7 +83,7 @@ export class AppComponent {
 		sideDirections.close();
 		sideRoute.open();
 		sideDepot.close();
-		this.onCloseStation();
+		//this.onCloseStation();
 		this.onCloseClient();
 		this.onCloseDirections();
 		this.onCloseDepot();
@@ -132,6 +132,7 @@ export class AppComponent {
 	}
 
 	onCloseStation() {
+		this.onCloseRoute();
 		this.stationService.clear();
 	}
 

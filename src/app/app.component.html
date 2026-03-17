@@ -1,6 +1,8 @@
-<div class="banner" [hidden]="!isOffline()">
-  <p>{{ 'app.offline' | transloco }}</p>
-</div>
+@if (isOffline()) {
+	<div class="banner">
+		<p>{{ 'app.offline' | transloco }}</p>
+	</div>
+}
 
 <app-drawer #sideMain [title]="'app.title' | transloco">
 	<app-main-panel
