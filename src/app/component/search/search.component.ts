@@ -1,11 +1,11 @@
-import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
+import {Component, EventEmitter, inject, Input, Output, ViewChild} from "@angular/core";
 import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MapDataService} from "../../service/map-data.service";
 import {SimplifyStationsPipe} from "../../pipe/simplifyStationsPipe";
 import {SimplifyRoutesPipe} from "../../pipe/simplifyRoutesPipe";
 import {SimplifyDepotsPipe} from "../../pipe/simplifyDepotsPipe";
 import {FormatNamePipe} from "../../pipe/formatNamePipe";
-import {AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent, AutoCompleteUnselectEvent} from "primeng/autocomplete";
+import {AutoComplete, AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent, AutoCompleteUnselectEvent} from "primeng/autocomplete";
 import {DividerModule} from "primeng/divider";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {InputTextModule} from "primeng/inputtext";
@@ -61,7 +61,9 @@ export class SearchComponent {
 	@Input({required: true}) includeClients = true;
 	@Input() selectedValues: string[] = [];
 	@Input() setText!: EventEmitter<string>;
+	@ViewChild('autocomplete') autocomplete!: AutoComplete;
 
+	protected width: number = 100;
 	protected data: SelectItemGroup[] = [];
 
 	onTextChanged(event: AutoCompleteCompleteEvent) {
@@ -154,6 +156,13 @@ export class SearchComponent {
 	onClear() {
 		this.selectedValues.length = 0;
 		this.textCleared.emit();
+	}
+	
+	onShow() {
+		document.documentElement.style.setProperty(
+			"--input-width",
+			this.autocomplete.inputEL?.nativeElement.getBoundingClientRect().width + "px"
+		);
 	}
 
 	getName(entry: { value?: { name?: string, number?: string } }) {

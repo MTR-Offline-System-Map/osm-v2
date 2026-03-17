@@ -74,6 +74,10 @@ small {
 	overflow: hidden;
 }
 
+.p-autocomplete-overlay {
+	max-width: var(--input-width) !important;
+}
+
 .small-divider {
 	--p-divider-horizontal-margin: 1px 0;
 }
