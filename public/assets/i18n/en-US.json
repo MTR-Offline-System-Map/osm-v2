@@ -39,6 +39,8 @@
     "show_empty_routes": "Show Empty Route(s)",
     "show_all_stations": "Show All Station(s)",
     "show_depots": "Show Depot(s)",
+    "show_players": "Show Player(s)",
+    "show_labels": "Show Label(s)",
     "no_players": "There are no players online.",
     "interchange_style": "Interchange Style",
     "font_style": "Font Style",

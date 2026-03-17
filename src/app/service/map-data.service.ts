@@ -41,6 +41,8 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 	public readonly showAllStations = signal<boolean>(false);
 	public readonly showDepots = signal<boolean>(false);
 	public readonly hasConnections = signal<boolean>(false);
+	public readonly showClients = signal<boolean>(true);
+	public readonly showLabels = signal<boolean>(true);
 	public readonly autoDetectBusRoutes = signal<boolean>(false);
 	public readonly hasBusRoutes = signal<boolean>(false);
 	public readonly developerMode = signal<boolean>(false);
@@ -184,6 +186,12 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 
 		const cookieShowDepots = getCookie("show_depots");
 		this.showDepots.set(cookieShowDepots === "true");
+
+		const cookieShowClients = getCookie("show_clients");
+		this.showClients.set(cookieShowClients !== "false");
+
+		const cookieShowLabels = getCookie("show_labels");
+		this.showLabels.set(cookieShowLabels !== "false");
 
 		const cookieDeveloperMode = getCookie("developer_mode");
 		this.developerMode.set(cookieDeveloperMode === "true");
@@ -492,6 +500,19 @@ export class MapDataService extends DataServiceBase<{ data: StationsAndRoutesDTO
 		setCookie("show_depots", value.toString());
 		this.updateData();
 	}
+
+	setShowClients(value: boolean) {
+		this.showClients.set(value);
+		setCookie("show_clients", value.toString());
+		this.updateData();
+	}
+
+	setShowLabels(value: boolean) {
+		this.showLabels.set(value);
+		setCookie("show_labels", value.toString());
+		this.updateData();
+	}
+
 	setAutoDetectBusRoutes(value: boolean) {
 		this.mapLoading.set(true);
 		this.autoDetectBusRoutes.set(value);

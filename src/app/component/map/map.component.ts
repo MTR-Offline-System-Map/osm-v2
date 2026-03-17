@@ -261,7 +261,7 @@ export class MapComponent implements AfterViewInit {
 			}
 		});
 
-		if (!this.dimensionService.isOffline()) {
+		if (!this.dimensionService.isOffline() && this.mapDataService.showClients()) {
 			this.clientsService.dataProcessed.subscribe(() => {
 				if (!this.mapDataService.mapLoading()) {
 					draw(true);
@@ -349,7 +349,7 @@ export class MapComponent implements AfterViewInit {
 			processShape(x, -z, 7, newWidth, newHeight, rotate, adjustZ - 1, this.getColor(blackColor, whiteColor, grayColorLight, grayColorDark, stationSelected));
 			processShape(x, -z, 5, newWidth, newHeight, rotate, adjustZ, this.getColor(whiteColor, blackColor, backgroundColor, backgroundColor, stationSelected));
 
-			if (!this.dimensionService.isOffline()) {
+			if (!this.dimensionService.isOffline() && this.mapDataService.showClients()) {
 				const clientGroups = this.clientsService.clientGroupsForStation()[id];
 				if (clientGroups) {
 					const clientCount = clientGroups.clients.length;
@@ -369,7 +369,7 @@ export class MapComponent implements AfterViewInit {
 			})
 		}
 
-		if (!this.dimensionService.isOffline()) {
+		if (!this.dimensionService.isOffline() && this.mapDataService.showClients()) {
 			Object.values(this.clientsService.allClients()).forEach(({id, rawX, rawZ}) => this.clientPositions[id] = {x: rawX, y: -rawZ});
 			Object.entries(this.clientsService.clientGroupsForRoute()).forEach(([routeKey, {clients, x, z, route, routeStationId1, routeStationId2}]) => {
 				const points = this.pointsForLineConnection[routeKey];
@@ -620,8 +620,8 @@ export class MapComponent implements AfterViewInit {
 					id,
 					text: name,
 					icons,
-					shouldRenderText: !!clientGroup || renderedTextCount < SETTINGS.maxText,
-					clients: this.dimensionService.isOffline() ? [] : clientGroup?.clients,
+					shouldRenderText: this.mapDataService.showLabels() && (!!clientGroup || renderedTextCount < SETTINGS.maxText),
+					clients: this.dimensionService.isOffline() || !this.mapDataService.showClients() ? [] : clientGroup?.clients,
 					clientImagePadding: clientImagePadding * SETTINGS.scale,
 					x: canvasX + halfCanvasWidth,
 					y: canvasY + halfCanvasHeight - textOffset,
@@ -633,7 +633,7 @@ export class MapComponent implements AfterViewInit {
 			}
 		});
 
-		if (this.mapDataService.showDepots() && this.mapDataService.depots().length > 0) {
+		if (this.mapDataService.showDepots() && this.mapDataService.showLabels()) {
 			this.mapDataService.depots().forEach(({id, name, x, z, getIcons}) => {
 				const canvasX = (x - this.camera.position.x) * this.camera.zoom;
 				const canvasY = (z + this.camera.position.y) * this.camera.zoom;
@@ -660,19 +660,21 @@ export class MapComponent implements AfterViewInit {
 		}
 
 		this.clientGroupsOnRoute.length = 0;
-		this.clientGroupsOnRouteRaw.forEach(({clients, x, y}) => {
-			const canvasX = (x - this.camera.position.x) * this.camera.zoom;
-			const canvasY = (-y + this.camera.position.y) * this.camera.zoom;
-			this.clientGroupsOnRoute.push({
-				clients,
-				clientImagePadding: clientImagePadding * SETTINGS.scale,
-				x: canvasX + halfCanvasWidth,
-				y: canvasY + halfCanvasHeight - clientImageSize * SETTINGS.scale / 2,
+		if (this.mapDataService.showClients()) {
+			this.clientGroupsOnRouteRaw.forEach(({clients, x, y}) => {
+				const canvasX = (x - this.camera.position.x) * this.camera.zoom;
+				const canvasY = (-y + this.camera.position.y) * this.camera.zoom;
+				this.clientGroupsOnRoute.push({
+					clients,
+					clientImagePadding: clientImagePadding * SETTINGS.scale,
+					x: canvasX + halfCanvasWidth,
+					y: canvasY + halfCanvasHeight - clientImageSize * SETTINGS.scale / 2,
+				});
 			});
-		});
+		}
 
-		if (!this.dimensionService.isOffline()) {
-			this.clientsService.allClientsNotInStationOrRoute().forEach(({id, name, rawX, rawZ}) => {
+		if (!this.dimensionService.isOffline() && this.mapDataService.showClients()) {
+			this.clientsService.allClientsNotInStationOrRoute().forEach(({id, name, afk, rawX, rawZ}) => {
 				const canvasX = (rawX - this.camera.position.x) * this.camera.zoom;
 				const canvasY = (rawZ + this.camera.position.y) * this.camera.zoom;
 				this.clientGroupsOnRoute.push({

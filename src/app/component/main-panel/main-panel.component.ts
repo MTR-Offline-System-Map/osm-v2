@@ -69,6 +69,8 @@ export class MainPanelComponent {
 		showEmptyRoutesToggle: new FormControl(this.dataService.showEmptyRoutes()),
 		showAllStationsToggle: new FormControl(this.dataService.showAllStations()),
 		showDepots: new FormControl(this.dataService.showDepots()),
+		showClients: new FormControl(this.dataService.showClients()),
+		showLabels: new FormControl(this.dataService.showLabels()),
 		autoDetectBusRoutes: new FormControl(this.dataService.autoDetectBusRoutes()),
 		developerMode: new FormControl(this.dataService.developerMode()),
 	});
@@ -199,6 +201,14 @@ export class MainPanelComponent {
 
 	setShowDepots(value: boolean) {
 		this.dataService.setShowDepots(value);
+	}
+
+	setShowLabels(value: boolean) {
+		this.dataService.setShowLabels(value);
+	}
+
+	setShowClients(value: boolean) {
+		this.dataService.setShowClients(value);
 	}
 
 	setAutoDetectBusRoutes(value: boolean) {
